@@ -1,0 +1,106 @@
+%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'primaryColor': '#1A365D',
+    'primaryTextColor': '#FFFFFF',
+    'primaryBorderColor': '#1A365D',
+    'lineColor': '#4A5568',
+    'secondaryColor': '#EDF2F7',
+    'clusterBkg': '#EDF2F7',
+    'clusterBorder': '#1A365D',
+    'fontFamily': 'Montserrat, sans-serif'
+  }
+}}%%
+
+graph TB
+    classDef frontend    fill:#1A365D,color:#FFFFFF,stroke:#0F2440,stroke-width:2px
+    classDef backend     fill:#2D3748,color:#FFFFFF,stroke:#1A202C,stroke-width:2px
+    classDef database    fill:#4A5568,color:#FFFFFF,stroke:#2D3748,stroke-width:2px
+    classDef external    fill:#FF9F1C,color:#1A365D,stroke:#E8910A,stroke-width:2px
+    classDef infra       fill:#38A169,color:#FFFFFF,stroke:#2F855A,stroke-width:2px
+    classDef user        fill:#EDF2F7,color:#1A365D,stroke:#CBD5E0,stroke-width:2px
+
+    %% ── USUARIOS
+    subgraph USERS["👤  USUARIOS DEL SISTEMA"]
+        U1["💼 Comercial"]:::user
+        U2["✏️ Dibujante"]:::user
+        U3["📊 Contabilidad"]:::user
+        U4["⚖️ Jurídica"]:::user
+        U5["🏭 Almacén"]:::user
+        U6["🔧 Admin"]:::user
+    end
+
+    %% ── FRONTEND
+    subgraph FE["⬛  FRONTEND — React + TypeScript"]
+        direction LR
+        FE1["🏠 Dashboard\nMétricas y KPIs"]:::frontend
+        FE2["👥 Módulo Clientes\nRegistro + Aprobación"]:::frontend
+        FE3["📋 Módulo Cotizaciones\nDibujante + Catálogos"]:::frontend
+        FE4["✍️ Módulo Contratos\nFirma Electrónica"]:::frontend
+        FE5["📦 Módulo Inventarios\nRemisiones + Agenda"]:::frontend
+        FE6["💳 Módulo Facturación\nFacturas + Cartera"]:::frontend
+        FE7["🔔 Notificaciones\nAlertas en tiempo real"]:::frontend
+        FE8["🔍 Auditoría\nRastreo global"]:::frontend
+    end
+
+    %% ── BACKEND
+    subgraph BE["⬛  BACKEND — FastAPI (Python)"]
+        direction LR
+        BE1["🔐 Auth Service\nJWT + RBAC"]:::backend
+        BE2["👥 Clientes API\nChecklist + Docs"]:::backend
+        BE3["📋 Cotizaciones API\nCálculo + PDF gen."]:::backend
+        BE4["📦 Inventarios API\nKardex + Agenda"]:::backend
+        BE5["💳 Facturación API\nm² + Retenciones"]:::backend
+        BE6["📊 Auditoría Service\nLog inmutable"]:::backend
+        BE7["🔔 Notif. Service\nTriggers + Alertas"]:::backend
+        BE8["📄 PDF Generator\nCotizaciones + Facturas"]:::backend
+    end
+
+    %% ── BASE DE DATOS
+    subgraph DB["⬛  BASE DE DATOS — PostgreSQL"]
+        DB1[("🗄️ clientes\nContactos · Aprobaciones\nDocumentos")]:::database
+        DB2[("🗄️ cotizaciones\nItems · Planos · Archivos")]:::database
+        DB3[("🗄️ inventario\nKardex · Remisiones\nAgenda · Conductores")]:::database
+        DB4[("🗄️ facturacion\nFacturas · Pagos · Cartera")]:::database
+        DB5[("🗄️ auditoria\nLog inmutable")]:::database
+        DB6[("🗄️ catalogo\nProductos · Precios")]:::database
+    end
+
+    %% ── ALMACENAMIENTO
+    STORAGE[("☁️ Object Storage\nS3 Compatible\nPDFs · Planos · Documentos")]:::infra
+
+    %% ── INTEGRACIONES EXTERNAS
+    subgraph EXT["⬛  INTEGRACIONES EXTERNAS"]
+        EXT1["✍️ DocuSign / Okc\nFirma Electrónica"]:::external
+        EXT2["📧 Email Service\nNotificaciones"]:::external
+        EXT3["📱 WhatsApp API\nAlertas móviles"]:::external
+    end
+
+    %% ── CONEXIONES USUARIO → FRONTEND
+    U1 & U2 & U3 & U4 & U5 & U6 -->|"HTTPS / Browser"| FE1
+
+    %% ── CONEXIONES FRONTEND ↔ BACKEND
+    FE --> BE1
+    FE2 <-->|"REST API"| BE2
+    FE3 <-->|"REST API"| BE3
+    FE5 <-->|"REST API"| BE4
+    FE6 <-->|"REST API"| BE5
+    FE7 <-->|"WebSocket"| BE7
+    FE8 <-->|"REST API"| BE6
+
+    %% ── CONEXIONES BACKEND ↔ DB
+    BE2 --> DB1
+    BE3 --> DB2
+    BE4 --> DB3
+    BE5 --> DB4
+    BE6 --> DB5
+    BE3 --> DB6
+
+    %% ── ARCHIVOS
+    BE3 & BE5 & BE2 -->|"Upload/Download"| STORAGE
+
+    %% ── INTEGRACIONES
+    BE3 -->|"PDF autogenerado"| BE8
+    BE4 -->|"Contrato firmado"| EXT1
+    BE7 -->|"Email trigger"| EXT2
+    BE7 -->|"Push móvil"| EXT3

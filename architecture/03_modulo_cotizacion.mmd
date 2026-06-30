@@ -1,0 +1,97 @@
+%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'primaryColor': '#1A365D',
+    'primaryTextColor': '#FFFFFF',
+    'primaryBorderColor': '#1A365D',
+    'lineColor': '#4A5568',
+    'secondaryColor': '#EDF2F7',
+    'clusterBkg': '#EDF2F7',
+    'clusterBorder': '#CBD5E0',
+    'fontFamily': 'Montserrat, sans-serif'
+  }
+}}%%
+
+flowchart TD
+    classDef azul       fill:#1A365D,color:#FFFFFF,stroke:#0F2440,stroke-width:2px
+    classDef naranja     fill:#FF9F1C,color:#1A365D,stroke:#E8910A,stroke-width:2px,font-weight:bold
+    classDef gris        fill:#4A5568,color:#FFFFFF,stroke:#2D3748,stroke-width:1px
+    classDef grisClaro   fill:#EDF2F7,color:#1A365D,stroke:#CBD5E0,stroke-width:1px
+    classDef exito       fill:#38A169,color:#FFFFFF,stroke:#2F855A,stroke-width:2px
+    classDef peligro     fill:#E53E3E,color:#FFFFFF,stroke:#C53030,stroke-width:2px
+
+    INICIO(["🏗️ Solicitud de Cotización"]):::naranja
+
+    subgraph DIBUJANTE["✏️  ROL: DIBUJANTE (4-6 horas proceso actual)"]
+        direction TB
+        PLANOS["📐 Recibir Planos del Cliente\n(DWG / DXF / PDF)"]:::azul
+        AUTOCAD["🖥️ Modelamiento en AutoCAD\n― Análisis de planos\n― Definición de materiales\n― Medición de áreas (m²)"]:::azul
+        EXCEL["📊 Exportar a Excel\nDesglose de materiales\npor frente de obra"]:::grisClaro
+        CATALOG["📚 Consulta Catálogo Oficial\nAsignación de precios\npor producto"]:::grisClaro
+        COTINI["📋 Cotización Inicial\nGenerada por el Dibujante"]:::azul
+        HORAS["⏱️ Registro de horas\nde modelamiento"]:::grisClaro
+    end
+
+    subgraph COMERCIAL["💼  ROL: COMERCIAL"]
+        direction TB
+        REVCOM["👀 Revisión de la Cotización\nTécnica del Dibujante"]:::azul
+        TIPONEQ{"¿Tipos de negocio\nincluidos?"}:::naranja
+        TV["✅ Venta"]:::grisClaro
+        TA["✅ Alquiler"]:::grisClaro
+        TT["✅ Transporte"]:::grisClaro
+        TR["✅ Reposición"]:::grisClaro
+        ACCESORIOS["➕ Agregar Accesorios\ny servicios adicionales"]:::grisClaro
+        DESCUENTO["💲 Aplicar Descuentos\ny condiciones comerciales"]:::grisClaro
+        VALCOM["💰 Agregar Valores\nComerciales + IVA"]:::azul
+    end
+
+    subgraph CONTABILIDAD_REV["📊  ROL: CONTABILIDAD"]
+        direction TB
+        RETENC["🧾 Validar Retenciones\nRte. Fuente · Rte. ICA · IVA"]:::grisClaro
+        M2["📐 Validar Cálculo m²\npara productos aplicables"]:::grisClaro
+    end
+
+    subgraph JURIDICA_REV["⚖️  ROL: JURÍDICA"]
+        direction TB
+        COND["📜 Validar Cláusulas\nde arrendamiento"]:::grisClaro
+    end
+
+    subgraph SALIDA["📄  ENTREGA AL CLIENTE"]
+        direction TB
+        PDF["📄 Generar PDF Final\nCotización oficial"]:::azul
+        ENVIO["📧 Enviar al Cliente\nvía email / WhatsApp"]:::exito
+        RESPQ{"¿Cliente\naprueba?"}:::naranja
+        ORDEN["📝 Generar Orden\nde Compra"]:::exito
+        RECHAZA["❌ Cotización\nRechazada"]:::peligro
+        REVISION["🔄 Revisión y\nAjuste"]:::grisClaro
+    end
+
+    %% ── FLUJO
+    INICIO --> PLANOS
+    PLANOS --> AUTOCAD
+    AUTOCAD --> EXCEL
+    EXCEL --> CATALOG
+    CATALOG --> COTINI
+    COTINI --> HORAS
+    HORAS --> REVCOM
+
+    REVCOM --> TIPONEQ
+    TIPONEQ -->|"incluye venta"| TV
+    TIPONEQ -->|"incluye alquiler"| TA
+    TIPONEQ -->|"incluye transporte"| TT
+    TIPONEQ -->|"incluye reposición"| TR
+    TV & TA & TT & TR --> ACCESORIOS
+    ACCESORIOS --> DESCUENTO
+    DESCUENTO --> VALCOM
+
+    VALCOM --> RETENC
+    RETENC --> M2
+    M2 --> COND
+    COND --> PDF
+
+    PDF --> ENVIO
+    ENVIO --> RESPQ
+    RESPQ -->|"Aprueba"| ORDEN
+    RESPQ -->|"Observaciones"| REVISION
+    RESPQ -->|"Rechaza"| RECHAZA
+    REVISION --> REVCOM

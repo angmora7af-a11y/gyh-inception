@@ -1,0 +1,27 @@
+Aquí tienes las transcripciones detalladas de cada uno de los tres audios, estructuradas de forma independiente para que puedas utilizarlas como insumos en tu proyecto:
+
+### Transcripción del Archivo 1
+
+**Nombre del archivo:** `WhatsApp Ptt 2026-06-24 at 4.14.22 PM.ogg`
+
+> Dentro de la información de métricas que se levanta, más o menos los dibujantes están haciendo semanalmente entre 6 a 12 procesos de cotización. Más o menos mensualmente hay un registro de hasta 50 clientes nuevos, que no a todos se les vende. Para el tema de la de la migración, más o menos se tienen alrededor de 130 clientes en Bogotá, 50 entre Ibagué y Armenia, y cada uno tiene más o menos 50 obras con un tercer nivel, que pues cada obra puede tener hasta tres o cuatro frentes para la cantidad de información que hay. En facturación se requiere un cálculo de algunos productos por metro cuadrado. Es importante saber un poco y tener información directa de los catálogos oficiales. Para un tema de alquiler, muchas veces o compra, también se venden accesorios; eso es otro detalle. Y todo tiene un una auto un código también de revisión. Las devoluciones también pueden ocurrir si requiere pues hacer como un cruce; ese proceso se avanzará más adelante. El modelamiento técnico por los dibujantes más o menos demora entre 4 a 6 horas actualmente. Hacen un proceso en en AutoCAD y ahí generan un material, lo sacan a un Excel y en el Excel, a partir de ese, hacen la cotización y la cotización se convierte pues en un PDF. A eso ya comercial le agrega ciertos valores y y pues obviamente entrega al cliente para cotizar.
+
+---
+
+### Transcripción del Archivo 2
+
+**Nombre del archivo:** `WhatsApp Ptt 2026-06-24 at 4.10.31 PM.ogg`
+
+> Es importante que en el sistema las personas que validan el proceso de registro de cliente puedan acceder a anotaciones, puedan especificar si es favorable o no favorable, pero también como con comentarios dentro de cada una de las áreas. Es importante en la plataforma global contar con un módulo de auditoría para saber quién, cuándo hizo qué tipo de el rastreo general. Y debe contar con una serie de notificaciones cuando para poder empujar algunos de estos procesos. En el área de inventarios es muy clave tener una serie de notificaciones con respecto a los equipos o a la agenda que hay que tener de los de la próxima recogida. Entonces, la persona de almacén lo que hace es programar los conductores para saber con respecto a ciertas órdenes pues qué equipos están por recoger, en qué horarios, en qué direcciones y poder coordinar todo el proceso de transporte.
+> 
+> 
+
+---
+
+### Transcripción del Archivo 3
+
+**Nombre del archivo:** `WhatsApp Ptt 2026-06-24 at 4.09.18 PM.ogg`
+
+> Necesito que generes inicialmente un diagrama con el proceso para G&H. Va entonces desde la cotización, donde hay un proceso de validación con respecto a unos catálogos que tiene el cliente para dar un valor asociado. En este proceso también incluye en la cotización dibujante, que dependiendo de los planos que son enviados, puede hacer pues ya la cotización más estricta del material que se va a gastar. Dentro del proceso de cotización están los roles de contabilidad, está el rol de de jurídica que valida, y está el rol del comercial. Entonces, entre ellos tres revisan porque, una vez pues al cliente le parece la cotización, empieza el proceso de orden de compra. Y para eso tiene que hacer un proceso de registro; ahí hay un checklist que está en un Excel, tienen que validarse todos estos documentos, hay que ver viabilidad, favorabilidad. Cada uno de los integrantes da su concepto para que se pueda o no venderse al cliente. Los tipos de de cosas que pueden darse dentro de la cotización puede ser venta, alquiler, transporte y reposición. Siendo venta pues ya productos que ya existen; alquiler, temporal de maquinaria; transporte, lo que se gasta yendo y viniendo pues los equipos; y la reposición. Una vez digamos que se hace todo este proceso y el cliente eventualmente pues es aprobado y notificado, tienen una firma de contrato que ya se hace a través de una plataforma parecida a DocuSign o Okc, más o menos, es el sistema de firma electrónica. Oficializan el contrato y empiezan operaciones. Ahí pasa al área de inventarios, donde se hace la remisión de salida de los equipos y, posterior a un tiempo, cuando es alquiler se devuelven. Si alguno de los equipos que se prestaron no se devuelven, ahí es donde entra las reposiciones. Y una vez esto ingresa, entra a facturación, que es otra área, donde se valida todo el proceso y se hace la respectiva el respectivo cobro y pues validación contable y cruce. Finalmente, en dado caso que el cliente quede por fuera en cartera, tiene que pues se le cobra con respecto a esto. Cada cada cliente tiene distintas obras y cada obra puede pedir una serie de materiales diferentes, o dentro de una misma obra puede tener distintos frentes. Es un poco lo que se tiene. Se necesita un flujo que explique esto a cabalidad y el detalle específico de las historias de usuario, roles y el checklist que se adjuntará.
+> 
+>

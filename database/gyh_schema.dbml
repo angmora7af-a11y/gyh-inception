@@ -1,0 +1,816 @@
+// ============================================================
+// G&H OBRAS Y ESTRUCTURAS METALICAS S.A.S
+// Sistema de Gestión Comercial, Cotizaciones, Inventarios y Facturación
+// Base de Datos: PostgreSQL — Versión 1.0
+// Fecha: 2026-06-24
+// ============================================================
+
+Project gyh_sistema {
+  database_type: 'PostgreSQL'
+  Note: '''
+    Sistema de Gestión para G&H Obras y Estructuras Metálicas S.A.S.
+    NIT: 901.218.896-8 — Bogotá, Colombia
+    Módulos: Clientes · Cotizaciones · Contratos · Inventarios · Facturación · Auditoría
+    Métricas de escala: ~180 clientes, hasta 50 obras/cliente, 3-4 frentes/obra,
+    6-12 cotizaciones/semana por dibujante, ~50 prospectos nuevos/mes.
+  '''
+}
+
+// ============================================================
+// ENUMERACIONES GLOBALES
+// ============================================================
+
+Enum rol_usuario {
+  admin         [note: 'Administrador del sistema']
+  comercial     [note: 'Equipo de ventas y cotizaciones']
+  dibujante     [note: 'Modelamiento técnico en AutoCAD']
+  contabilidad  [note: 'Validación financiera y facturación']
+  juridica      [note: 'Validación documental y contratos']
+  almacen       [note: 'Jefe de almacén e inventarios']
+  conductor     [note: 'Transporte de equipos']
+}
+
+Enum tipo_id {
+  NIT
+  CC
+  CE
+  Pasaporte
+}
+
+Enum ciudad_sucursal {
+  bogota
+  ibague
+  armenia
+}
+
+Enum estado_cliente {
+  prospecto     [note: 'Lead sin proceso de registro formal']
+  en_revision   [note: 'Checklist en proceso de aprobación']
+  aprobado      [note: 'Todos los conceptos favorables']
+  rechazado     [note: 'Al menos un área dio concepto no favorable']
+  inactivo
+}
+
+Enum regimen_iva_tipo {
+  comun
+  simplificado
+  especial
+}
+
+Enum area_aprobacion {
+  contabilidad
+  juridica
+  comercial
+}
+
+Enum estado_aprobacion {
+  pendiente
+  favorable
+  no_favorable
+}
+
+Enum tipo_contacto {
+  encargado_pagos
+  recepcion_facturas
+  general
+}
+
+Enum tipo_documento_registro {
+  rut
+  camara_comercio
+  cedula_representante
+  estados_financieros
+  autorizacion_centrales_riesgo
+  formulario_registro_ft_ac_001
+  carta_presentacion
+  certificado_bancario
+  otro
+}
+
+Enum estado_validacion_doc {
+  pendiente
+  aprobado
+  rechazado
+  requiere_actualizacion
+}
+
+Enum estado_obra {
+  activa
+  pausada
+  finalizada
+  cancelada
+}
+
+Enum tipo_producto {
+  andamio
+  formaleta
+  maquinaria
+  accesorio
+  herramienta
+  otro
+}
+
+Enum unidad_medida {
+  unidad
+  metro
+  metro_cuadrado
+  juego
+  kit
+}
+
+Enum estado_cotizacion {
+  borrador
+  en_revision
+  enviada_cliente
+  aprobada_cliente
+  rechazada_cliente
+  vencida
+  convertida_orden
+}
+
+Enum tipo_item_cotizacion {
+  venta         [note: 'Productos existentes en catálogo']
+  alquiler      [note: 'Maquinaria temporal — se calcula por días']
+  transporte_ida
+  transporte_vuelta
+  reposicion    [note: 'Cobro por pérdida o no devolución']
+  accesorio
+}
+
+Enum formato_archivo {
+  dwg
+  dxf
+  pdf
+  xlsx
+  xls
+  png
+  jpg
+}
+
+Enum tipo_archivo_plano {
+  plano_autocad
+  desglose_materiales
+  cotizacion_pdf
+  otro
+}
+
+Enum estado_orden {
+  pendiente
+  en_firma
+  activa
+  finalizada
+  cancelada
+}
+
+Enum estado_contrato {
+  borrador
+  enviado_firma
+  firmado
+  cancelado
+}
+
+Enum tipo_remision {
+  salida            [note: 'Despacho de equipos a obra']
+  entrada_devolucion [note: 'Retorno de alquiler']
+  entrada_reposicion [note: 'Cobro por faltante']
+}
+
+Enum estado_remision {
+  programada
+  en_transito
+  entregada
+  recibida
+  con_novedad
+}
+
+Enum estado_item_remision {
+  pendiente
+  entregado_ok
+  entregado_parcial
+  dañado
+  faltante
+}
+
+Enum estado_agenda {
+  programado
+  en_curso
+  completado
+  cancelado
+  reprogramado
+}
+
+Enum estado_factura {
+  pendiente
+  enviada
+  pagada_parcial
+  pagada
+  vencida
+  en_cartera
+  anulada
+}
+
+Enum metodo_pago {
+  transferencia
+  efectivo
+  cheque
+  otro
+}
+
+Enum estado_cartera {
+  nueva
+  en_gestion
+  acuerdo_pago
+  demanda
+  castigada
+  recuperada
+}
+
+Enum tipo_notificacion {
+  aprobacion_pendiente
+  cotizacion_aprobada
+  contrato_firmado
+  recogida_programada
+  devolucion_pendiente
+  factura_vencida
+  cartera_alerta
+  sistema
+}
+
+// ============================================================
+// MÓDULO: USUARIOS Y SEGURIDAD
+// ============================================================
+
+Table usuarios {
+  id          uuid        [pk, default: `gen_random_uuid()`]
+  nombre      varchar(200) [not null]
+  email       varchar(200) [unique, not null]
+  password_hash varchar(500) [not null]
+  rol         rol_usuario  [not null]
+  activo      boolean      [default: true]
+  created_at  timestamp    [default: `now()`]
+  updated_at  timestamp    [default: `now()`]
+
+  Note: 'Usuarios del sistema con control de acceso por rol (RBAC)'
+}
+
+// ============================================================
+// MÓDULO: AUDITORÍA Y NOTIFICACIONES (Transversal)
+// ============================================================
+
+Table auditoria {
+  id               bigserial    [pk]
+  usuario_id       uuid         [ref: > usuarios.id]
+  accion           varchar(100) [not null, note: 'CREATE, UPDATE, DELETE, LOGIN, etc.']
+  tabla_afectada   varchar(100) [not null]
+  registro_id      varchar(100) [note: 'ID del registro modificado']
+  datos_anteriores jsonb
+  datos_nuevos     jsonb
+  ip_address       varchar(50)
+  user_agent       text
+  created_at       timestamp    [default: `now()`]
+
+  indexes {
+    usuario_id
+    tabla_afectada
+    created_at
+  }
+
+  Note: 'Log inmutable: quién hizo qué y cuándo — requerimiento transversal del sistema'
+}
+
+Table notificaciones {
+  id               bigserial    [pk]
+  usuario_id       uuid         [not null, ref: > usuarios.id]
+  tipo             tipo_notificacion [not null]
+  titulo           varchar(300) [not null]
+  mensaje          text         [not null]
+  url_referencia   varchar(500)
+  leida            boolean      [default: false]
+  leida_at         timestamp
+  created_at       timestamp    [default: `now()`]
+
+  indexes {
+    usuario_id
+    leida
+  }
+
+  Note: 'Motor de notificaciones para empujar aprobaciones y alertas logísticas'
+}
+
+// ============================================================
+// MÓDULO: CLIENTES
+// (Basado en formulario FT-AC-001 VERSION 2.0)
+// ============================================================
+
+Table clientes {
+  id                      uuid        [pk, default: `gen_random_uuid()`]
+
+  // I. INFORMACIÓN GENERAL (FT-AC-001 Sección I)
+  razon_social            varchar(300) [not null]
+  nombre_comercial        varchar(300)
+  tipo_identificacion     tipo_id      [not null]
+  numero_identificacion   varchar(50)  [unique, not null]
+  ciudad                  varchar(100)
+  direccion               text
+  telefono                varchar(50)
+  fax                     varchar(50)
+  representante_legal     varchar(200)
+  id_representante        varchar(50)
+  clase_sociedad          varchar(100)
+  regimen                 varchar(100)
+
+  // V. INFORMACIÓN TRIBUTARIA (FT-AC-001 Sección V)
+  tiene_camara_comercio   boolean      [default: false]
+  fecha_camara_comercio   date
+  matricula_camara        varchar(100)
+  codigo_ciiu             varchar(20)
+  actividad_economica     text
+  codigo_ica              varchar(20)
+  tarifa_ica              decimal(5,2)
+  rte_fuente              decimal(5,2)
+  rte_ica                 decimal(5,2)
+  regimen_iva             regimen_iva_tipo
+  gran_contribuyente      boolean      [default: false]
+  autorretenedor          boolean      [default: false]
+
+  // Control del sistema
+  estado_cliente          estado_cliente [default: 'prospecto']
+  codigo_revision         varchar(50)  [unique, note: 'Código auto-generado de revisión del registro']
+  ciudad_sucursal         ciudad_sucursal
+  creado_por              uuid         [ref: > usuarios.id]
+  created_at              timestamp    [default: `now()`]
+  updated_at              timestamp    [default: `now()`]
+
+  indexes {
+    numero_identificacion
+    estado_cliente
+    ciudad_sucursal
+  }
+
+  Note: 'Registro central de clientes — ~180 clientes migración inicial (130 Bogotá, 50 Ibagué/Armenia)'
+}
+
+Table contactos_cliente {
+  id             uuid         [pk, default: `gen_random_uuid()`]
+  cliente_id     uuid         [not null, ref: > clientes.id]
+
+  // II. INFORMACIÓN DE CONTACTO (FT-AC-001 Sección II)
+  tipo_contacto  tipo_contacto [not null]
+  nombre         varchar(200) [not null]
+  telefono       varchar(50)
+  ext            varchar(10)
+  correo         varchar(200)
+  direccion      text
+  horario        varchar(200)
+  plazos_pago    varchar(200)
+
+  Note: 'Sección II FT-AC-001: encargado de pagos y recepción de facturas electrónicas'
+}
+
+Table referencias_bancarias {
+  id               uuid         [pk, default: `gen_random_uuid()`]
+  cliente_id       uuid         [not null, ref: > clientes.id]
+
+  // III. REFERENCIAS BANCARIAS (FT-AC-001 Sección III)
+  banco            varchar(200) [not null]
+  sucursal         varchar(200)
+  telefono         varchar(50)
+  direccion        text
+  persona_contacto varchar(200)
+  orden            integer      [default: 1]
+
+  Note: 'Sección III FT-AC-001: hasta 2 referencias bancarias por cliente'
+}
+
+Table referencias_comerciales {
+  id         uuid         [pk, default: `gen_random_uuid()`]
+  cliente_id uuid         [not null, ref: > clientes.id]
+
+  // IV. REFERENCIAS COMERCIALES (FT-AC-001 Sección IV)
+  nombre     varchar(200) [not null]
+  telefono   varchar(50)
+  celular    varchar(50)
+  direccion  text
+  orden      integer      [default: 1]
+
+  Note: 'Sección IV FT-AC-001: hasta 2 referencias comerciales por cliente'
+}
+
+Table accionistas {
+  id              uuid         [pk, default: `gen_random_uuid()`]
+  cliente_id      uuid         [not null, ref: > clientes.id]
+
+  // VII. SOCIOS Y/O ACCIONISTAS (FT-AC-001 Sección VII)
+  nombre_completo varchar(300) [not null]
+  tipo_id         tipo_id      [not null]
+  numero_id       varchar(50)  [not null]
+  es_pep          boolean      [default: false, note: 'Persona Expuesta Políticamente']
+  descripcion_pep text
+
+  Note: 'Sección VII FT-AC-001: accionistas con >5% del capital social'
+}
+
+Table autorizacion_centrales_riesgo {
+  id                    uuid    [pk, default: `gen_random_uuid()`]
+  cliente_id            uuid    [unique, not null, ref: > clientes.id]
+  firma_representante_url varchar(500)
+  huella_url            varchar(500)
+  fecha_firma           date
+  nombre_firmante       varchar(200)
+  cedula_firmante       varchar(50)
+
+  Note: 'Autorización Ley 1581/2012 — Consulta centrales de riesgo y listas LAFT (Circular 09/2016)'
+}
+
+// ============================================================
+// FLUJO DE APROBACIÓN DE CLIENTES
+// (Reemplaza el Excel CHECKLIST VALIDACION CLIENTES BOGOTA)
+// ============================================================
+
+Table aprobaciones_cliente {
+  id             uuid         [pk, default: `gen_random_uuid()`]
+  cliente_id     uuid         [not null, ref: > clientes.id]
+  area           area_aprobacion [not null]
+  estado         estado_aprobacion [default: 'pendiente']
+  concepto       text         [note: 'Comentario obligatorio que justifica la decisión']
+  es_favorable   boolean
+  aprobado_por   uuid         [ref: > usuarios.id]
+  fecha_concepto timestamp
+  created_at     timestamp    [default: `now()`]
+  updated_at     timestamp    [default: `now()`]
+
+  indexes {
+    (cliente_id, area) [unique, note: 'Un concepto por área por cliente']
+  }
+
+  Note: 'Checklist digital de aprobación: las 3 áreas deben dar concepto antes de proceder al contrato'
+}
+
+Table documentos_registro {
+  id                  uuid    [pk, default: `gen_random_uuid()`]
+  cliente_id          uuid    [not null, ref: > clientes.id]
+  tipo_documento      tipo_documento_registro [not null]
+  nombre_archivo      varchar(300) [not null]
+  url_archivo         varchar(500) [not null]
+  estado_validacion   estado_validacion_doc [default: 'pendiente']
+  validado_por        uuid    [ref: > usuarios.id]
+  fecha_validacion    timestamp
+  comentario          text
+  uploaded_by         uuid    [ref: > usuarios.id]
+  created_at          timestamp [default: `now()`]
+
+  Note: 'Documentos del checklist de validación: RUT, Cámara, Cédula RL, Estados Financieros, etc.'
+}
+
+// ============================================================
+// MÓDULO: OBRAS Y FRENTES DE TRABAJO
+// ============================================================
+
+Table obras {
+  id         uuid         [pk, default: `gen_random_uuid()`]
+  cliente_id uuid         [not null, ref: > clientes.id]
+
+  // VIII. INFORMACIÓN DE OBRA (FT-AC-001 Sección VIII)
+  nombre     varchar(300) [not null]
+  direccion  text         [not null]
+  ciudad     varchar(100)
+  telefono   varchar(50)
+  correo     varchar(200)
+  encargado  varchar(200)
+  estado     estado_obra  [default: 'activa']
+  created_at timestamp    [default: `now()`]
+  updated_at timestamp    [default: `now()`]
+
+  indexes {
+    cliente_id
+    estado
+  }
+
+  Note: 'Obras por cliente — hasta 50 por cliente según métricas de migración'
+}
+
+Table frentes_obra {
+  id          uuid         [pk, default: `gen_random_uuid()`]
+  obra_id     uuid         [not null, ref: > obras.id]
+  nombre      varchar(200) [not null]
+  descripcion text
+  estado      estado_obra  [default: 'activa']
+  created_at  timestamp    [default: `now()`]
+
+  Note: 'Frentes dentro de una obra — entre 3 y 4 frentes por obra según métricas'
+}
+
+// ============================================================
+// MÓDULO: CATÁLOGO DE PRODUCTOS
+// ============================================================
+
+Table catalogo_productos {
+  id                   uuid         [pk, default: `gen_random_uuid()`]
+  codigo               varchar(100) [unique, not null]
+  nombre               varchar(300) [not null]
+  descripcion          text
+  categoria            varchar(100)
+  tipo_producto        tipo_producto [not null]
+  unidad_medida        unidad_medida [default: 'unidad']
+
+  // Precios por modalidad
+  precio_venta         decimal(15,2)
+  precio_alquiler_dia  decimal(15,2) [note: 'Tarifa diaria — inicia desde remisión hasta devolución']
+  precio_reposicion    decimal(15,2) [note: 'Valor comercial en caso de pérdida/daño']
+
+  // Cálculo por área (requerimiento facturación)
+  calcula_por_m2       boolean       [default: false]
+  precio_por_m2        decimal(15,2)
+
+  // Inventario
+  stock_actual         integer       [default: 0]
+  stock_minimo         integer       [default: 0]
+
+  imagen_url           varchar(500)
+  activo               boolean       [default: true]
+  codigo_revision      varchar(50)   [note: 'Código auto de versión del producto']
+  created_at           timestamp     [default: `now()`]
+  updated_at           timestamp     [default: `now()`]
+
+  Note: 'Catálogo oficial: andamios multidireccionales, formaletas, maquinaria y accesorios'
+}
+
+// ============================================================
+// MÓDULO: COTIZACIONES
+// (Proceso actual: AutoCAD → Excel → PDF — entre 4 y 6 horas por dibujante)
+// ============================================================
+
+Table cotizaciones {
+  id                   uuid         [pk, default: `gen_random_uuid()`]
+  numero_cotizacion    varchar(50)  [unique, not null]
+  cliente_id           uuid         [not null, ref: > clientes.id]
+  obra_id              uuid         [ref: > obras.id]
+  dibujante_id         uuid         [ref: > usuarios.id]
+  comercial_id         uuid         [ref: > usuarios.id]
+  estado               estado_cotizacion [default: 'borrador']
+
+  // Tipos de negocio habilitados en la cotización
+  incluye_venta        boolean      [default: false]
+  incluye_alquiler     boolean      [default: false]
+  incluye_transporte   boolean      [default: false]
+  incluye_reposicion   boolean      [default: false]
+
+  // Totales calculados
+  subtotal             decimal(18,2) [default: 0]
+  descuento            decimal(18,2) [default: 0]
+  iva                  decimal(18,2) [default: 0]
+  total                decimal(18,2) [default: 0]
+
+  // Archivos del proceso (AutoCAD → Excel → PDF)
+  archivo_plano_url    varchar(500)
+  archivo_excel_url    varchar(500)  [note: 'Desglose de materiales exportado desde AutoCAD']
+  pdf_cotizacion_url   varchar(500)  [note: 'PDF final con valores comerciales agregados']
+
+  notas_dibujante      text
+  notas_comercial      text
+  horas_modelamiento   decimal(4,2)  [note: 'Métrica: actualmente 4-6 horas en AutoCAD']
+  codigo_revision      varchar(50)
+  created_at           timestamp     [default: `now()`]
+  updated_at           timestamp     [default: `now()`]
+
+  indexes {
+    cliente_id
+    estado
+    dibujante_id
+    created_at
+  }
+
+  Note: 'Cotizaciones: 6-12 por semana por dibujante. Soporta venta, alquiler, transporte y reposición'
+}
+
+Table cotizacion_items {
+  id                   uuid          [pk, default: `gen_random_uuid()`]
+  cotizacion_id        uuid          [not null, ref: > cotizaciones.id]
+  frente_id            uuid          [ref: > frentes_obra.id]
+  producto_id          uuid          [not null, ref: > catalogo_productos.id]
+  tipo_item            tipo_item_cotizacion [not null]
+  cantidad             decimal(12,3) [default: 1]
+  area_m2              decimal(12,2) [note: 'Para productos que calculan por metro cuadrado']
+  precio_unitario      decimal(15,2) [not null]
+  precio_por_m2        decimal(15,2)
+  dias_alquiler        integer       [note: 'Para ítems de alquiler: desde remisión hasta devolución']
+  subtotal             decimal(18,2) [not null]
+  descripcion_adicional text
+
+  Note: 'Líneas de cotización con soporte para cálculo por m² y días de alquiler'
+}
+
+Table archivos_planos {
+  id             uuid    [pk, default: `gen_random_uuid()`]
+  cotizacion_id  uuid    [not null, ref: > cotizaciones.id]
+  nombre_archivo varchar(300) [not null]
+  formato        formato_archivo [not null]
+  url_archivo    varchar(500)   [not null]
+  tipo_archivo   tipo_archivo_plano [not null]
+  uploaded_by    uuid    [ref: > usuarios.id]
+  created_at     timestamp [default: `now()`]
+
+  Note: 'Planos AutoCAD (DWG/DXF), exports Excel y PDFs de cotización'
+}
+
+// ============================================================
+// MÓDULO: CONTRATOS Y ÓRDENES DE COMPRA
+// ============================================================
+
+Table ordenes_compra {
+  id                    uuid    [pk, default: `gen_random_uuid()`]
+  numero_orden          varchar(50) [unique, not null]
+  cotizacion_id         uuid    [not null, ref: > cotizaciones.id]
+  cliente_id            uuid    [not null, ref: > clientes.id]
+  obra_id               uuid    [ref: > obras.id]
+  estado                estado_orden [default: 'pendiente']
+  fecha_inicio          date
+  fecha_estimada_fin    date
+  fecha_fin_real        date
+  notas                 text
+  created_at            timestamp [default: `now()`]
+  updated_at            timestamp [default: `now()`]
+
+  Note: 'Orden de compra generada una vez el cliente aprueba la cotización'
+}
+
+Table contratos {
+  id                      uuid    [pk, default: `gen_random_uuid()`]
+  numero_contrato         varchar(50) [unique, not null]
+  orden_compra_id         uuid    [unique, not null, ref: > ordenes_compra.id]
+  cliente_id              uuid    [not null, ref: > clientes.id]
+  estado                  estado_contrato [default: 'borrador']
+
+  // Integración con firma electrónica (DocuSign / Okc)
+  plataforma_firma        varchar(100) [note: 'DocuSign, Okc u otra plataforma']
+  id_documento_externo    varchar(200) [note: 'ID del documento en la plataforma de firma']
+  url_documento_firmado   varchar(500)
+  fecha_envio_firma       timestamp
+  fecha_firma             timestamp
+  firmado_por             varchar(200)
+
+  created_at              timestamp [default: `now()`]
+  updated_at              timestamp [default: `now()`]
+
+  Note: 'Contratos con integración a firma electrónica — trigger automático a operaciones al firmarse'
+}
+
+// ============================================================
+// MÓDULO: INVENTARIOS Y LOGÍSTICA
+// ============================================================
+
+Table conductores {
+  id           uuid    [pk, default: `gen_random_uuid()`]
+  nombre       varchar(200) [not null]
+  cedula       varchar(50)  [unique, not null]
+  telefono     varchar(50)
+  celular      varchar(50)
+  tipo_vehiculo varchar(100)
+  placa        varchar(20)
+  activo       boolean  [default: true]
+  created_at   timestamp [default: `now()`]
+
+  Note: 'Conductores para transporte de equipos a obras'
+}
+
+Table remisiones {
+  id               uuid    [pk, default: `gen_random_uuid()`]
+  numero_remision  varchar(50) [unique, not null]
+  orden_compra_id  uuid    [not null, ref: > ordenes_compra.id]
+  frente_id        uuid    [ref: > frentes_obra.id]
+  tipo_remision    tipo_remision [not null]
+  fecha_remision   date    [not null]
+  responsable_id   uuid    [ref: > usuarios.id]
+  conductor_id     uuid    [ref: > conductores.id]
+  vehiculo         varchar(100)
+  placa            varchar(20)
+  direccion_destino text
+  observaciones    text
+  estado           estado_remision [default: 'programada']
+  created_at       timestamp [default: `now()`]
+  updated_at       timestamp [default: `now()`]
+
+  indexes {
+    orden_compra_id
+    tipo_remision
+    fecha_remision
+  }
+
+  Note: 'Remisiones de salida y entrada al Kardex — control de equipos en obra'
+}
+
+Table remision_items {
+  id                  uuid    [pk, default: `gen_random_uuid()`]
+  remision_id         uuid    [not null, ref: > remisiones.id]
+  producto_id         uuid    [not null, ref: > catalogo_productos.id]
+  cantidad_programada integer [not null]
+  cantidad_real       integer
+  estado_item         estado_item_remision [default: 'pendiente']
+  novedad             text    [note: 'Descripción de daño, faltante o novedad']
+
+  Note: 'Detalle de equipos por remisión — base para calcular reposiciones y actualizar Kardex'
+}
+
+Table agenda_transporte {
+  id                 uuid    [pk, default: `gen_random_uuid()`]
+  remision_id        uuid    [not null, ref: > remisiones.id]
+  conductor_id       uuid    [not null, ref: > conductores.id]
+  fecha_programada   date    [not null]
+  hora_inicio        time
+  hora_fin           time
+  direccion_recogida text
+  direccion_destino  text    [not null]
+  orden_compra_id    uuid    [ref: > ordenes_compra.id]
+  estado_agenda      estado_agenda [default: 'programado']
+  notas              text
+  created_at         timestamp [default: `now()`]
+  updated_at         timestamp [default: `now()`]
+
+  indexes {
+    conductor_id
+    fecha_programada
+  }
+
+  Note: 'Agenda del jefe de almacén: conductores, horarios y direcciones de recogida'
+}
+
+// ============================================================
+// MÓDULO: FACTURACIÓN Y CARTERA
+// ============================================================
+
+Table facturas {
+  id               uuid    [pk, default: `gen_random_uuid()`]
+  numero_factura   varchar(50)  [unique, not null]
+  orden_compra_id  uuid    [not null, ref: > ordenes_compra.id]
+  cliente_id       uuid    [not null, ref: > clientes.id]
+  estado           estado_factura [default: 'pendiente']
+  fecha_emision    date    [not null]
+  fecha_vencimiento date   [not null]
+
+  // Valores con retenciones (según condiciones FT-AC-001 Sección VI)
+  subtotal         decimal(18,2) [not null]
+  descuento        decimal(18,2) [default: 0]
+  iva              decimal(18,2) [default: 0]
+  rte_fuente       decimal(18,2) [default: 0]
+  rte_ica          decimal(18,2) [default: 0]
+  total            decimal(18,2) [not null]
+  saldo_pendiente  decimal(18,2) [not null]
+
+  pdf_url          varchar(500)
+  notas            text
+  created_at       timestamp [default: `now()`]
+  updated_at       timestamp [default: `now()`]
+
+  indexes {
+    cliente_id
+    estado
+    fecha_vencimiento
+  }
+
+  Note: 'Facturación electrónica con retenciones, cálculo por m² y cruce contable'
+}
+
+Table factura_items {
+  id                 uuid    [pk, default: `gen_random_uuid()`]
+  factura_id         uuid    [not null, ref: > facturas.id]
+  cotizacion_item_id uuid    [ref: > cotizacion_items.id]
+  descripcion        text    [not null]
+  tipo_cobro         tipo_item_cotizacion [not null]
+  cantidad           decimal(12,3) [default: 1]
+  area_m2            decimal(12,2)
+  dias_alquiler      integer [note: 'Calculado desde fecha remisión salida hasta devolución']
+  precio_unitario    decimal(15,2) [not null]
+  subtotal           decimal(18,2) [not null]
+
+  Note: 'Líneas de factura: soporta cobro por m², por unidad y por días de alquiler'
+}
+
+Table pagos {
+  id              uuid    [pk, default: `gen_random_uuid()`]
+  factura_id      uuid    [not null, ref: > facturas.id]
+  monto           decimal(18,2) [not null]
+  fecha_pago      date    [not null]
+  metodo_pago     metodo_pago [not null]
+  referencia_pago varchar(200)
+  registrado_por  uuid    [ref: > usuarios.id]
+  notas           text
+  created_at      timestamp [default: `now()`]
+
+  Note: 'Registro de pagos recibidos — actualiza saldo_pendiente en facturas'
+}
+
+Table cartera {
+  id                   uuid    [pk, default: `gen_random_uuid()`]
+  factura_id           uuid    [unique, not null, ref: > facturas.id]
+  cliente_id           uuid    [not null, ref: > clientes.id]
+  dias_mora            integer [default: 0]
+  monto_mora           decimal(18,2) [default: 0]
+  estado_gestion       estado_cartera [default: 'nueva']
+  fecha_ultimo_contacto date
+  notas_gestion        text
+  responsable_id       uuid    [ref: > usuarios.id]
+  created_at           timestamp [default: `now()`]
+  updated_at           timestamp [default: `now()`]
+
+  Note: 'Gestión de clientes con facturas vencidas — coordinado entre contabilidad y jurídica'
+}

@@ -1,0 +1,2651 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>G&H Sistema — Inception Report 2026</title>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: 'base',
+      securityLevel: 'loose',
+      themeVariables: {
+        primaryColor: '#1A365D',
+        primaryTextColor: '#ffffff',
+        primaryBorderColor: '#1A365D',
+        lineColor: '#4A5568',
+        secondaryColor: '#EDF2F7',
+        fontFamily: 'Segoe UI, system-ui, sans-serif'
+      }
+    });
+    document.addEventListener('DOMContentLoaded', async () => {
+      const blocks = document.querySelectorAll('pre.mermaid');
+      for (let i = 0; i < blocks.length; i++) {
+        const el = blocks[i];
+        const code = el.textContent.trim();
+        const id = 'mmd-gyh-' + i;
+        try {
+          const { svg } = await mermaid.render(id, code);
+          const wrap = document.createElement('div');
+          wrap.className = 'mmd-svg-wrap';
+          wrap.innerHTML = svg;
+          el.replaceWith(wrap);
+        } catch(err) {
+          const errEl = document.createElement('div');
+          errEl.style.cssText = 'padding:1rem;background:#fef2f2;border-radius:8px;color:#b91c1c;font-size:.82rem;border:1px solid #fca5a5;';
+          errEl.innerHTML = '<strong>Error al renderizar diagrama:</strong><br>' + (err.message || String(err));
+          el.replaceWith(errEl);
+        }
+      }
+    });
+  </script>
+  <style>
+:root {
+  --bg:#F7FAFC; --surface:#FFFFFF; --surface2:#EDF2F7; --border:#CBD5E0;
+  --text:#1A202C; --muted:#718096;
+  --primary:#1A365D; --primary2:#2C5282;
+  --accent:#FF9F1C; --accent2:#E8910A;
+  --steel:#4A5568; --success:#38A169; --danger:#E53E3E;
+  --nav-w:270px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:"Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.65;font-size:15px}
+
+/* Layout */
+.layout{display:grid;grid-template-columns:var(--nav-w) 1fr;min-height:100vh}
+@media(max-width:960px){.layout{grid-template-columns:1fr}nav{position:relative;height:auto;width:100%}}
+
+/* Sidebar */
+nav{position:sticky;top:0;height:100vh;overflow-y:auto;background:var(--primary);color:#fff;padding:0 0 2rem;font-size:.84rem;box-shadow:2px 0 12px rgba(0,0,0,.18)}
+.nav-brand{display:flex;align-items:center;gap:.75rem;padding:1.25rem 1rem;background:#0F2440;border-bottom:1px solid rgba(255,255,255,.12);margin-bottom:.5rem}
+.nav-logo{background:var(--accent);color:var(--primary);font-weight:900;font-size:1.15rem;padding:.3rem .55rem;border-radius:6px;line-height:1;flex-shrink:0}
+.nav-brand strong{display:block;color:#fff;font-size:.88rem;line-height:1.3}
+.nav-brand small{color:rgba(255,255,255,.5);font-size:.7rem}
+.nav-group{font-size:.62rem;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.38);padding:.9rem 1rem .3rem}
+nav a{display:block;padding:.38rem 1rem;color:rgba(255,255,255,.72);text-decoration:none;border-left:3px solid transparent;transition:all .15s}
+nav a:hover{color:var(--accent);background:rgba(255,255,255,.07);border-left-color:var(--accent)}
+
+/* Main */
+main{padding:2rem 2.5rem 4rem;background:var(--bg)}
+@media(max-width:720px){main{padding:1rem 1rem 3rem}}
+
+/* Hero */
+.hero{background:linear-gradient(135deg,var(--primary) 0%,var(--primary2) 100%);color:#fff;border-radius:14px;padding:2.5rem 2rem;margin-bottom:2.5rem;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;right:-80px;top:-80px;width:260px;height:260px;border-radius:50%;background:rgba(255,159,28,.12);pointer-events:none}
+.hero::after{content:'';position:absolute;right:40px;bottom:-40px;width:140px;height:140px;border-radius:50%;background:rgba(255,255,255,.06);pointer-events:none}
+.hero-tag{font-size:.72rem;text-transform:uppercase;letter-spacing:.12em;color:var(--accent);font-weight:700;margin-bottom:.5rem}
+.hero h1{font-size:2rem;font-weight:900;margin-bottom:.4rem}
+.hero p{color:rgba(255,255,255,.65);font-size:.92rem}
+.hero-meta{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1.5rem}
+.hero-chip{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:999px;padding:.22rem .7rem;font-size:.75rem;color:rgba(255,255,255,.88)}
+
+/* Sections */
+section{margin-bottom:3.5rem;scroll-margin-top:1rem}
+.section-header{margin-bottom:1.5rem;padding-bottom:.7rem;border-bottom:3px solid var(--accent)}
+.section-header h2{font-size:1.45rem;color:var(--primary);font-weight:800}
+.section-sub{color:var(--muted);font-size:.86rem;margin-top:.3rem}
+section h3{font-size:1.05rem;color:var(--primary);margin:1.75rem 0 .75rem;font-weight:700}
+
+/* Diagrams */
+.diagram-block{border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface);box-shadow:0 2px 10px rgba(0,0,0,.07);margin-bottom:1rem}
+.diagram-label{background:var(--primary);color:rgba(255,255,255,.75);padding:.45rem 1rem;font-size:.72rem;font-family:ui-monospace,monospace;letter-spacing:.04em}
+.mermaid-wrap{padding:1.5rem;overflow-x:auto;background:#fff;min-height:80px}
+.mmd-svg-wrap svg{max-width:100%;height:auto}
+
+/* Metrics */
+.metrics-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.9rem;margin-bottom:1.5rem}
+.metric-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.2rem 1rem;text-align:center;border-top:4px solid var(--accent);box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.metric-icon{display:block;font-size:1.7rem;margin-bottom:.45rem}
+.metric-value{display:block;font-size:1.7rem;font-weight:900;color:var(--primary)}
+.metric-label{display:block;font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-top:.2rem}
+
+/* Info cards */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem}
+@media(max-width:680px){.two-col{grid-template-columns:1fr}}
+.info-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.25rem;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.info-card h3{color:var(--primary);font-size:1rem;margin-bottom:.75rem;border-bottom:1px solid var(--surface2);padding-bottom:.4rem}
+.module-list,.stack-list{list-style:none}
+.module-list li,.stack-list li{padding:.35rem 0;border-bottom:1px solid var(--surface2);font-size:.86rem;color:var(--steel);display:flex;align-items:center;gap:.5rem}
+.module-list li:last-child,.stack-list li:last-child{border-bottom:none}
+.mod-badge{background:var(--primary);color:#fff;border-radius:4px;padding:.1rem .4rem;font-size:.68rem;font-weight:700;flex-shrink:0}
+.stack-tag{padding:.12rem .45rem;border-radius:4px;font-size:.68rem;font-weight:700;flex-shrink:0}
+.stack-tag.fe{background:#EBF8FF;color:#2B6CB0}
+.stack-tag.be{background:#F0FFF4;color:#276749}
+.stack-tag.db{background:#FAF5FF;color:#6B46C1}
+.stack-tag.ex{background:#FFFBEB;color:#92400E}
+.roles-grid{display:flex;flex-wrap:wrap;gap:.5rem;padding-top:.25rem}
+.role-chip{background:var(--surface2);border:1px solid var(--border);border-radius:999px;padding:.28rem .82rem;font-size:.8rem;color:var(--primary);font-weight:600}
+.role-chip.admin{background:#FFFBEB;border-color:var(--accent);color:#92400E}
+
+/* Callout */
+.callout{background:#EBF8FF;border-left:4px solid #3182CE;border-radius:0 8px 8px 0;padding:.85rem 1.1rem;margin:1rem 0;font-size:.86rem}
+.callout.warn{background:#FFFBEB;border-left-color:var(--accent)}
+
+/* DB tables */
+.db-legend{display:flex;flex-wrap:wrap;gap:.6rem;margin-bottom:1.25rem}
+.db-legend span{border:1px solid;border-radius:4px;padding:.2rem .55rem;font-size:.72rem;font-weight:600}
+.t-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:.9rem;margin-bottom:1.5rem}
+.t-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.t-head{background:var(--tcolor,var(--primary));color:#fff;padding:.55rem .9rem;display:flex;align-items:center;gap:.5rem}
+.t-name{font-weight:700;font-size:.86rem;flex:1;font-family:ui-monospace,monospace}
+.t-count{font-size:.65rem;color:rgba(255,255,255,.6);background:rgba(255,255,255,.12);padding:.1rem .4rem;border-radius:3px}
+.t-note{font-size:.73rem;color:var(--muted);padding:.45rem .8rem;background:var(--surface2);border-bottom:1px solid var(--border);line-height:1.4}
+.t-cols{width:100%;border-collapse:collapse;font-size:.76rem}
+.t-cols td{padding:.28rem .75rem;border-bottom:1px solid #f1f5f9}
+.t-cols tr:last-child td{border-bottom:none}
+.t-cols td:first-child code{font-size:.75rem;color:var(--primary);font-weight:600}
+.t-type{color:var(--muted);font-family:ui-monospace,monospace;font-size:.7rem}
+.t-more{font-size:.7rem;color:var(--muted);padding:.35rem .75rem;background:var(--surface2);text-align:center;font-style:italic}
+.badge{display:inline-block;padding:.05rem .3rem;border-radius:3px;font-size:.62rem;font-weight:700;margin-right:.15rem}
+.badge.pk{background:#FEF3C7;color:#92400E}
+.badge.fk{background:#E0E7FF;color:#3730A3}
+.badge.uniq{background:#D1FAE5;color:#065F46}
+.enum-grid{display:flex;flex-wrap:wrap;gap:.7rem;margin-bottom:1.5rem}
+.enum-pill{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.55rem .85rem;min-width:150px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.enum-pill strong{display:block;color:var(--primary);font-size:.8rem;margin-bottom:.2rem}
+.enum-vals{color:var(--muted);font-size:.7rem;font-family:ui-monospace,monospace;line-height:1.6}
+details{margin-top:1rem}
+details summary{cursor:pointer;color:var(--primary);font-size:.88rem;font-weight:600;padding:.5rem 0;user-select:none}
+.code-block{background:#1A202C;color:#E2E8F0;border-radius:10px;padding:1.25rem;font-size:.76rem;overflow-x:auto;line-height:1.75;max-height:500px;overflow-y:auto;font-family:ui-monospace,monospace;border:1px solid #2D3748;margin-top:.75rem}
+
+/* Markdown content */
+.md-content h1{font-size:1.4rem;color:var(--primary);margin:1.5rem 0 .75rem;border-bottom:2px solid var(--accent);padding-bottom:.35rem}
+.md-content h2{font-size:1.2rem;color:var(--primary);margin:2rem 0 .75rem;border-bottom:1px solid var(--border);padding-bottom:.35rem}
+.md-content h3{font-size:1rem;color:var(--primary2);margin:1.4rem 0 .5rem}
+.md-content h4{font-size:.92rem;color:var(--steel);margin:1rem 0 .4rem;font-style:italic}
+.md-content p{margin:.5rem 0;color:var(--text);font-size:.88rem}
+.md-content code{background:#EDF2F7;padding:.1rem .38rem;border-radius:3px;font-size:.8em;color:#6B46C1}
+.md-content strong{color:var(--primary)}
+.md-content hr{border:none;border-top:2px solid var(--border);margin:2rem 0}
+.md-content ul.md-list{margin:.5rem 0 .5rem 1.4rem}
+.md-content ol{margin:.5rem 0 .5rem 1.4rem}
+.md-content li{margin:.28rem 0;font-size:.88rem}
+.check-item{list-style:none;display:flex;align-items:flex-start;gap:.5rem;margin-left:-1.4rem;padding:.2rem 0}
+.chk{flex-shrink:0;width:1.3rem;text-align:center;color:var(--muted);margin-top:.05rem;font-size:.9rem}
+.chk-ok{color:var(--success)}
+.check-item.done{color:#276749}
+.table-wrap{overflow-x:auto;margin:1rem 0}
+.md-content table{width:100%;border-collapse:collapse;font-size:.82rem;background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.md-content th{background:var(--primary);color:#fff;padding:.45rem .75rem;text-align:left;font-size:.8rem;font-weight:600}
+.md-content td{padding:.4rem .75rem;border-bottom:1px solid var(--border);vertical-align:top}
+.md-content tr:nth-child(even) td{background:var(--surface2)}
+
+/* Footer */
+footer{padding-top:2rem;border-top:2px solid var(--border);color:var(--muted);font-size:.8rem;margin-top:2rem}
+footer strong{color:var(--primary)}
+
+@media print{nav{display:none}.layout{grid-template-columns:1fr}body{font-size:11pt}}
+</style>
+</head>
+<body>
+<div class="layout">
+
+<nav>
+  <div class="nav-brand">
+    <span class="nav-logo">G&amp;H</span>
+    <div><strong>G&amp;H Sistema</strong><small>Inception Report · 2026</small></div>
+  </div>
+  <div class="nav-group">Visión General</div>
+  <a href="#overview">📊 Resumen del Proyecto</a>
+  <div class="nav-group">Diagramas de Arquitectura</div>
+  <a href="#arquitectura">🏗️ Arquitectura del Sistema</a>
+  <a href="#flujo-principal">🔄 Flujo Principal del Negocio</a>
+  <a href="#cotizacion">📋 Módulo Cotizaciones</a>
+  <a href="#registro-cliente">👥 Registro y Aprobación</a>
+  <a href="#inventarios">📦 Inventarios y Logística</a>
+  <a href="#roles">🔐 Roles y Permisos</a>
+  <a href="#sitemap">🗺️ Sitemap de la App</a>
+  <div class="nav-group">Base de Datos</div>
+  <a href="#database">🗄️ Schema PostgreSQL</a>
+  <div class="nav-group">Requerimientos</div>
+  <a href="#historias">📖 Historias de Usuario</a>
+  <a href="#checklist">✅ Checklist Validado</a>
+</nav>
+
+<main>
+
+  <header class="hero">
+    <p class="hero-tag">Fase de Inception · Documentación Técnica · G&amp;H Obras y Estructuras Metálicas S.A.S</p>
+    <h1>Sistema de Gestión G&amp;H</h1>
+    <p>Cotizaciones · Clientes · Contratos · Inventarios · Facturación · Auditoría</p>
+    <div class="hero-meta">
+      <span class="hero-chip">📅 24 de June de 2026</span>
+      <span class="hero-chip">🗄️ 27 tablas PostgreSQL</span>
+      <span class="hero-chip">📊 7 diagramas Mermaid</span>
+      <span class="hero-chip">📖 14 historias de usuario</span>
+      <span class="hero-chip">✅ 30 ítems de checklist</span>
+      <span class="hero-chip">👤 7 roles del sistema</span>
+    </div>
+  </header>
+
+  
+<section id="overview">
+  <div class="section-header">
+    <h2>Resumen del Proyecto</h2>
+    <p class="section-sub">G&H Obras y Estructuras Metálicas S.A.S · NIT: 901.218.896-8 · Bogotá · Sesión 2026-06-16</p>
+  </div>
+
+  <div class="metrics-grid">
+    <div class="metric-card"><span class="metric-icon">🏗️</span><span class="metric-value">~180</span><span class="metric-label">Clientes (migración)</span></div>
+    <div class="metric-card"><span class="metric-icon">🏢</span><span class="metric-value">50</span><span class="metric-label">Obras / cliente</span></div>
+    <div class="metric-card"><span class="metric-icon">🔧</span><span class="metric-value">3–4</span><span class="metric-label">Frentes / obra</span></div>
+    <div class="metric-card"><span class="metric-icon">📋</span><span class="metric-value">6–12</span><span class="metric-label">Cotiz. / dibujante/sem</span></div>
+    <div class="metric-card"><span class="metric-icon">👤</span><span class="metric-value">~50</span><span class="metric-label">Prospectos / mes</span></div>
+    <div class="metric-card"><span class="metric-icon">⏱️</span><span class="metric-value">4–6h</span><span class="metric-label">Modelamiento AutoCAD</span></div>
+  </div>
+
+  <div class="two-col">
+    <div class="info-card">
+      <h3>Módulos del Sistema</h3>
+      <ul class="module-list">
+        <li><span class="mod-badge">01</span> Cotizaciones — Dibujante + Comercial</li>
+        <li><span class="mod-badge">02</span> Registro y Aprobación de Clientes</li>
+        <li><span class="mod-badge">03</span> Contratos y Firma Electrónica</li>
+        <li><span class="mod-badge">04</span> Inventarios y Logística</li>
+        <li><span class="mod-badge">05</span> Facturación y Cartera</li>
+        <li><span class="mod-badge">06</span> Auditoría y Notificaciones</li>
+      </ul>
+    </div>
+    <div class="info-card">
+      <h3>Stack Tecnológico</h3>
+      <ul class="stack-list">
+        <li><span class="stack-tag fe">Frontend</span> React + TypeScript</li>
+        <li><span class="stack-tag be">Backend</span> FastAPI (Python)</li>
+        <li><span class="stack-tag db">Base de Datos</span> PostgreSQL</li>
+        <li><span class="stack-tag ex">Firma</span> DocuSign / Okc</li>
+        <li><span class="stack-tag ex">Storage</span> S3 Compatible</li>
+        <li><span class="stack-tag ex">Notif.</span> Email + WhatsApp API</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="info-card" style="margin-top:1rem">
+    <h3>Roles del Sistema (7)</h3>
+    <div class="roles-grid">
+      <div class="role-chip">💼 Comercial</div>
+      <div class="role-chip">✏️ Dibujante</div>
+      <div class="role-chip">📊 Contabilidad</div>
+      <div class="role-chip">⚖️ Jurídica</div>
+      <div class="role-chip">🏭 Almacén</div>
+      <div class="role-chip">🚛 Conductor</div>
+      <div class="role-chip admin">👑 Admin</div>
+    </div>
+  </div>
+
+  <div class="callout warn" style="margin-top:1.25rem">
+    <strong>📍 Ciudades:</strong> Bogotá (130 clientes) · Ibagué + Armenia (50 clientes) &nbsp;·&nbsp;
+    <strong>Documentos de referencia:</strong> FT-AC-001 v2.0 · CHECKLIST VALIDACION CLIENTES BOGOTA ·
+    Autorización Centrales de Riesgo (Ley 1581/2012 · Circular 09/2016)
+  </div>
+</section>
+
+  
+<section id="arquitectura">
+  <div class="section-header">
+    <h2>Arquitectura del Sistema</h2>
+    <p class="section-sub">React + FastAPI + PostgreSQL · Módulos · Integraciones externas: DocuSign / Okc · Email · WhatsApp</p>
+  </div>
+  <div class="diagram-block">
+    <div class="diagram-label">📊 02_arquitectura_sistema.mmd</div>
+    <div class="mermaid-wrap">
+      <pre class="mermaid">%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'primaryColor': '#1A365D',
+    'primaryTextColor': '#FFFFFF',
+    'primaryBorderColor': '#1A365D',
+    'lineColor': '#4A5568',
+    'secondaryColor': '#EDF2F7',
+    'clusterBkg': '#EDF2F7',
+    'clusterBorder': '#1A365D',
+    'fontFamily': 'Montserrat, sans-serif'
+  }
+}}%%
+
+graph TB
+    classDef frontend    fill:#1A365D,color:#FFFFFF,stroke:#0F2440,stroke-width:2px
+    classDef backend     fill:#2D3748,color:#FFFFFF,stroke:#1A202C,stroke-width:2px
+    classDef database    fill:#4A5568,color:#FFFFFF,stroke:#2D3748,stroke-width:2px
+    classDef external    fill:#FF9F1C,color:#1A365D,stroke:#E8910A,stroke-width:2px
+    classDef infra       fill:#38A169,color:#FFFFFF,stroke:#2F855A,stroke-width:2px
+    classDef user        fill:#EDF2F7,color:#1A365D,stroke:#CBD5E0,stroke-width:2px
+
+    %% ── USUARIOS
+    subgraph USERS["👤  USUARIOS DEL SISTEMA"]
+        U1["💼 Comercial"]:::user
+        U2["✏️ Dibujante"]:::user
+        U3["📊 Contabilidad"]:::user
+        U4["⚖️ Jurídica"]:::user
+        U5["🏭 Almacén"]:::user
+        U6["🔧 Admin"]:::user
+    end
+
+    %% ── FRONTEND
+    subgraph FE["⬛  FRONTEND — React + TypeScript"]
+        direction LR
+        FE1["🏠 Dashboard\nMétricas y KPIs"]:::frontend
+        FE2["👥 Módulo Clientes\nRegistro + Aprobación"]:::frontend
+        FE3["📋 Módulo Cotizaciones\nDibujante + Catálogos"]:::frontend
+        FE4["✍️ Módulo Contratos\nFirma Electrónica"]:::frontend
+        FE5["📦 Módulo Inventarios\nRemisiones + Agenda"]:::frontend
+        FE6["💳 Módulo Facturación\nFacturas + Cartera"]:::frontend
+        FE7["🔔 Notificaciones\nAlertas en tiempo real"]:::frontend
+        FE8["🔍 Auditoría\nRastreo global"]:::frontend
+    end
+
+    %% ── BACKEND
+    subgraph BE["⬛  BACKEND — FastAPI (Python)"]
+        direction LR
+        BE1["🔐 Auth Service\nJWT + RBAC"]:::backend
+        BE2["👥 Clientes API\nChecklist + Docs"]:::backend
+        BE3["📋 Cotizaciones API\nCálculo + PDF gen."]:::backend
+        BE4["📦 Inventarios API\nKardex + Agenda"]:::backend
+        BE5["💳 Facturación API\nm² + Retenciones"]:::backend
+        BE6["📊 Auditoría Service\nLog inmutable"]:::backend
+        BE7["🔔 Notif. Service\nTriggers + Alertas"]:::backend
+        BE8["📄 PDF Generator\nCotizaciones + Facturas"]:::backend
+    end
+
+    %% ── BASE DE DATOS
+    subgraph DB["⬛  BASE DE DATOS — PostgreSQL"]
+        DB1[("🗄️ clientes\nContactos · Aprobaciones\nDocumentos")]:::database
+        DB2[("🗄️ cotizaciones\nItems · Planos · Archivos")]:::database
+        DB3[("🗄️ inventario\nKardex · Remisiones\nAgenda · Conductores")]:::database
+        DB4[("🗄️ facturacion\nFacturas · Pagos · Cartera")]:::database
+        DB5[("🗄️ auditoria\nLog inmutable")]:::database
+        DB6[("🗄️ catalogo\nProductos · Precios")]:::database
+    end
+
+    %% ── ALMACENAMIENTO
+    STORAGE[("☁️ Object Storage\nS3 Compatible\nPDFs · Planos · Documentos")]:::infra
+
+    %% ── INTEGRACIONES EXTERNAS
+    subgraph EXT["⬛  INTEGRACIONES EXTERNAS"]
+        EXT1["✍️ DocuSign / Okc\nFirma Electrónica"]:::external
+        EXT2["📧 Email Service\nNotificaciones"]:::external
+        EXT3["📱 WhatsApp API\nAlertas móviles"]:::external
+    end
+
+    %% ── CONEXIONES USUARIO → FRONTEND
+    U1 & U2 & U3 & U4 & U5 & U6 -->|"HTTPS / Browser"| FE1
+
+    %% ── CONEXIONES FRONTEND ↔ BACKEND
+    FE --> BE1
+    FE2 <-->|"REST API"| BE2
+    FE3 <-->|"REST API"| BE3
+    FE5 <-->|"REST API"| BE4
+    FE6 <-->|"REST API"| BE5
+    FE7 <-->|"WebSocket"| BE7
+    FE8 <-->|"REST API"| BE6
+
+    %% ── CONEXIONES BACKEND ↔ DB
+    BE2 --> DB1
+    BE3 --> DB2
+    BE4 --> DB3
+    BE5 --> DB4
+    BE6 --> DB5
+    BE3 --> DB6
+
+    %% ── ARCHIVOS
+    BE3 & BE5 & BE2 -->|"Upload/Download"| STORAGE
+
+    %% ── INTEGRACIONES
+    BE3 -->|"PDF autogenerado"| BE8
+    BE4 -->|"Contrato firmado"| EXT1
+    BE7 -->|"Email trigger"| EXT2
+    BE7 -->|"Push móvil"| EXT3
+</pre>
+    </div>
+  </div>
+</section>
+
+  
+<section id="flujo-principal">
+  <div class="section-header">
+    <h2>Flujo Principal del Negocio</h2>
+    <p class="section-sub">Ciclo completo: Cotización → Aprobación multi-área → Contrato → Inventarios → Facturación → Cartera</p>
+  </div>
+  <div class="diagram-block">
+    <div class="diagram-label">📊 01_flujo_principal_gyh.mmd</div>
+    <div class="mermaid-wrap">
+      <pre class="mermaid">%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'primaryColor': '#1A365D',
+    'primaryTextColor': '#FFFFFF',
+    'primaryBorderColor': '#1A365D',
+    'lineColor': '#4A5568',
+    'secondaryColor': '#EDF2F7',
+    'tertiaryColor': '#FF9F1C',
+    'clusterBkg': '#EDF2F7',
+    'clusterBorder': '#CBD5E0',
+    'edgeLabelBackground': '#FFFFFF',
+    'fontFamily': 'Montserrat, sans-serif'
+  }
+}}%%
+
+flowchart TD
+    classDef azul       fill:#1A365D,color:#FFFFFF,stroke:#0F2440,stroke-width:2px
+    classDef naranja     fill:#FF9F1C,color:#1A365D,stroke:#E8910A,stroke-width:2px,font-weight:bold
+    classDef gris        fill:#4A5568,color:#FFFFFF,stroke:#2D3748,stroke-width:1px
+    classDef grisClaro   fill:#EDF2F7,color:#1A365D,stroke:#CBD5E0,stroke-width:1px
+    classDef exito       fill:#38A169,color:#FFFFFF,stroke:#2F855A,stroke-width:2px
+    classDef peligro     fill:#E53E3E,color:#FFFFFF,stroke:#C53030,stroke-width:2px
+    classDef inicio      fill:#FF9F1C,color:#1A365D,stroke:#E8910A,stroke-width:3px,font-weight:bold
+    classDef fin         fill:#38A169,color:#FFFFFF,stroke:#2F855A,stroke-width:3px
+
+    %% ── INICIO
+    INICIO(["🏗️ Cliente Prospecto"]):::inicio
+
+    %% ── MÓDULO 1: COTIZACIÓN
+    subgraph PREVENTA["⬛  ÁREA COMERCIAL — PREVENTA"]
+        direction TB
+        COT["📋 Cotización\n― Catálogos de precios\n― Dibujante + AutoCAD"]:::azul
+        TIPO{"¿Tipo de\nnegocio?"}:::naranja
+        VENTA["📦 Venta\nProductos catálogo"]:::grisClaro
+        ALQUILER["🏗️ Alquiler\nMaquinaria temporal"]:::grisClaro
+        TRANSP["🚛 Transporte\nFlete ida y vuelta"]:::grisClaro
+        REPOS["🔄 Reposición\nCobro por pérdida"]:::grisClaro
+        PDF["📄 PDF Cotización\nValores comerciales agregados"]:::azul
+    end
+
+    %% ── MÓDULO 2: APROBACIÓN
+    subgraph APROBACION["⬛  APROBACIÓN MULTI-ÁREA (3 conceptos obligatorios)"]
+        direction TB
+        REVISION["👥 Revisión Simultánea"]:::gris
+        CONTA["📊 Contabilidad\nViabilidad financiera\ny de crédito"]:::grisClaro
+        JURI["⚖️ Jurídica\nValidación documental\nListas LAFT"]:::grisClaro
+        COMER["💼 Comercial\nOportunidad\nde negocio"]:::grisClaro
+        APROBQ{"¿Todos\nFavorable?"}:::naranja
+        RECHAZA["❌ Notificar Rechazo\nal Prospecto"]:::peligro
+        REGISTRO["✅ Registro de Cliente\nChecklist FT-AC-001\n+ Documentos"]:::exito
+    end
+
+    %% ── MÓDULO 3: CONTRATOS
+    subgraph CONTRATO["⬛  ORDEN DE COMPRA & CONTRATO"]
+        direction TB
+        ORDEN["📝 Orden de Compra\nGenerada"]:::azul
+        FIRMA["✍️ Firma Electrónica\nDocuSign / Okc"]:::azul
+        FIRMAQ{"¿Firmado?"}:::naranja
+        NOTIFIRMA["⏰ Notificar\nPendiente de Firma"]:::grisClaro
+        ACTIVAR["🚀 Activar Operaciones"]:::exito
+    end
+
+    %% ── MÓDULO 4: INVENTARIOS
+    subgraph INVENTARIOS["⬛  INVENTARIOS Y LOGÍSTICA"]
+        direction TB
+        SALIDA["📤 Remisión de Salida\n(Kardex actualizado)"]:::azul
+        AGENDA["🗓️ Agenda Transporte\nProgramar conductor\n+ horario + dirección"]:::grisClaro
+        ESALQUILER{"¿Es alquiler?"}:::naranja
+        FACDIR["➡️ Pasar a Facturación"]:::grisClaro
+        PERIODO["⏳ Periodo de Alquiler\nen Obra"]:::grisClaro
+        DEVQ{"¿Equipos\ndevueltos?"}:::naranja
+        ENTRADA["📥 Remisión de Entrada\n(Kardex — días calculados)"]:::azul
+        REPOS2["🔄 Reposición\nCobro comercial\npor faltante"]:::peligro
+    end
+
+    %% ── MÓDULO 5: FACTURACIÓN
+    subgraph FACTURACION["⬛  FACTURACIÓN Y CARTERA"]
+        direction TB
+        FACTURA["📃 Generar Factura\n― Cálculo m²\n― Días alquiler\n― Retenciones (Rte. Fuente / ICA)"]:::azul
+        VALIDA["✅ Validación Contable\ny Cruce"]:::grisClaro
+        PAGOQ{"¿Pago\nrecibido?"}:::naranja
+        EXITO(["🏆 Cobro Exitoso\nCierre del ciclo"]):::fin
+        CARTERA["📋 Gestión de Cartera\nSeguimiento y cobro\njurídico"]:::peligro
+    end
+
+    %% ── CONEXIONES PRINCIPALES
+    INICIO --> COT
+    COT --> TIPO
+    TIPO -->|"Venta"| VENTA
+    TIPO -->|"Alquiler"| ALQUILER
+    TIPO -->|"Transporte"| TRANSP
+    TIPO -->|"Reposición"| REPOS
+    VENTA & ALQUILER & TRANSP & REPOS --> PDF
+
+    PDF --> REVISION
+    REVISION --> CONTA & JURI & COMER
+    CONTA & JURI & COMER --> APROBQ
+    APROBQ -->|"No"| RECHAZA
+    APROBQ -->|"Sí"| REGISTRO
+
+    REGISTRO --> ORDEN
+    ORDEN --> FIRMA
+    FIRMA --> FIRMAQ
+    FIRMAQ -->|"No"| NOTIFIRMA
+    NOTIFIRMA --> FIRMA
+    FIRMAQ -->|"Sí"| ACTIVAR
+
+    ACTIVAR --> SALIDA
+    SALIDA --> AGENDA
+    AGENDA --> ESALQUILER
+    ESALQUILER -->|"No — Venta"| FACDIR
+    ESALQUILER -->|"Sí"| PERIODO
+    PERIODO --> DEVQ
+    DEVQ -->|"Sí"| ENTRADA
+    DEVQ -->|"No / Faltante"| REPOS2
+    ENTRADA --> FACDIR
+    REPOS2 --> FACDIR
+
+    FACDIR --> FACTURA
+    FACTURA --> VALIDA
+    VALIDA --> PAGOQ
+    PAGOQ -->|"Sí"| EXITO
+    PAGOQ -->|"No / Mora"| CARTERA
+</pre>
+    </div>
+  </div>
+</section>
+
+  
+<section id="cotizacion">
+  <div class="section-header">
+    <h2>Módulo de Cotizaciones</h2>
+    <p class="section-sub">Dibujante (AutoCAD 4-6h) → Importar Excel → Catálogo → Comercial → PDF → Orden de Compra</p>
+  </div>
+  <div class="diagram-block">
+    <div class="diagram-label">📊 03_modulo_cotizacion.mmd</div>
+    <div class="mermaid-wrap">
+      <pre class="mermaid">%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'primaryColor': '#1A365D',
+    'primaryTextColor': '#FFFFFF',
+    'primaryBorderColor': '#1A365D',
+    'lineColor': '#4A5568',
+    'secondaryColor': '#EDF2F7',
+    'clusterBkg': '#EDF2F7',
+    'clusterBorder': '#CBD5E0',
+    'fontFamily': 'Montserrat, sans-serif'
+  }
+}}%%
+
+flowchart TD
+    classDef azul       fill:#1A365D,color:#FFFFFF,stroke:#0F2440,stroke-width:2px
+    classDef naranja     fill:#FF9F1C,color:#1A365D,stroke:#E8910A,stroke-width:2px,font-weight:bold
+    classDef gris        fill:#4A5568,color:#FFFFFF,stroke:#2D3748,stroke-width:1px
+    classDef grisClaro   fill:#EDF2F7,color:#1A365D,stroke:#CBD5E0,stroke-width:1px
+    classDef exito       fill:#38A169,color:#FFFFFF,stroke:#2F855A,stroke-width:2px
+    classDef peligro     fill:#E53E3E,color:#FFFFFF,stroke:#C53030,stroke-width:2px
+
+    INICIO(["🏗️ Solicitud de Cotización"]):::naranja
+
+    subgraph DIBUJANTE["✏️  ROL: DIBUJANTE (4-6 horas proceso actual)"]
+        direction TB
+        PLANOS["📐 Recibir Planos del Cliente\n(DWG / DXF / PDF)"]:::azul
+        AUTOCAD["🖥️ Modelamiento en AutoCAD\n― Análisis de planos\n― Definición de materiales\n― Medición de áreas (m²)"]:::azul
+        EXCEL["📊 Exportar a Excel\nDesglose de materiales\npor frente de obra"]:::grisClaro
+        CATALOG["📚 Consulta Catálogo Oficial\nAsignación de precios\npor producto"]:::grisClaro
+        COTINI["📋 Cotización Inicial\nGenerada por el Dibujante"]:::azul
+        HORAS["⏱️ Registro de horas\nde modelamiento"]:::grisClaro
+    end
+
+    subgraph COMERCIAL["💼  ROL: COMERCIAL"]
+        direction TB
+        REVCOM["👀 Revisión de la Cotización\nTécnica del Dibujante"]:::azul
+        TIPONEQ{"¿Tipos de negocio\nincluidos?"}:::naranja
+        TV["✅ Venta"]:::grisClaro
+        TA["✅ Alquiler"]:::grisClaro
+        TT["✅ Transporte"]:::grisClaro
+        TR["✅ Reposición"]:::grisClaro
+        ACCESORIOS["➕ Agregar Accesorios\ny servicios adicionales"]:::grisClaro
+        DESCUENTO["💲 Aplicar Descuentos\ny condiciones comerciales"]:::grisClaro
+        VALCOM["💰 Agregar Valores\nComerciales + IVA"]:::azul
+    end
+
+    subgraph CONTABILIDAD_REV["📊  ROL: CONTABILIDAD"]
+        direction TB
+        RETENC["🧾 Validar Retenciones\nRte. Fuente · Rte. ICA · IVA"]:::grisClaro
+        M2["📐 Validar Cálculo m²\npara productos aplicables"]:::grisClaro
+    end
+
+    subgraph JURIDICA_REV["⚖️  ROL: JURÍDICA"]
+        direction TB
+        COND["📜 Validar Cláusulas\nde arrendamiento"]:::grisClaro
+    end
+
+    subgraph SALIDA["📄  ENTREGA AL CLIENTE"]
+        direction TB
+        PDF["📄 Generar PDF Final\nCotización oficial"]:::azul
+        ENVIO["📧 Enviar al Cliente\nvía email / WhatsApp"]:::exito
+        RESPQ{"¿Cliente\naprueba?"}:::naranja
+        ORDEN["📝 Generar Orden\nde Compra"]:::exito
+        RECHAZA["❌ Cotización\nRechazada"]:::peligro
+        REVISION["🔄 Revisión y\nAjuste"]:::grisClaro
+    end
+
+    %% ── FLUJO
+    INICIO --> PLANOS
+    PLANOS --> AUTOCAD
+    AUTOCAD --> EXCEL
+    EXCEL --> CATALOG
+    CATALOG --> COTINI
+    COTINI --> HORAS
+    HORAS --> REVCOM
+
+    REVCOM --> TIPONEQ
+    TIPONEQ -->|"incluye venta"| TV
+    TIPONEQ -->|"incluye alquiler"| TA
+    TIPONEQ -->|"incluye transporte"| TT
+    TIPONEQ -->|"incluye reposición"| TR
+    TV & TA & TT & TR --> ACCESORIOS
+    ACCESORIOS --> DESCUENTO
+    DESCUENTO --> VALCOM
+
+    VALCOM --> RETENC
+    RETENC --> M2
+    M2 --> COND
+    COND --> PDF
+
+    PDF --> ENVIO
+    ENVIO --> RESPQ
+    RESPQ -->|"Aprueba"| ORDEN
+    RESPQ -->|"Observaciones"| REVISION
+    RESPQ -->|"Rechaza"| RECHAZA
+    REVISION --> REVCOM
+</pre>
+    </div>
+  </div>
+</section>
+
+  
+<section id="registro-cliente">
+  <div class="section-header">
+    <h2>Registro y Aprobación de Clientes</h2>
+    <p class="section-sub">Formulario FT-AC-001 v2.0 · 9 secciones · Checklist documental · Concepto obligatorio 3 áreas</p>
+  </div>
+  <div class="diagram-block">
+    <div class="diagram-label">📊 04_registro_aprobacion_cliente.mmd</div>
+    <div class="mermaid-wrap">
+      <pre class="mermaid">%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'primaryColor': '#1A365D',
+    'primaryTextColor': '#FFFFFF',
+    'primaryBorderColor': '#1A365D',
+    'lineColor': '#4A5568',
+    'secondaryColor': '#EDF2F7',
+    'clusterBkg': '#EDF2F7',
+    'clusterBorder': '#CBD5E0',
+    'fontFamily': 'Montserrat, sans-serif'
+  }
+}}%%
+
+flowchart TD
+    classDef azul       fill:#1A365D,color:#FFFFFF,stroke:#0F2440,stroke-width:2px
+    classDef naranja     fill:#FF9F1C,color:#1A365D,stroke:#E8910A,stroke-width:2px,font-weight:bold
+    classDef grisClaro   fill:#EDF2F7,color:#1A365D,stroke:#CBD5E0,stroke-width:1px
+    classDef exito       fill:#38A169,color:#FFFFFF,stroke:#2F855A,stroke-width:2px
+    classDef peligro     fill:#E53E3E,color:#FFFFFF,stroke:#C53030,stroke-width:2px
+    classDef doc         fill:#2D3748,color:#FFFFFF,stroke:#1A202C,stroke-width:1px
+
+    INICIO(["📋 Cliente interesado\nen comprar / alquilar"]):::naranja
+
+    %% ── FORMULARIO ÚNICO
+    subgraph FORMULARIO["📝  FORMULARIO FT-AC-001 v2.0"]
+        direction TB
+        F1["I. Información General\nRazón social · NIT · Ciudad · Dirección"]:::doc
+        F2["II. Información de Contacto\nEncargado pagos · Recepción facturas"]:::doc
+        F3["III. Referencias Bancarias\nBanco · Sucursal · Contacto (x2)"]:::doc
+        F4["IV. Referencias Comerciales\nNombre · Tel · Cel (x2)"]:::doc
+        F5["V. Información Tributaria\nCódigo ICA · CIIU · Rte. Fuente · IVA"]:::doc
+        F6["VI. Información Contable\nFechas y horarios de radicación facturas"]:::doc
+        F7["VII. Socios y Accionistas\nNombre · ID · PEP >5% capital"]:::doc
+        F8["VIII. Información de Obra\nNombre · Dirección · Encargado"]:::doc
+        F9["IX. Autorización\nCentrales de Riesgo (Ley 1581/2012)"]:::doc
+    end
+
+    %% ── DOCUMENTOS ADJUNTOS
+    subgraph DOCS["📂  DOCUMENTOS ADJUNTOS (Checklist)"]
+        direction LR
+        D1["📄 RUT"]:::grisClaro
+        D2["📄 Cámara de Comercio"]:::grisClaro
+        D3["📄 Cédula Rep. Legal"]:::grisClaro
+        D4["📄 Estados Financieros"]:::grisClaro
+        D5["📄 Autorización\nCentrales de Riesgo"]:::grisClaro
+        D6["📄 Carta\nPresentación"]:::grisClaro
+    end
+
+    %% ── REVISIÓN SIMULTÁNEA
+    subgraph APROBACION["✅  APROBACIÓN SIMULTÁNEA — 3 Áreas"]
+        direction LR
+
+        subgraph CONTA["📊 CONTABILIDAD"]
+            CA1["Validación\nfinanciera\ny de crédito"]:::grisClaro
+            CA2{"Favorable /\nNo Favorable"}:::naranja
+            CA3["💬 Comentario\nobligatorio"]:::grisClaro
+        end
+
+        subgraph JURI["⚖️ JURÍDICA"]
+            JA1["Validación\ndocumental\nListas LAFT"]:::grisClaro
+            JA2{"Favorable /\nNo Favorable"}:::naranja
+            JA3["💬 Comentario\nobligatorio"]:::grisClaro
+        end
+
+        subgraph COMERC["💼 COMERCIAL"]
+            CO1["Evaluación\nde la oportunidad\nde negocio"]:::grisClaro
+            CO2{"Favorable /\nNo Favorable"}:::naranja
+            CO3["💬 Comentario\nobligatorio"]:::grisClaro
+        end
+    end
+
+    CONSOLIDAR{"¿Los 3 conceptos\nson Favorables?"}:::naranja
+
+    APROBADO["✅ Cliente APROBADO\nEstado → Activo\nNotificación automática"]:::exito
+    RECHAZADO["❌ Cliente RECHAZADO\nNotificación con motivos\nal equipo comercial"]:::peligro
+
+    CONTRATO["📝 Siguiente Paso:\nOrden de Compra\n+ Firma Contrato"]:::azul
+
+    NOTIF["🔔 Notificación Automática\na todas las áreas\npara agilizar aprobación"]:::grisClaro
+
+    %% ── FLUJO
+    INICIO --> F1
+    F1 --> F2 --> F3 --> F4 --> F5 --> F6 --> F7 --> F8 --> F9
+    F9 --> D1 & D2 & D3 & D4 & D5 & D6
+
+    D1 & D2 & D3 & D4 & D5 & D6 --> CA1 & JA1 & CO1
+    CA1 --> CA2 --> CA3
+    JA1 --> JA2 --> JA3
+    CO1 --> CO2 --> CO3
+
+    CA3 & JA3 & CO3 --> CONSOLIDAR
+    CONSOLIDAR -->|"Sí — todos favorables"| APROBADO
+    CONSOLIDAR -->|"No — al menos uno no favorable"| RECHAZADO
+    APROBADO --> CONTRATO
+    CONSOLIDAR -.->|"Pendientes sin resolver"| NOTIF
+    NOTIF -.->|"Empujar a las áreas"| CA1 & JA1 & CO1
+</pre>
+    </div>
+  </div>
+</section>
+
+  
+<section id="inventarios">
+  <div class="section-header">
+    <h2>Inventarios y Logística</h2>
+    <p class="section-sub">Kardex · Remisiones de salida/entrada · Agenda de transporte · Conductores · Devoluciones · Reposiciones</p>
+  </div>
+  <div class="diagram-block">
+    <div class="diagram-label">📊 05_modulo_inventarios_logistica.mmd</div>
+    <div class="mermaid-wrap">
+      <pre class="mermaid">%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'primaryColor': '#1A365D',
+    'primaryTextColor': '#FFFFFF',
+    'primaryBorderColor': '#1A365D',
+    'lineColor': '#4A5568',
+    'secondaryColor': '#EDF2F7',
+    'clusterBkg': '#EDF2F7',
+    'clusterBorder': '#CBD5E0',
+    'fontFamily': 'Montserrat, sans-serif'
+  }
+}}%%
+
+flowchart TD
+    classDef azul       fill:#1A365D,color:#FFFFFF,stroke:#0F2440,stroke-width:2px
+    classDef naranja     fill:#FF9F1C,color:#1A365D,stroke:#E8910A,stroke-width:2px,font-weight:bold
+    classDef grisClaro   fill:#EDF2F7,color:#1A365D,stroke:#CBD5E0,stroke-width:1px
+    classDef exito       fill:#38A169,color:#FFFFFF,stroke:#2F855A,stroke-width:2px
+    classDef peligro     fill:#E53E3E,color:#FFFFFF,stroke:#C53030,stroke-width:2px
+
+    INICIO(["📝 Contrato firmado\n→ Operaciones Activas"]):::naranja
+
+    %% ── SALIDA
+    subgraph ALMACEN["🏭  JEFE DE ALMACÉN — DESPACHO"]
+        direction TB
+        REMSAL["📤 Generar Remisión de Salida\n― Productos por frente de obra\n― Cantidades e items del contrato"]:::azul
+        KARDEX_OUT["🗄️ Kardex actualizado\n(Stock disminuye)"]:::grisClaro
+        AGENDA["🗓️ Programar Agenda de Transporte\n― Seleccionar conductor\n― Asignar vehículo + placa\n― Hora de salida y llegada\n― Dirección de la obra"]:::azul
+        NOTIF_COND["🔔 Notificar al Conductor\nDetalle del despacho"]:::grisClaro
+        DESPACHO["🚛 Equipo en Tránsito\nhacia la Obra"]:::azul
+        ENTREGA["📦 Confirmación de Entrega\nen el Frente de Obra"]:::exito
+    end
+
+    %% ── PERÍODO EN OBRA
+    subgraph OBRA["🏗️  PERIODO EN OBRA (solo alquiler)"]
+        direction TB
+        ALQUILER_VIGENTE["⏳ Alquiler Vigente\nContador de días iniciado\ndesde fecha de remisión salida"]:::grisClaro
+        DEVQ{"¿Se programa\ndevolución?"}:::naranja
+        NOTIF_DEV["🔔 Alerta Próxima Recogida\nNotificación automática\nal jefe de almacén"]:::grisClaro
+        AGENDA_REC["🗓️ Programar Recogida\n― Conductor\n― Horario\n― Dirección del frente"]:::azul
+    end
+
+    %% ── DEVOLUCIÓN / REPOSICIÓN
+    subgraph RETORNO["📥  RETORNO DE EQUIPOS"]
+        direction TB
+        RECOGIDA["🚛 Recogida en Obra\nTransporte de vuelta"]:::azul
+        INSPECCION["🔍 Inspección de Equipos\nen Bodega"]:::grisClaro
+        ITEMQ{"Estado de\ncada equipo"}:::naranja
+        ITEM_OK["✅ Buen Estado\nKardex restaurado"]:::exito
+        ITEM_DAÑ["🔧 Dañado\nRegistrar novedad\n+ presupuesto reparación"]:::peligro
+        ITEM_FALT["❌ Faltante\nGenerar Reposición\n(cobro al cliente)"]:::peligro
+        KARDEX_IN["🗄️ Kardex actualizado\n(Stock aumenta)"]:::grisClaro
+        DIAS["📅 Calcular días de alquiler\nfecha salida → fecha entrada"]:::azul
+    end
+
+    %% ── FACTURACIÓN
+    FAC["💳 Pasar a Facturación\ncon días calculados\n+ reposiciones si aplica"]:::azul
+
+    %% ── FLUJO
+    INICIO --> REMSAL
+    REMSAL --> KARDEX_OUT
+    KARDEX_OUT --> AGENDA
+    AGENDA --> NOTIF_COND
+    NOTIF_COND --> DESPACHO
+    DESPACHO --> ENTREGA
+
+    ENTREGA --> ALQUILER_VIGENTE
+    ALQUILER_VIGENTE --> DEVQ
+    DEVQ -->|"Sí — programar retorno"| NOTIF_DEV
+    DEVQ -->|"Sí — ya en fecha"| AGENDA_REC
+    NOTIF_DEV --> AGENDA_REC
+    AGENDA_REC --> RECOGIDA
+
+    RECOGIDA --> INSPECCION
+    INSPECCION --> ITEMQ
+    ITEMQ -->|"OK"| ITEM_OK
+    ITEMQ -->|"Daño"| ITEM_DAÑ
+    ITEMQ -->|"No retornó"| ITEM_FALT
+    ITEM_OK --> KARDEX_IN
+    ITEM_DAÑ --> KARDEX_IN
+    ITEM_FALT --> FAC
+    KARDEX_IN --> DIAS
+    DIAS --> FAC
+
+    ENTREGA -->|"Si es Venta (no alquiler)"| FAC
+</pre>
+    </div>
+  </div>
+</section>
+
+  
+<section id="roles">
+  <div class="section-header">
+    <h2>Roles y Permisos (RBAC)</h2>
+    <p class="section-sub">7 roles · Admin · Comercial · Dibujante · Contabilidad · Jurídica · Almacén · Conductor</p>
+  </div>
+  <div class="diagram-block">
+    <div class="diagram-label">📊 06_roles_y_permisos.mmd</div>
+    <div class="mermaid-wrap">
+      <pre class="mermaid">%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'primaryColor': '#1A365D',
+    'primaryTextColor': '#FFFFFF',
+    'primaryBorderColor': '#1A365D',
+    'lineColor': '#4A5568',
+    'secondaryColor': '#EDF2F7',
+    'clusterBkg': '#EDF2F7',
+    'clusterBorder': '#1A365D',
+    'fontFamily': 'Montserrat, sans-serif'
+  }
+}}%%
+
+graph LR
+    classDef rol        fill:#1A365D,color:#FFFFFF,stroke:#0F2440,stroke-width:3px,font-weight:bold
+    classDef modulo     fill:#4A5568,color:#FFFFFF,stroke:#2D3748,stroke-width:2px
+    classDef accion     fill:#EDF2F7,color:#1A365D,stroke:#CBD5E0,stroke-width:1px
+    classDef critico    fill:#FF9F1C,color:#1A365D,stroke:#E8910A,stroke-width:2px
+    classDef admin      fill:#38A169,color:#FFFFFF,stroke:#2F855A,stroke-width:3px
+
+    %% ── ROLES
+    R_ADMIN["👑 ADMIN"]:::admin
+    R_COM["💼 COMERCIAL"]:::rol
+    R_DIB["✏️ DIBUJANTE"]:::rol
+    R_CONT["📊 CONTABILIDAD"]:::rol
+    R_JUR["⚖️ JURÍDICA"]:::rol
+    R_ALM["🏭 ALMACÉN"]:::rol
+    R_COND["🚛 CONDUCTOR"]:::rol
+
+    %% ── MÓDULOS Y ACCIONES
+
+    subgraph MOD_CLI["👥 Módulo Clientes"]
+        MC1["Ver prospectos"]:::accion
+        MC2["Crear / Editar cliente"]:::accion
+        MC3["Subir documentos"]:::accion
+        MC4["Dar concepto favorable / no favorable"]:::critico
+        MC5["Ver todos los conceptos"]:::accion
+        MC6["Aprobar cliente (solo si los 3 dan favorable)"]:::critico
+    end
+
+    subgraph MOD_COT["📋 Módulo Cotizaciones"]
+        CQ1["Ver cotizaciones asignadas"]:::accion
+        CQ2["Cargar planos y archivos"]:::accion
+        CQ3["Crear cotización técnica (materiales)"]:::accion
+        CQ4["Agregar valores comerciales"]:::accion
+        CQ5["Generar PDF y enviar al cliente"]:::accion
+        CQ6["Ver todas las cotizaciones"]:::accion
+    end
+
+    subgraph MOD_CONT["📝 Módulo Contratos"]
+        CT1["Crear orden de compra"]:::accion
+        CT2["Enviar contrato a firma"]:::accion
+        CT3["Confirmar firma del contrato"]:::accion
+    end
+
+    subgraph MOD_INV["📦 Módulo Inventarios"]
+        IV1["Ver stock y Kardex"]:::accion
+        IV2["Generar remisión de salida"]:::accion
+        IV3["Programar agenda de transporte"]:::accion
+        IV4["Asignar conductor y vehículo"]:::accion
+        IV5["Confirmar entrega / recepción"]:::accion
+        IV6["Ver agenda asignada"]:::accion
+    end
+
+    subgraph MOD_FAC["💳 Módulo Facturación"]
+        FA1["Generar factura"]:::accion
+        FA2["Registrar pagos"]:::accion
+        FA3["Gestionar cartera"]:::accion
+        FA4["Ver facturas propias"]:::accion
+    end
+
+    subgraph MOD_AUD["🔍 Auditoría y Config"]
+        AU1["Ver log completo de auditoría"]:::critico
+        AU2["Gestionar usuarios y roles"]:::critico
+        AU3["Configurar catálogo de productos"]:::critico
+    end
+
+    %% ── PERMISOS POR ROL
+    R_ADMIN --- MC1 & MC2 & MC4 & MC5 & MC6
+    R_ADMIN --- CQ5 & CQ6
+    R_ADMIN --- CT1 & CT2 & CT3
+    R_ADMIN --- IV1 & IV2 & IV3 & IV4
+    R_ADMIN --- FA1 & FA2 & FA3
+    R_ADMIN --- AU1 & AU2 & AU3
+
+    R_COM --- MC1 & MC2 & MC3 & MC5
+    R_COM --- CQ4 & CQ5 & CQ6
+    R_COM --- CT1 & CT2
+
+    R_DIB --- CQ1 & CQ2 & CQ3
+    R_DIB --- MC1
+
+    R_CONT --- MC1 & MC4 & MC5
+    R_CONT --- FA1 & FA2 & FA3 & FA4
+    R_CONT --- AU1
+
+    R_JUR --- MC1 & MC4 & MC5
+    R_JUR --- CT3
+    R_JUR --- FA3 & FA4
+
+    R_ALM --- IV1 & IV2 & IV3 & IV4 & IV5
+    R_ALM --- MC1
+
+    R_COND --- IV6 & IV5
+</pre>
+    </div>
+  </div>
+</section>
+
+  
+<section id="sitemap">
+  <div class="section-header">
+    <h2>Sitemap de la Aplicación</h2>
+    <p class="section-sub">Mapa completo de rutas · 8 módulos · Autenticación · Dashboard · Config</p>
+  </div>
+  <div class="diagram-block">
+    <div class="diagram-label">📊 sitemap_gyh_app.mmd</div>
+    <div class="mermaid-wrap">
+      <pre class="mermaid">%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'primaryColor': '#1A365D',
+    'primaryTextColor': '#FFFFFF',
+    'primaryBorderColor': '#1A365D',
+    'lineColor': '#4A5568',
+    'secondaryColor': '#EDF2F7',
+    'clusterBkg': '#EDF2F7',
+    'clusterBorder': '#1A365D',
+    'fontFamily': 'Montserrat, sans-serif'
+  }
+}}%%
+
+flowchart TD
+    classDef root        fill:#1A365D,color:#FFFFFF,stroke:#0F2440,stroke-width:3px,font-weight:bold
+    classDef modulo      fill:#1A365D,color:#FFFFFF,stroke:#2C5282,stroke-width:2px,font-weight:bold
+    classDef submod      fill:#2D3748,color:#FFFFFF,stroke:#1A202C,stroke-width:1px
+    classDef pagina      fill:#EDF2F7,color:#1A365D,stroke:#CBD5E0,stroke-width:1px
+    classDef cta         fill:#FF9F1C,color:#1A365D,stroke:#E8910A,stroke-width:2px,font-weight:bold
+    classDef alerta      fill:#E53E3E,color:#FFFFFF,stroke:#C53030,stroke-width:1px
+    classDef exito       fill:#38A169,color:#FFFFFF,stroke:#2F855A,stroke-width:1px
+    classDef auth        fill:#4A5568,color:#FFFFFF,stroke:#2D3748,stroke-width:2px
+
+    %% ── RAÍZ
+    ROOT(["🏗️ G&H Sistema\ngyh.com.co"]):::root
+
+    %% ── AUTH
+    AUTH["🔐 Autenticación"]:::auth
+    LOGIN["Iniciar Sesión\n/login"]:::pagina
+    FORGOT["Recuperar Contraseña\n/forgot-password"]:::pagina
+    AUTH --> LOGIN & FORGOT
+
+    %% ── DASHBOARD
+    DASH["🏠 Dashboard\n/dashboard"]:::modulo
+    DASH_KPI["📊 KPIs y Métricas\nCotizaciones · Clientes · Ingresos"]:::pagina
+    DASH_ALERTS["🔔 Alertas Pendientes\nAprobaciones · Recogidas · Vencimientos"]:::pagina
+    DASH_ACT["📋 Actividad Reciente\nLog de acciones del sistema"]:::pagina
+    DASH --> DASH_KPI & DASH_ALERTS & DASH_ACT
+
+    %% ── CLIENTES
+    CLI["👥 Clientes\n/clientes"]:::modulo
+    CLI_LIST["📋 Lista de Clientes\n/clientes"]:::pagina
+    CLI_NEW["➕ Nuevo Cliente\n/clientes/nuevo"]:::cta
+    CLI_DET["👤 Detalle Cliente\n/clientes/:id"]:::pagina
+    CLI_FORM["📝 Formulario FT-AC-001\n/clientes/:id/registro"]:::pagina
+    CLI_DOCS["📂 Documentos\n/clientes/:id/documentos"]:::pagina
+    CLI_APROB["✅ Aprobación Multi-Área\n/clientes/:id/aprobacion"]:::cta
+    CLI_OBRAS["🏗️ Obras y Frentes\n/clientes/:id/obras"]:::pagina
+    CLI_HIST["🕐 Historial\n/clientes/:id/historial"]:::pagina
+    CLI --> CLI_LIST & CLI_NEW
+    CLI_LIST --> CLI_DET
+    CLI_DET --> CLI_FORM & CLI_DOCS & CLI_APROB & CLI_OBRAS & CLI_HIST
+
+    %% ── COTIZACIONES
+    COT["📋 Cotizaciones\n/cotizaciones"]:::modulo
+    COT_LIST["📋 Lista de Cotizaciones\n/cotizaciones"]:::pagina
+    COT_NEW["➕ Nueva Cotización\n/cotizaciones/nueva"]:::cta
+    COT_DET["📄 Detalle Cotización\n/cotizaciones/:id"]:::pagina
+    COT_PLAN["📐 Carga de Planos\n/cotizaciones/:id/planos"]:::pagina
+    COT_MAT["📊 Desglose Materiales\n/cotizaciones/:id/materiales\n(Import desde Excel)"]:::pagina
+    COT_ITEMS["🛒 Ítems y Precios\n/cotizaciones/:id/items\nVenta · Alquiler · Transp. · Repos."]:::pagina
+    COT_PDF["📄 Generar PDF\n/cotizaciones/:id/pdf"]:::cta
+    COT_CATALOG["📚 Catálogo de Precios\n/catalogo"]:::pagina
+    COT --> COT_LIST & COT_NEW & COT_CATALOG
+    COT_LIST --> COT_DET
+    COT_DET --> COT_PLAN & COT_MAT & COT_ITEMS & COT_PDF
+
+    %% ── CONTRATOS
+    CONT["📝 Contratos\n/contratos"]:::modulo
+    CONT_LIST["📋 Lista de Contratos\n/contratos"]:::pagina
+    CONT_OC["📝 Orden de Compra\n/contratos/:id/orden-compra"]:::pagina
+    CONT_FIRMA["✍️ Firma Electrónica\n/contratos/:id/firma\nDocuSign / Okc"]:::cta
+    CONT_EST["📊 Estado del Contrato\n/contratos/:id/estado"]:::pagina
+    CONT --> CONT_LIST
+    CONT_LIST --> CONT_OC & CONT_FIRMA & CONT_EST
+
+    %% ── INVENTARIOS
+    INV["📦 Inventarios\n/inventarios"]:::modulo
+    INV_STOCK["🗄️ Stock / Kardex\n/inventarios/stock"]:::pagina
+    INV_REM["📤 Remisiones\n/inventarios/remisiones"]:::pagina
+    INV_REM_NEW["➕ Nueva Remisión\n/inventarios/remisiones/nueva"]:::cta
+    INV_AGENDA["🗓️ Agenda de Transporte\n/inventarios/agenda"]:::cta
+    INV_COND["🚛 Conductores\n/inventarios/conductores"]:::pagina
+    INV_DEV["📥 Devoluciones\n/inventarios/devoluciones"]:::pagina
+    INV_ALERTA["🔔 Próximas Recogidas\n/inventarios/alertas"]:::alerta
+    INV --> INV_STOCK & INV_REM & INV_AGENDA & INV_COND & INV_DEV & INV_ALERTA
+    INV_REM --> INV_REM_NEW
+
+    %% ── FACTURACIÓN
+    FAC["💳 Facturación\n/facturacion"]:::modulo
+    FAC_LIST["📋 Facturas\n/facturacion/facturas"]:::pagina
+    FAC_NEW["➕ Nueva Factura\n/facturacion/facturas/nueva"]:::cta
+    FAC_CART["⚠️ Cartera\n/facturacion/cartera"]:::alerta
+    FAC_PAG["💰 Registrar Pago\n/facturacion/:id/pago"]:::pagina
+    FAC_RET["🧾 Retenciones\n/facturacion/retenciones\nRte. Fuente · ICA · IVA"]:::pagina
+    FAC --> FAC_LIST & FAC_CART & FAC_RET
+    FAC_LIST --> FAC_NEW & FAC_PAG
+
+    %% ── AUDITORÍA
+    AUD["🔍 Auditoría\n/auditoria"]:::modulo
+    AUD_LOG["📋 Log Global\n/auditoria/log\nQuién · Cuándo · Qué"]:::pagina
+    AUD_USR["👥 Por Usuario\n/auditoria/usuario/:id"]:::pagina
+    AUD_MOD["📦 Por Módulo\n/auditoria/modulo/:name"]:::pagina
+    AUD --> AUD_LOG & AUD_USR & AUD_MOD
+
+    %% ── CONFIGURACIÓN
+    CONF["⚙️ Configuración\n/configuracion"]:::modulo
+    CONF_USR["👤 Usuarios y Roles\n/configuracion/usuarios"]:::pagina
+    CONF_CAT["📚 Catálogo Productos\n/configuracion/catalogo"]:::pagina
+    CONF_NOTIF["🔔 Notificaciones\n/configuracion/notificaciones"]:::pagina
+    CONF_FIRMA["✍️ Integración Firma\nDocuSign / Okc API Keys"]:::pagina
+    CONF --> CONF_USR & CONF_CAT & CONF_NOTIF & CONF_FIRMA
+
+    %% ── CONEXIONES RAÍZ
+    ROOT --> AUTH
+    ROOT --> DASH
+    ROOT --> CLI
+    ROOT --> COT
+    ROOT --> CONT
+    ROOT --> INV
+    ROOT --> FAC
+    ROOT --> AUD
+    ROOT --> CONF
+</pre>
+    </div>
+  </div>
+</section>
+
+  
+<section id="database">
+  <div class="section-header">
+    <h2>Base de Datos — Schema PostgreSQL</h2>
+    <p class="section-sub">DBML v1.0 · 27 tablas · 27 enumeraciones · Generado 2026-06-24</p>
+  </div>
+  <div class="callout">
+    <strong>Motor:</strong> PostgreSQL &nbsp;·&nbsp; <strong>Escala inicial:</strong> ~180 clientes · 50 obras/cliente · 3-4 frentes/obra
+    &nbsp;·&nbsp; <strong>Basado en:</strong> FT-AC-001 v2.0 · Checklist Validación Clientes · Autorización Centrales de Riesgo
+  </div>
+
+  <div class="db-legend">
+    <span style="border-color:#1A365D;color:#1A365D">⬛ Seguridad / Transversal</span>
+    <span style="border-color:#2C7A7B;color:#2C7A7B">⬛ Clientes / Obras</span>
+    <span style="border-color:#553C9A;color:#553C9A">⬛ Cotizaciones</span>
+    <span style="border-color:#6B46C1;color:#6B46C1">⬛ Contratos</span>
+    <span style="border-color:#276749;color:#276749">⬛ Inventarios</span>
+    <span style="border-color:#744210;color:#744210">⬛ Facturación</span>
+  </div>
+
+  <h3>Enumeraciones (27)</h3>
+  <div class="enum-grid"><div class="enum-pill"><strong>rol_usuario</strong><span class="enum-vals">admin, comercial, dibujante, contabilidad, juridica, almacen +1</span></div>
+<div class="enum-pill"><strong>tipo_id</strong><span class="enum-vals">NIT, CC, CE, Pasaporte</span></div>
+<div class="enum-pill"><strong>ciudad_sucursal</strong><span class="enum-vals">bogota, ibague, armenia</span></div>
+<div class="enum-pill"><strong>estado_cliente</strong><span class="enum-vals">prospecto, en_revision, aprobado, rechazado, inactivo</span></div>
+<div class="enum-pill"><strong>regimen_iva_tipo</strong><span class="enum-vals">comun, simplificado, especial</span></div>
+<div class="enum-pill"><strong>area_aprobacion</strong><span class="enum-vals">contabilidad, juridica, comercial</span></div>
+<div class="enum-pill"><strong>estado_aprobacion</strong><span class="enum-vals">pendiente, favorable, no_favorable</span></div>
+<div class="enum-pill"><strong>tipo_contacto</strong><span class="enum-vals">encargado_pagos, recepcion_facturas, general</span></div>
+<div class="enum-pill"><strong>tipo_documento_registro</strong><span class="enum-vals">rut, camara_comercio, cedula_representante, estados_financieros, autorizacion_centrales_riesgo, formulario_registro_ft_ac_001 +3</span></div>
+<div class="enum-pill"><strong>estado_validacion_doc</strong><span class="enum-vals">pendiente, aprobado, rechazado, requiere_actualizacion</span></div>
+<div class="enum-pill"><strong>estado_obra</strong><span class="enum-vals">activa, pausada, finalizada, cancelada</span></div>
+<div class="enum-pill"><strong>tipo_producto</strong><span class="enum-vals">andamio, formaleta, maquinaria, accesorio, herramienta, otro</span></div>
+<div class="enum-pill"><strong>unidad_medida</strong><span class="enum-vals">unidad, metro, metro_cuadrado, juego, kit</span></div>
+<div class="enum-pill"><strong>estado_cotizacion</strong><span class="enum-vals">borrador, en_revision, enviada_cliente, aprobada_cliente, rechazada_cliente, vencida +1</span></div>
+<div class="enum-pill"><strong>tipo_item_cotizacion</strong><span class="enum-vals">venta, alquiler, transporte_ida, transporte_vuelta, reposicion, accesorio</span></div>
+<div class="enum-pill"><strong>formato_archivo</strong><span class="enum-vals">dwg, dxf, pdf, xlsx, xls, png +1</span></div>
+<div class="enum-pill"><strong>tipo_archivo_plano</strong><span class="enum-vals">plano_autocad, desglose_materiales, cotizacion_pdf, otro</span></div>
+<div class="enum-pill"><strong>estado_orden</strong><span class="enum-vals">pendiente, en_firma, activa, finalizada, cancelada</span></div>
+<div class="enum-pill"><strong>estado_contrato</strong><span class="enum-vals">borrador, enviado_firma, firmado, cancelado</span></div>
+<div class="enum-pill"><strong>tipo_remision</strong><span class="enum-vals">salida, entrada_devolucion, entrada_reposicion</span></div>
+<div class="enum-pill"><strong>estado_remision</strong><span class="enum-vals">programada, en_transito, entregada, recibida, con_novedad</span></div>
+<div class="enum-pill"><strong>estado_item_remision</strong><span class="enum-vals">pendiente, entregado_ok, entregado_parcial, dañado, faltante</span></div>
+<div class="enum-pill"><strong>estado_agenda</strong><span class="enum-vals">programado, en_curso, completado, cancelado, reprogramado</span></div>
+<div class="enum-pill"><strong>estado_factura</strong><span class="enum-vals">pendiente, enviada, pagada_parcial, pagada, vencida, en_cartera +1</span></div>
+<div class="enum-pill"><strong>metodo_pago</strong><span class="enum-vals">transferencia, efectivo, cheque, otro</span></div>
+<div class="enum-pill"><strong>estado_cartera</strong><span class="enum-vals">nueva, en_gestion, acuerdo_pago, demanda, castigada, recuperada</span></div>
+<div class="enum-pill"><strong>tipo_notificacion</strong><span class="enum-vals">aprobacion_pendiente, cotizacion_aprobada, contrato_firmado, recogida_programada, devolucion_pendiente, factura_vencida +2</span></div>
+</div>
+
+  <h3>Tablas (27)</h3>
+  <div class="t-grid">
+<div class="t-card" style="--tcolor:#1A365D">
+  <div class="t-head">
+    <span class="t-name">usuarios</span>
+    <span class="t-count">8 cols</span>
+  </div>
+  <p class="t-note">Usuarios del sistema con control de acceso por rol (RBAC)</p>
+  <table class="t-cols"><tbody><tr><td><code>id</code></td><td class="t-type">uuid</td><td></td></tr><tr><td><code>nombre</code></td><td class="t-type">varchar(200)</td><td></td></tr><tr><td><code>email</code></td><td class="t-type">varchar(200)</td><td><span class="badge uniq">UQ</span></td></tr><tr><td><code>password_hash</code></td><td class="t-type">varchar(500)</td><td></td></tr><tr><td><code>rol</code></td><td class="t-type">rol_usuario</td><td></td></tr><tr><td><code>activo</code></td><td class="t-type">boolean</td><td></td></tr><tr><td><code>created_at</code></td><td class="t-type">timestamp</td><td></td></tr></tbody></table>
+  <p class="t-more">+ 1 columnas más</p>
+</div>
+<div class="t-card" style="--tcolor:#1A365D">
+  <div class="t-head">
+    <span class="t-name">auditoria</span>
+    <span class="t-count">8 cols</span>
+  </div>
+  <p class="t-note">Log inmutable: quién hizo qué y cuándo — requerimiento transversal del sistema</p>
+  <table class="t-cols"><tbody><tr><td><code>id</code></td><td class="t-type">bigserial</td><td><span class="badge pk">PK</span></td></tr><tr><td><code>usuario_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>accion</code></td><td class="t-type">varchar(100)</td><td></td></tr><tr><td><code>tabla_afectada</code></td><td class="t-type">varchar(100)</td><td></td></tr><tr><td><code>registro_id</code></td><td class="t-type">varchar(100)</td><td></td></tr><tr><td><code>datos_anteriores</code></td><td class="t-type">jsonb</td><td></td></tr><tr><td><code>ip_address</code></td><td class="t-type">varchar(50)</td><td></td></tr></tbody></table>
+  <p class="t-more">+ 1 columnas más</p>
+</div>
+<div class="t-card" style="--tcolor:#1A365D">
+  <div class="t-head">
+    <span class="t-name">notificaciones</span>
+    <span class="t-count">7 cols</span>
+  </div>
+  <p class="t-note">Motor de notificaciones para empujar aprobaciones y alertas logísticas</p>
+  <table class="t-cols"><tbody><tr><td><code>id</code></td><td class="t-type">bigserial</td><td><span class="badge pk">PK</span></td></tr><tr><td><code>usuario_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>tipo</code></td><td class="t-type">tipo_notificacion</td><td></td></tr><tr><td><code>titulo</code></td><td class="t-type">varchar(300)</td><td></td></tr><tr><td><code>mensaje</code></td><td class="t-type">text</td><td></td></tr><tr><td><code>url_referencia</code></td><td class="t-type">varchar(500)</td><td></td></tr><tr><td><code>leida_at</code></td><td class="t-type">timestamp</td><td></td></tr></tbody></table>
+  
+</div>
+<div class="t-card" style="--tcolor:#2C7A7B">
+  <div class="t-head">
+    <span class="t-name">clientes</span>
+    <span class="t-count">20 cols</span>
+  </div>
+  <p class="t-note">Registro central de clientes — ~180 clientes migración inicial (130 Bogotá, 50 Ibagué/Armenia)</p>
+  <table class="t-cols"><tbody><tr><td><code>id</code></td><td class="t-type">uuid</td><td></td></tr><tr><td><code>razon_social</code></td><td class="t-type">varchar(300)</td><td></td></tr><tr><td><code>nombre_comercial</code></td><td class="t-type">varchar(300)</td><td></td></tr><tr><td><code>numero_identificacion</code></td><td class="t-type">varchar(50)</td><td><span class="badge uniq">UQ</span></td></tr><tr><td><code>ciudad</code></td><td class="t-type">varchar(100)</td><td></td></tr><tr><td><code>telefono</code></td><td class="t-type">varchar(50)</td><td></td></tr><tr><td><code>representante_legal</code></td><td class="t-type">varchar(200)</td><td></td></tr></tbody></table>
+  <p class="t-more">+ 13 columnas más</p>
+</div>
+<div class="t-card" style="--tcolor:#2C7A7B">
+  <div class="t-head">
+    <span class="t-name">contactos_cliente</span>
+    <span class="t-count">7 cols</span>
+  </div>
+  <p class="t-note">Sección II FT-AC-001: encargado de pagos y recepción de facturas electrónicas</p>
+  <table class="t-cols"><tbody><tr><td><code>id</code></td><td class="t-type">uuid</td><td></td></tr><tr><td><code>cliente_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>tipo_contacto</code></td><td class="t-type">tipo_contacto</td><td></td></tr><tr><td><code>nombre</code></td><td class="t-type">varchar(200)</td><td></td></tr><tr><td><code>telefono</code></td><td class="t-type">varchar(50)</td><td></td></tr><tr><td><code>correo</code></td><td class="t-type">varchar(200)</td><td></td></tr><tr><td><code>horario</code></td><td class="t-type">varchar(200)</td><td></td></tr></tbody></table>
+  
+</div>
+<div class="t-card" style="--tcolor:#2C7A7B">
+  <div class="t-head">
+    <span class="t-name">referencias_bancarias</span>
+    <span class="t-count">6 cols</span>
+  </div>
+  <p class="t-note">Sección III FT-AC-001: hasta 2 referencias bancarias por cliente</p>
+  <table class="t-cols"><tbody><tr><td><code>id</code></td><td class="t-type">uuid</td><td></td></tr><tr><td><code>cliente_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>banco</code></td><td class="t-type">varchar(200)</td><td></td></tr><tr><td><code>sucursal</code></td><td class="t-type">varchar(200)</td><td></td></tr><tr><td><code>direccion</code></td><td class="t-type">text</td><td></td></tr><tr><td><code>orden</code></td><td class="t-type">integer</td><td></td></tr></tbody></table>
+  
+</div>
+<div class="t-card" style="--tcolor:#2C7A7B">
+  <div class="t-head">
+    <span class="t-name">referencias_comerciales</span>
+    <span class="t-count">5 cols</span>
+  </div>
+  <p class="t-note">Sección IV FT-AC-001: hasta 2 referencias comerciales por cliente</p>
+  <table class="t-cols"><tbody><tr><td><code>id</code></td><td class="t-type">uuid</td><td></td></tr><tr><td><code>cliente_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>nombre</code></td><td class="t-type">varchar(200)</td><td></td></tr><tr><td><code>telefono</code></td><td class="t-type">varchar(50)</td><td></td></tr><tr><td><code>direccion</code></td><td class="t-type">text</td><td></td></tr></tbody></table>
+  
+</div>
+<div class="t-card" style="--tcolor:#2C7A7B">
+  <div class="t-head">
+    <span class="t-name">accionistas</span>
+    <span class="t-count">7 cols</span>
+  </div>
+  <p class="t-note">Sección VII FT-AC-001: accionistas con &gt;5% del capital social</p>
+  <table class="t-cols"><tbody><tr><td><code>id</code></td><td class="t-type">uuid</td><td></td></tr><tr><td><code>cliente_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>nombre_completo</code></td><td class="t-type">varchar(300)</td><td></td></tr><tr><td><code>tipo_id</code></td><td class="t-type">tipo_id</td><td></td></tr><tr><td><code>numero_id</code></td><td class="t-type">varchar(50)</td><td></td></tr><tr><td><code>es_pep</code></td><td class="t-type">boolean</td><td></td></tr><tr><td><code>descripcion_pep</code></td><td class="t-type">text</td><td></td></tr></tbody></table>
+  
+</div>
+<div class="t-card" style="--tcolor:#2C7A7B">
+  <div class="t-head">
+    <span class="t-name">autorizacion_centrales_riesgo</span>
+    <span class="t-count">5 cols</span>
+  </div>
+  <p class="t-note">Autorización Ley 1581/2012 — Consulta centrales de riesgo y listas LAFT (Circular 09/2016)</p>
+  <table class="t-cols"><tbody><tr><td><code>id</code></td><td class="t-type">uuid</td><td></td></tr><tr><td><code>cliente_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span><span class="badge uniq">UQ</span></td></tr><tr><td><code>firma_representante_url</code></td><td class="t-type">varchar(500)</td><td></td></tr><tr><td><code>fecha_firma</code></td><td class="t-type">date</td><td></td></tr><tr><td><code>cedula_firmante</code></td><td class="t-type">varchar(50)</td><td></td></tr></tbody></table>
+  
+</div>
+<div class="t-card" style="--tcolor:#2C7A7B">
+  <div class="t-head">
+    <span class="t-name">aprobaciones_cliente</span>
+    <span class="t-count">8 cols</span>
+  </div>
+  <p class="t-note">Checklist digital de aprobación: las 3 áreas deben dar concepto antes de proceder al contrato</p>
+  <table class="t-cols"><tbody><tr><td><code>id</code></td><td class="t-type">uuid</td><td></td></tr><tr><td><code>cliente_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>area</code></td><td class="t-type">area_aprobacion</td><td></td></tr><tr><td><code>estado</code></td><td class="t-type">estado_aprobacion</td><td></td></tr><tr><td><code>concepto</code></td><td class="t-type">text</td><td></td></tr><tr><td><code>es_favorable</code></td><td class="t-type">boolean</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>fecha_concepto</code></td><td class="t-type">timestamp</td><td></td></tr></tbody></table>
+  <p class="t-more">+ 1 columnas más</p>
+</div>
+<div class="t-card" style="--tcolor:#2C7A7B">
+  <div class="t-head">
+    <span class="t-name">documentos_registro</span>
+    <span class="t-count">10 cols</span>
+  </div>
+  <p class="t-note">Documentos del checklist de validación: RUT, Cámara, Cédula RL, Estados Financieros, etc.</p>
+  <table class="t-cols"><tbody><tr><td><code>id</code></td><td class="t-type">uuid</td><td></td></tr><tr><td><code>cliente_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>tipo_documento</code></td><td class="t-type">tipo_documento_registro</td><td></td></tr><tr><td><code>nombre_archivo</code></td><td class="t-type">varchar(300)</td><td></td></tr><tr><td><code>url_archivo</code></td><td class="t-type">varchar(500)</td><td></td></tr><tr><td><code>estado_validacion</code></td><td class="t-type">estado_validacion_doc</td><td></td></tr><tr><td><code>validado_por</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr></tbody></table>
+  <p class="t-more">+ 3 columnas más</p>
+</div>
+<div class="t-card" style="--tcolor:#2C7A7B">
+  <div class="t-head">
+    <span class="t-name">obras</span>
+    <span class="t-count">9 cols</span>
+  </div>
+  <p class="t-note">Obras por cliente — hasta 50 por cliente según métricas de migración</p>
+  <table class="t-cols"><tbody><tr><td><code>id</code></td><td class="t-type">uuid</td><td></td></tr><tr><td><code>cliente_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>nombre</code></td><td class="t-type">varchar(300)</td><td></td></tr><tr><td><code>direccion</code></td><td class="t-type">text</td><td></td></tr><tr><td><code>ciudad</code></td><td class="t-type">varchar(100)</td><td></td></tr><tr><td><code>correo</code></td><td class="t-type">varchar(200)</td><td></td></tr><tr><td><code>estado</code></td><td class="t-type">estado_obra</td><td></td></tr></tbody></table>
+  <p class="t-more">+ 2 columnas más</p>
+</div>
+<div class="t-card" style="--tcolor:#2C7A7B">
+  <div class="t-head">
+    <span class="t-name">frentes_obra</span>
+    <span class="t-count">5 cols</span>
+  </div>
+  <p class="t-note">Frentes dentro de una obra — entre 3 y 4 frentes por obra según métricas</p>
+  <table class="t-cols"><tbody><tr><td><code>id</code></td><td class="t-type">uuid</td><td></td></tr><tr><td><code>obra_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>nombre</code></td><td class="t-type">varchar(200)</td><td></td></tr><tr><td><code>descripcion</code></td><td class="t-type">text</td><td></td></tr><tr><td><code>created_at</code></td><td class="t-type">timestamp</td><td></td></tr></tbody></table>
+  
+</div>
+<div class="t-card" style="--tcolor:#553C9A">
+  <div class="t-head">
+    <span class="t-name">catalogo_productos</span>
+    <span class="t-count">16 cols</span>
+  </div>
+  <p class="t-note">Catálogo oficial: andamios multidireccionales, formaletas, maquinaria y accesorios</p>
+  <table class="t-cols"><tbody><tr><td><code>id</code></td><td class="t-type">uuid</td><td></td></tr><tr><td><code>codigo</code></td><td class="t-type">varchar(100)</td><td><span class="badge uniq">UQ</span></td></tr><tr><td><code>nombre</code></td><td class="t-type">varchar(300)</td><td></td></tr><tr><td><code>descripcion</code></td><td class="t-type">text</td><td></td></tr><tr><td><code>tipo_producto</code></td><td class="t-type">tipo_producto</td><td></td></tr><tr><td><code>unidad_medida</code></td><td class="t-type">unidad_medida</td><td></td></tr><tr><td><code>precio_venta</code></td><td class="t-type">decimal(15,2)</td><td></td></tr></tbody></table>
+  <p class="t-more">+ 9 columnas más</p>
+</div>
+<div class="t-card" style="--tcolor:#553C9A">
+  <div class="t-head">
+    <span class="t-name">cotizaciones</span>
+    <span class="t-count">21 cols</span>
+  </div>
+  <p class="t-note">Cotizaciones: 6-12 por semana por dibujante. Soporta venta, alquiler, transporte y reposición</p>
+  <table class="t-cols"><tbody><tr><td><code>id</code></td><td class="t-type">uuid</td><td></td></tr><tr><td><code>numero_cotizacion</code></td><td class="t-type">varchar(50)</td><td><span class="badge uniq">UQ</span></td></tr><tr><td><code>cliente_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>obra_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>dibujante_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>comercial_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>estado</code></td><td class="t-type">estado_cotizacion</td><td></td></tr></tbody></table>
+  <p class="t-more">+ 14 columnas más</p>
+</div>
+<div class="t-card" style="--tcolor:#553C9A">
+  <div class="t-head">
+    <span class="t-name">cotizacion_items</span>
+    <span class="t-count">11 cols</span>
+  </div>
+  <p class="t-note">Líneas de cotización con soporte para cálculo por m² y días de alquiler</p>
+  <table class="t-cols"><tbody><tr><td><code>id</code></td><td class="t-type">uuid</td><td></td></tr><tr><td><code>cotizacion_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>frente_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>producto_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>tipo_item</code></td><td class="t-type">tipo_item_cotizacion</td><td></td></tr><tr><td><code>cantidad</code></td><td class="t-type">decimal(12,3)</td><td></td></tr><tr><td><code>area_m2</code></td><td class="t-type">decimal(12,2)</td><td></td></tr></tbody></table>
+  <p class="t-more">+ 4 columnas más</p>
+</div>
+<div class="t-card" style="--tcolor:#553C9A">
+  <div class="t-head">
+    <span class="t-name">archivos_planos</span>
+    <span class="t-count">8 cols</span>
+  </div>
+  <p class="t-note">Planos AutoCAD (DWG/DXF), exports Excel y PDFs de cotización</p>
+  <table class="t-cols"><tbody><tr><td><code>id</code></td><td class="t-type">uuid</td><td></td></tr><tr><td><code>cotizacion_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>nombre_archivo</code></td><td class="t-type">varchar(300)</td><td></td></tr><tr><td><code>formato</code></td><td class="t-type">formato_archivo</td><td></td></tr><tr><td><code>url_archivo</code></td><td class="t-type">varchar(500)</td><td></td></tr><tr><td><code>tipo_archivo</code></td><td class="t-type">tipo_archivo_plano</td><td></td></tr><tr><td><code>uploaded_by</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr></tbody></table>
+  <p class="t-more">+ 1 columnas más</p>
+</div>
+<div class="t-card" style="--tcolor:#6B46C1">
+  <div class="t-head">
+    <span class="t-name">ordenes_compra</span>
+    <span class="t-count">10 cols</span>
+  </div>
+  <p class="t-note">Orden de compra generada una vez el cliente aprueba la cotización</p>
+  <table class="t-cols"><tbody><tr><td><code>id</code></td><td class="t-type">uuid</td><td></td></tr><tr><td><code>numero_orden</code></td><td class="t-type">varchar(50)</td><td><span class="badge uniq">UQ</span></td></tr><tr><td><code>cotizacion_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>cliente_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>obra_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>estado</code></td><td class="t-type">estado_orden</td><td></td></tr><tr><td><code>fecha_inicio</code></td><td class="t-type">date</td><td></td></tr></tbody></table>
+  <p class="t-more">+ 3 columnas más</p>
+</div>
+<div class="t-card" style="--tcolor:#6B46C1">
+  <div class="t-head">
+    <span class="t-name">contratos</span>
+    <span class="t-count">11 cols</span>
+  </div>
+  <p class="t-note">Contratos con integración a firma electrónica — trigger automático a operaciones al firmarse</p>
+  <table class="t-cols"><tbody><tr><td><code>id</code></td><td class="t-type">uuid</td><td></td></tr><tr><td><code>numero_contrato</code></td><td class="t-type">varchar(50)</td><td><span class="badge uniq">UQ</span></td></tr><tr><td><code>orden_compra_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span><span class="badge uniq">UQ</span></td></tr><tr><td><code>cliente_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>estado</code></td><td class="t-type">estado_contrato</td><td></td></tr><tr><td><code>plataforma_firma</code></td><td class="t-type">varchar(100)</td><td></td></tr><tr><td><code>id_documento_externo</code></td><td class="t-type">varchar(200)</td><td></td></tr></tbody></table>
+  <p class="t-more">+ 4 columnas más</p>
+</div>
+<div class="t-card" style="--tcolor:#276749">
+  <div class="t-head">
+    <span class="t-name">conductores</span>
+    <span class="t-count">7 cols</span>
+  </div>
+  <p class="t-note">Conductores para transporte de equipos a obras</p>
+  <table class="t-cols"><tbody><tr><td><code>id</code></td><td class="t-type">uuid</td><td></td></tr><tr><td><code>nombre</code></td><td class="t-type">varchar(200)</td><td></td></tr><tr><td><code>cedula</code></td><td class="t-type">varchar(50)</td><td><span class="badge uniq">UQ</span></td></tr><tr><td><code>telefono</code></td><td class="t-type">varchar(50)</td><td></td></tr><tr><td><code>tipo_vehiculo</code></td><td class="t-type">varchar(100)</td><td></td></tr><tr><td><code>activo</code></td><td class="t-type">boolean</td><td></td></tr><tr><td><code>created_at</code></td><td class="t-type">timestamp</td><td></td></tr></tbody></table>
+  
+</div>
+<div class="t-card" style="--tcolor:#276749">
+  <div class="t-head">
+    <span class="t-name">remisiones</span>
+    <span class="t-count">13 cols</span>
+  </div>
+  <p class="t-note">Remisiones de salida y entrada al Kardex — control de equipos en obra</p>
+  <table class="t-cols"><tbody><tr><td><code>id</code></td><td class="t-type">uuid</td><td></td></tr><tr><td><code>numero_remision</code></td><td class="t-type">varchar(50)</td><td><span class="badge uniq">UQ</span></td></tr><tr><td><code>orden_compra_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>frente_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>tipo_remision</code></td><td class="t-type">tipo_remision</td><td></td></tr><tr><td><code>fecha_remision</code></td><td class="t-type">date</td><td></td></tr><tr><td><code>responsable_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr></tbody></table>
+  <p class="t-more">+ 6 columnas más</p>
+</div>
+<div class="t-card" style="--tcolor:#276749">
+  <div class="t-head">
+    <span class="t-name">remision_items</span>
+    <span class="t-count">6 cols</span>
+  </div>
+  <p class="t-note">Detalle de equipos por remisión — base para calcular reposiciones y actualizar Kardex</p>
+  <table class="t-cols"><tbody><tr><td><code>id</code></td><td class="t-type">uuid</td><td></td></tr><tr><td><code>remision_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>producto_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>cantidad_programada</code></td><td class="t-type">integer</td><td></td></tr><tr><td><code>cantidad_real</code></td><td class="t-type">integer</td><td></td></tr><tr><td><code>novedad</code></td><td class="t-type">text</td><td></td></tr></tbody></table>
+  
+</div>
+<div class="t-card" style="--tcolor:#276749">
+  <div class="t-head">
+    <span class="t-name">agenda_transporte</span>
+    <span class="t-count">10 cols</span>
+  </div>
+  <p class="t-note">Agenda del jefe de almacén: conductores, horarios y direcciones de recogida</p>
+  <table class="t-cols"><tbody><tr><td><code>id</code></td><td class="t-type">uuid</td><td></td></tr><tr><td><code>remision_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>conductor_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>fecha_programada</code></td><td class="t-type">date</td><td></td></tr><tr><td><code>hora_inicio</code></td><td class="t-type">time</td><td></td></tr><tr><td><code>direccion_recogida</code></td><td class="t-type">text</td><td></td></tr><tr><td><code>orden_compra_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr></tbody></table>
+  <p class="t-more">+ 3 columnas más</p>
+</div>
+<div class="t-card" style="--tcolor:#744210">
+  <div class="t-head">
+    <span class="t-name">facturas</span>
+    <span class="t-count">17 cols</span>
+  </div>
+  <p class="t-note">Facturación electrónica con retenciones, cálculo por m² y cruce contable</p>
+  <table class="t-cols"><tbody><tr><td><code>id</code></td><td class="t-type">uuid</td><td></td></tr><tr><td><code>numero_factura</code></td><td class="t-type">varchar(50)</td><td><span class="badge uniq">UQ</span></td></tr><tr><td><code>orden_compra_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>cliente_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>estado</code></td><td class="t-type">estado_factura</td><td></td></tr><tr><td><code>fecha_emision</code></td><td class="t-type">date</td><td></td></tr><tr><td><code>fecha_vencimiento</code></td><td class="t-type">date</td><td></td></tr></tbody></table>
+  <p class="t-more">+ 10 columnas más</p>
+</div>
+<div class="t-card" style="--tcolor:#744210">
+  <div class="t-head">
+    <span class="t-name">factura_items</span>
+    <span class="t-count">9 cols</span>
+  </div>
+  <p class="t-note">Líneas de factura: soporta cobro por m², por unidad y por días de alquiler</p>
+  <table class="t-cols"><tbody><tr><td><code>id</code></td><td class="t-type">uuid</td><td></td></tr><tr><td><code>factura_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>cotizacion_item_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>descripcion</code></td><td class="t-type">text</td><td></td></tr><tr><td><code>tipo_cobro</code></td><td class="t-type">tipo_item_cotizacion</td><td></td></tr><tr><td><code>cantidad</code></td><td class="t-type">decimal(12,3)</td><td></td></tr><tr><td><code>area_m2</code></td><td class="t-type">decimal(12,2)</td><td></td></tr></tbody></table>
+  <p class="t-more">+ 2 columnas más</p>
+</div>
+<div class="t-card" style="--tcolor:#744210">
+  <div class="t-head">
+    <span class="t-name">pagos</span>
+    <span class="t-count">7 cols</span>
+  </div>
+  <p class="t-note">Registro de pagos recibidos — actualiza saldo_pendiente en facturas</p>
+  <table class="t-cols"><tbody><tr><td><code>id</code></td><td class="t-type">uuid</td><td></td></tr><tr><td><code>factura_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>monto</code></td><td class="t-type">decimal(18,2)</td><td></td></tr><tr><td><code>fecha_pago</code></td><td class="t-type">date</td><td></td></tr><tr><td><code>metodo_pago</code></td><td class="t-type">metodo_pago</td><td></td></tr><tr><td><code>referencia_pago</code></td><td class="t-type">varchar(200)</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>notas</code></td><td class="t-type">text</td><td></td></tr></tbody></table>
+  
+</div>
+<div class="t-card" style="--tcolor:#744210">
+  <div class="t-head">
+    <span class="t-name">cartera</span>
+    <span class="t-count">10 cols</span>
+  </div>
+  <p class="t-note">Gestión de clientes con facturas vencidas — coordinado entre contabilidad y jurídica</p>
+  <table class="t-cols"><tbody><tr><td><code>id</code></td><td class="t-type">uuid</td><td></td></tr><tr><td><code>factura_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span><span class="badge uniq">UQ</span></td></tr><tr><td><code>cliente_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>dias_mora</code></td><td class="t-type">integer</td><td></td></tr><tr><td><code>monto_mora</code></td><td class="t-type">decimal(18,2)</td><td></td></tr><tr><td><code>estado_gestion</code></td><td class="t-type">estado_cartera</td><td></td></tr><tr><td><code>fecha_ultimo_contacto</code></td><td class="t-type">date</td><td></td></tr></tbody></table>
+  <p class="t-more">+ 3 columnas más</p>
+</div></div>
+
+  <h3>Código DBML completo</h3>
+  <details>
+    <summary>▶ Ver schema completo (.dbml)</summary>
+    <pre class="code-block">// ============================================================
+// G&amp;H OBRAS Y ESTRUCTURAS METALICAS S.A.S
+// Sistema de Gestión Comercial, Cotizaciones, Inventarios y Facturación
+// Base de Datos: PostgreSQL — Versión 1.0
+// Fecha: 2026-06-24
+// ============================================================
+
+Project gyh_sistema {
+  database_type: &#x27;PostgreSQL&#x27;
+  Note: &#x27;&#x27;&#x27;
+    Sistema de Gestión para G&amp;H Obras y Estructuras Metálicas S.A.S.
+    NIT: 901.218.896-8 — Bogotá, Colombia
+    Módulos: Clientes · Cotizaciones · Contratos · Inventarios · Facturación · Auditoría
+    Métricas de escala: ~180 clientes, hasta 50 obras/cliente, 3-4 frentes/obra,
+    6-12 cotizaciones/semana por dibujante, ~50 prospectos nuevos/mes.
+  &#x27;&#x27;&#x27;
+}
+
+// ============================================================
+// ENUMERACIONES GLOBALES
+// ============================================================
+
+Enum rol_usuario {
+  admin         [note: &#x27;Administrador del sistema&#x27;]
+  comercial     [note: &#x27;Equipo de ventas y cotizaciones&#x27;]
+  dibujante     [note: &#x27;Modelamiento técnico en AutoCAD&#x27;]
+  contabilidad  [note: &#x27;Validación financiera y facturación&#x27;]
+  juridica      [note: &#x27;Validación documental y contratos&#x27;]
+  almacen       [note: &#x27;Jefe de almacén e inventarios&#x27;]
+  conductor     [note: &#x27;Transporte de equipos&#x27;]
+}
+
+Enum tipo_id {
+  NIT
+  CC
+  CE
+  Pasaporte
+}
+
+Enum ciudad_sucursal {
+  bogota
+  ibague
+  armenia
+}
+
+Enum estado_cliente {
+  prospecto     [note: &#x27;Lead sin proceso de registro formal&#x27;]
+  en_revision   [note: &#x27;Checklist en proceso de aprobación&#x27;]
+  aprobado      [note: &#x27;Todos los conceptos favorables&#x27;]
+  rechazado     [note: &#x27;Al menos un área dio concepto no favorable&#x27;]
+  inactivo
+}
+
+Enum regimen_iva_tipo {
+  comun
+  simplificado
+  especial
+}
+
+Enum area_aprobacion {
+  contabilidad
+  juridica
+  comercial
+}
+
+Enum estado_aprobacion {
+  pendiente
+  favorable
+  no_favorable
+}
+
+Enum tipo_contacto {
+  encargado_pagos
+  recepcion_facturas
+  general
+}
+
+Enum tipo_documento_registro {
+  rut
+  camara_comercio
+  cedula_representante
+  estados_financieros
+  autorizacion_centrales_riesgo
+  formulario_registro_ft_ac_001
+  carta_presentacion
+  certificado_bancario
+  otro
+}
+
+Enum estado_validacion_doc {
+  pendiente
+  aprobado
+  rechazado
+  requiere_actualizacion
+}
+
+Enum estado_obra {
+  activa
+  pausada
+  finalizada
+  cancelada
+}
+
+Enum tipo_producto {
+  andamio
+  formaleta
+  maquinaria
+  accesorio
+  herramienta
+  otro
+}
+
+Enum unidad_medida {
+  unidad
+  metro
+  metro_cuadrado
+  juego
+  kit
+}
+
+Enum estado_cotizacion {
+  borrador
+  en_revision
+  enviada_cliente
+  aprobada_cliente
+  rechazada_cliente
+  vencida
+  convertida_orden
+}
+
+Enum tipo_item_cotizacion {
+  venta         [note: &#x27;Productos existentes en catálogo&#x27;]
+  alquiler      [note: &#x27;Maquinaria temporal — se calcula por días&#x27;]
+  transporte_ida
+  transporte_vuelta
+  reposicion    [note: &#x27;Cobro por pérdida o no devolución&#x27;]
+  accesorio
+}
+
+Enum formato_archivo {
+  dwg
+  dxf
+  pdf
+  xlsx
+  xls
+  png
+  jpg
+}
+
+Enum tipo_archivo_plano {
+  plano_autocad
+  desglose_materiales
+  cotizacion_pdf
+  otro
+}
+
+Enum estado_orden {
+  pendiente
+  en_firma
+  activa
+  finalizada
+  cancelada
+}
+
+Enum estado_contrato {
+  borrador
+  enviado_firma
+  firmado
+  cancelado
+}
+
+Enum tipo_remision {
+  salida            [note: &#x27;Despacho de equipos a obra&#x27;]
+  entrada_devolucion [note: &#x27;Retorno de alquiler&#x27;]
+  entrada_reposicion [note: &#x27;Cobro por faltante&#x27;]
+}
+
+Enum estado_remision {
+  programada
+  en_transito
+  entregada
+  recibida
+  con_novedad
+}
+
+Enum estado_item_remision {
+  pendiente
+  entregado_ok
+  entregado_parcial
+  dañado
+  faltante
+}
+
+Enum estado_agenda {
+  programado
+  en_curso
+  completado
+  cancelado
+  reprogramado
+}
+
+Enum estado_factura {
+  pendiente
+  enviada
+  pagada_parcial
+  pagada
+  vencida
+  en_cartera
+  anulada
+}
+
+Enum metodo_pago {
+  transferencia
+  efectivo
+  cheque
+  otro
+}
+
+Enum estado_cartera {
+  nueva
+  en_gestion
+  acuerdo_pago
+  demanda
+  castigada
+  recuperada
+}
+
+Enum tipo_notificacion {
+  aprobacion_pendiente
+  cotizacion_aprobada
+  contrato_firmado
+  recogida_programada
+  devolucion_pendiente
+  factura_vencida
+  cartera_alerta
+  sistema
+}
+
+// ============================================================
+// MÓDULO: USUARIOS Y SEGURIDAD
+// ============================================================
+
+Table usuarios {
+  id          uuid        [pk, default: `gen_random_uuid()`]
+  nombre      varchar(200) [not null]
+  email       varchar(200) [unique, not null]
+  password_hash varchar(500) [not null]
+  rol         rol_usuario  [not null]
+  activo      boolean      [default: true]
+  created_at  timestamp    [default: `now()`]
+  updated_at  timestamp    [default: `now()`]
+
+  Note: &#x27;Usuarios del sistema con control de acceso por rol (RBAC)&#x27;
+}
+
+// ============================================================
+// MÓDULO: AUDITORÍA Y NOTIFICACIONES (Transversal)
+// ============================================================
+
+Table auditoria {
+  id               bigserial    [pk]
+  usuario_id       uuid         [ref: &gt; usuarios.id]
+  accion           varchar(100) [not null, note: &#x27;CREATE, UPDATE, DELETE, LOGIN, etc.&#x27;]
+  tabla_afectada   varchar(100) [not null]
+  registro_id      varchar(100) [note: &#x27;ID del registro modificado&#x27;]
+  datos_anteriores jsonb
+  datos_nuevos     jsonb
+  ip_address       varchar(50)
+  user_agent       text
+  created_at       timestamp    [default: `now()`]
+
+  indexes {
+    usuario_id
+    tabla_afectada
+    created_at
+  }
+
+  Note: &#x27;Log inmutable: quién hizo qué y cuándo — requerimiento transversal del sistema&#x27;
+}
+
+Table notificaciones {
+  id               bigserial    [pk]
+  usuario_id       uuid         [not null, ref: &gt; usuarios.id]
+  tipo             tipo_notificacion [not null]
+  titulo           varchar(300) [not null]
+  mensaje          text         [not null]
+  url_referencia   varchar(500)
+  leida            boolean      [default: false]
+  leida_at         timestamp
+  created_at       timestamp    [default: `now()`]
+
+  indexes {
+    usuario_id
+    leida
+  }
+
+  Note: &#x27;Motor de notificaciones para empujar aprobaciones y alertas logísticas&#x27;
+}
+
+// ============================================================
+// MÓDULO: CLIENTES
+// (Basado en formulario FT-AC-001 VERSION 2.0)
+// ============================================================
+
+Table clientes {
+  id                      uuid        [pk, default: `gen_random_uuid()`]
+
+  // I. INFORMACIÓN GENERAL (FT-AC-001 Sección I)
+  razon_social            varchar(300) [not null]
+  nombre_comercial        varchar(300)
+  tipo_identificacion     tipo_id      [not null]
+  numero_identificacion   varchar(50)  [unique, not null]
+  ciudad                  varchar(100)
+  direccion               text
+  telefono                varchar(50)
+  fax                     varchar(50)
+  representante_legal     varchar(200)
+  id_representante        varchar(50)
+  clase_sociedad          varchar(100)
+  regimen                 varchar(100)
+
+  // V. INFORMACIÓN TRIBUTARIA (FT-AC-001 Sección V)
+  tiene_camara_comercio   boolean      [default: false]
+  fecha_camara_comercio   date
+  matricula_camara        varchar(100)
+  codigo_ciiu             varchar(20)
+  actividad_economica     text
+  codigo_ica              varchar(20)
+  tarifa_ica              decimal(5,2)
+  rte_fuente              decimal(5,2)
+  rte_ica                 decimal(5,2)
+  regimen_iva             regimen_iva_tipo
+  gran_contribuyente      boolean      [default: false]
+  autorretenedor          boolean      [default: false]
+
+  // Control del sistema
+  estado_cliente          estado_cliente [default: &#x27;prospecto&#x27;]
+  codigo_revision         varchar(50)  [unique, note: &#x27;Código auto-generado de revisión del registro&#x27;]
+  ciudad_sucursal         ciudad_sucursal
+  creado_por              uuid         [ref: &gt; usuarios.id]
+  created_at              timestamp    [default: `now()`]
+  updated_at              timestamp    [default: `now()`]
+
+  indexes {
+    numero_identificacion
+    estado_cliente
+    ciudad_sucursal
+  }
+
+  Note: &#x27;Registro central de clientes — ~180 clientes migración inicial (130 Bogotá, 50 Ibagué/Armenia)&#x27;
+}
+
+Table contactos_cliente {
+  id             uuid         [pk, default: `gen_random_uuid()`]
+  cliente_id     uuid         [not null, ref: &gt; clientes.id]
+
+  // II. INFORMACIÓN DE CONTACTO (FT-AC-001 Sección II)
+  tipo_contacto  tipo_contacto [not null]
+  nombre         varchar(200) [not null]
+  telefono       varchar(50)
+  ext            varchar(10)
+  correo         varchar(200)
+  direccion      text
+  horario        varchar(200)
+  plazos_pago    varchar(200)
+
+  Note: &#x27;Sección II FT-AC-001: encargado de pagos y recepción de facturas electrónicas&#x27;
+}
+
+Table referencias_bancarias {
+  id               uuid         [pk, default: `gen_random_uuid()`]
+  cliente_id       uuid         [not null, ref: &gt; clientes.id]
+
+  // III. REFERENCIAS BANCARIAS (FT-AC-001 Sección III)
+  banco            varchar(200) [not null]
+  sucursal         varchar(200)
+  telefono         varchar(50)
+  direccion        text
+  persona_contacto varchar(200)
+  orden            integer      [default: 1]
+
+  Note: &#x27;Sección III FT-AC-001: hasta 2 referencias bancarias por cliente&#x27;
+}
+
+Table referencias_comerciales {
+  id         uuid         [pk, default: `gen_random_uuid()`]
+  cliente_id uuid         [not null, ref: &gt; clientes.id]
+
+  // IV. REFERENCIAS COMERCIALES (FT-AC-001 Sección IV)
+  nombre     varchar(200) [not null]
+  telefono   varchar(50)
+  celular    varchar(50)
+  direccion  text
+  orden      integer      [default: 1]
+
+  Note: &#x27;Sección IV FT-AC-001: hasta 2 referencias comerciales por cliente&#x27;
+}
+
+Table accionistas {
+  id              uuid         [pk, default: `gen_random_uuid()`]
+  cliente_id      uuid         [not null, ref: &gt; clientes.id]
+
+  // VII. SOCIOS Y/O ACCIONISTAS (FT-AC-001 Sección VII)
+  nombre_completo varchar(300) [not null]
+  tipo_id         tipo_id      [not null]
+  numero_id       varchar(50)  [not null]
+  es_pep          boolean      [default: false, note: &#x27;Persona Expuesta Políticamente&#x27;]
+  descripcion_pep text
+
+  Note: &#x27;Sección VII FT-AC-001: accionistas con &gt;5% del capital social&#x27;
+}
+
+Table autorizacion_centrales_riesgo {
+  id                    uuid    [pk, default: `gen_random_uuid()`]
+  cliente_id            uuid    [unique, not null, ref: &gt; clientes.id]
+  firma_representante_url varchar(500)
+  huella_url            varchar(500)
+  fecha_firma           date
+  nombre_firmante       varchar(200)
+  cedula_firmante       varchar(50)
+
+  Note: &#x27;Autorización Ley 1581/2012 — Consulta centrales de riesgo y listas LAFT (Circular 09/2016)&#x27;
+}
+
+// ============================================================
+// FLUJO DE APROBACIÓN DE CLIENTES
+// (Reemplaza el Excel CHECKLIST VALIDACION CLIENTES BOGOTA)
+// ============================================================
+
+Table aprobaciones_cliente {
+  id             uuid         [pk, default: `gen_random_uuid()`]
+  cliente_id     uuid         [not null, ref: &gt; clientes.id]
+  area           area_aprobacion [not null]
+  estado         estado_aprobacion [default: &#x27;pendiente&#x27;]
+  concepto       text         [note: &#x27;Comentario obligatorio que justifica la decisión&#x27;]
+  es_favorable   boolean
+  aprobado_por   uuid         [ref: &gt; usuarios.id]
+  fecha_concepto timestamp
+  created_at     timestamp    [default: `now()`]
+  updated_at     timestamp    [default: `now()`]
+
+  indexes {
+    (cliente_id, area) [unique, note: &#x27;Un concepto por área por cliente&#x27;]
+  }
+
+  Note: &#x27;Checklist digital de aprobación: las 3 áreas deben dar concepto antes de proceder al contrato&#x27;
+}
+
+Table documentos_registro {
+  id                  uuid    [pk, default: `gen_random_uuid()`]
+  cliente_id          uuid    [not null, ref: &gt; clientes.id]
+  tipo_documento      tipo_documento_registro [not null]
+  nombre_archivo      varchar(300) [not null]
+  url_archivo         varchar(500) [not null]
+  estado_validacion   estado_validacion_doc [default: &#x27;pendiente&#x27;]
+  validado_por        uuid    [ref: &gt; usuarios.id]
+  fecha_validacion    timestamp
+  comentario          text
+  uploaded_by         uuid    [ref: &gt; usuarios.id]
+  created_at          timestamp [default: `now()`]
+
+  Note: &#x27;Documentos del checklist de validación: RUT, Cámara, Cédula RL, Estados Financieros, etc.&#x27;
+}
+
+// ============================================================
+// MÓDULO: OBRAS Y FRENTES DE TRABAJO
+// ============================================================
+
+Table obras {
+  id         uuid         [pk, default: `gen_random_uuid()`]
+  cliente_id uuid         [not null, ref: &gt; clientes.id]
+
+  // VIII. INFORMACIÓN DE OBRA (FT-AC-001 Sección VIII)
+  nombre     varchar(300) [not null]
+  direccion  text         [not null]
+  ciudad     varchar(100)
+  telefono   varchar(50)
+  correo     varchar(200)
+  encargado  varchar(200)
+  estado     estado_obra  [default: &#x27;activa&#x27;]
+  created_at timestamp    [default: `now()`]
+  updated_at timestamp    [default: `now()`]
+
+  indexes {
+    cliente_id
+    estado
+  }
+
+  Note: &#x27;Obras por cliente — hasta 50 por cliente según métricas de migración&#x27;
+}
+
+Table frentes_obra {
+  id          uuid         [pk, default: `gen_random_uuid()`]
+  obra_id     uuid         [not null, ref: &gt; obras.id]
+  nombre      varchar(200) [not null]
+  descripcion text
+  estado      estado_obra  [default: &#x27;activa&#x27;]
+  created_at  timestamp    [default: `now()`]
+
+  Note: &#x27;Frentes dentro de una obra — entre 3 y 4 frentes por obra según métricas&#x27;
+}
+
+// ============================================================
+// MÓDULO: CATÁLOGO DE PRODUCTOS
+// ============================================================
+
+Table catalogo_productos {
+  id                   uuid         [pk, default: `gen_random_uuid()`]
+  codigo               varchar(100) [unique, not null]
+  nombre               varchar(300) [not null]
+  descripcion          text
+  categoria            varchar(100)
+  tipo_producto        tipo_producto [not null]
+  unidad_medida        unidad_medida [default: &#x27;unidad&#x27;]
+
+  // Precios por modalidad
+  precio_venta         decimal(15,2)
+  precio_alquiler_dia  decimal(15,2) [note: &#x27;Tarifa diaria — inicia desde remisión hasta devolución&#x27;]
+  precio_reposicion    decimal(15,2) [note: &#x27;Valor comercial en caso de pérdida/daño&#x27;]
+
+  // Cálculo por área (requerimiento facturación)
+  calcula_por_m2       boolean       [default: false]
+  precio_por_m2        decimal(15,2)
+
+  // Inventario
+  stock_actual         integer       [default: 0]
+  stock_minimo         integer       [default: 0]
+
+  imagen_url           varchar(500)
+  activo               boolean       [default: true]
+  codigo_revision      varchar(50)   [note: &#x27;Código auto de versión del producto&#x27;]
+  created_at           timestamp     [default: `now()`]
+  updated_at           timestamp     [default: `now()`]
+
+  Note: &#x27;Catálogo oficial: andamios multidireccionales, formaletas, maquinaria y accesorios&#x27;
+}
+
+// ============================================================
+// MÓDULO: COTIZACIONES
+// (Proceso actual: AutoCAD → Excel → PDF — entre 4 y 6 horas por dibujante)
+// ============================================================
+
+Table cotizaciones {
+  id                   uuid         [pk, default: `gen_random_uuid()`]
+  numero_cotizacion    varchar(50)  [unique, not null]
+  cliente_id           uuid         [not null, ref: &gt; clientes.id]
+  obra_id              uuid         [ref: &gt; obras.id]
+  dibujante_id         uuid         [ref: &gt; usuarios.id]
+  comercial_id         uuid         [ref: &gt; usuarios.id]
+  estado               estado_cotizacion [default: &#x27;borrador&#x27;]
+
+  // Tipos de negocio habilitados en la cotización
+  incluye_venta        boolean      [default: false]
+  incluye_alquiler     boolean      [default: false]
+  incluye_transporte   boolean      [default: false]
+  incluye_reposicion   boolean      [default: false]
+
+  // Totales calculados
+  subtotal             decimal(18,2) [default: 0]
+  descuento            decimal(18,2) [default: 0]
+  iva                  decimal(18,2) [default: 0]
+  total                decimal(18,2) [default: 0]
+
+  // Archivos del proceso (AutoCAD → Excel → PDF)
+  archivo_plano_url    varchar(500)
+  archivo_excel_url    varchar(500)  [note: &#x27;Desglose de materiales exportado desde AutoCAD&#x27;]
+  pdf_cotizacion_url   varchar(500)  [note: &#x27;PDF final con valores comerciales agregados&#x27;]
+
+  notas_dibujante      text
+  notas_comercial      text
+  horas_modelamiento   decimal(4,2)  [note: &#x27;Métrica: actualmente 4-6 horas en AutoCAD&#x27;]
+  codigo_revision      varchar(50)
+  created_at           timestamp     [default: `now()`]
+  updated_at           timestamp     [default: `now()`]
+
+  indexes {
+    cliente_id
+    estado
+    dibujante_id
+    created_at
+  }
+
+  Note: &#x27;Cotizaciones: 6-12 por semana por dibujante. Soporta venta, alquiler, transporte y reposición&#x27;
+}
+
+Table cotizacion_items {
+  id                   uuid          [pk, default: `gen_random_uuid()`]
+  cotizacion_id        uuid          [not null, ref: &gt; cotizaciones.id]
+  frente_id            uuid          [ref: &gt; frentes_obra.id]
+  producto_id          uuid          [not null, ref: &gt; catalogo_productos.id]
+  tipo_item            tipo_item_cotizacion [not null]
+  cantidad             decimal(12,3) [default: 1]
+  area_m2              decimal(12,2) [note: &#x27;Para productos que calculan por metro cuadrado&#x27;]
+  precio_unitario      decimal(15,2) [not null]
+  precio_por_m2        decimal(15,2)
+  dias_alquiler        integer       [note: &#x27;Para ítems de alquiler: desde remisión hasta devolución&#x27;]
+  subtotal             decimal(18,2) [not null]
+  descripcion_adicional text
+
+  Note: &#x27;Líneas de cotización con soporte para cálculo por m² y días de alquiler&#x27;
+}
+
+Table archivos_planos {
+  id             uuid    [pk, default: `gen_random_uuid()`]
+  cotizacion_id  uuid    [not null, ref: &gt; cotizaciones.id]
+  nombre_archivo varchar(300) [not null]
+  formato        formato_archivo [not null]
+  url_archivo    varchar(500)   [not null]
+  tipo_archivo   tipo_archivo_plano [not null]
+  uploaded_by    uuid    [ref: &gt; usuarios.id]
+  created_at     timestamp [default: `now()`]
+
+  Note: &#x27;Planos AutoCAD (DWG/DXF), exports Excel y PDFs de cotización&#x27;
+}
+
+// ============================================================
+// MÓDULO: CONTRATOS Y ÓRDENES DE COMPRA
+// ============================================================
+
+Table ordenes_compra {
+  id                    uuid    [pk, default: `gen_random_uuid()`]
+  numero_orden          varchar(50) [unique, not null]
+  cotizacion_id         uuid    [not null, ref: &gt; cotizaciones.id]
+  cliente_id            uuid    [not null, ref: &gt; clientes.id]
+  obra_id               uuid    [ref: &gt; obras.id]
+  estado                estado_orden [default: &#x27;pendiente&#x27;]
+  fecha_inicio          date
+  fecha_estimada_fin    date
+  fecha_fin_real        date
+  notas                 text
+  created_at            timestamp [default: `now()`]
+  updated_at            timestamp [default: `now()`]
+
+  Note: &#x27;Orden de compra generada una vez el cliente aprueba la cotización&#x27;
+}
+
+Table contratos {
+  id                      uuid    [pk, default: `gen_random_uuid()`]
+  numero_contrato         varchar(50) [unique, not null]
+  orden_compra_id         uuid    [unique, not null, ref: &gt; ordenes_compra.id]
+  cliente_id              uuid    [not null, ref: &gt; clientes.id]
+  estado                  estado_contrato [default: &#x27;borrador&#x27;]
+
+  // Integración con firma electrónica (DocuSign / Okc)
+  plataforma_firma        varchar(100) [note: &#x27;DocuSign, Okc u otra plataforma&#x27;]
+  id_documento_externo    varchar(200) [note: &#x27;ID del documento en la plataforma de firma&#x27;]
+  url_documento_firmado   varchar(500)
+  fecha_envio_firma       timestamp
+  fecha_firma             timestamp
+  firmado_por             varchar(200)
+
+  created_at              timestamp [default: `now()`]
+  updated_at              timestamp [default: `now()`]
+
+  Note: &#x27;Contratos con integración a firma electrónica — trigger automático a operaciones al firmarse&#x27;
+}
+
+// ============================================================
+// MÓDULO: INVENTARIOS Y LOGÍSTICA
+// ============================================================
+
+Table conductores {
+  id           uuid    [pk, default: `gen_random_uuid()`]
+  nombre       varchar(200) [not null]
+  cedula       varchar(50)  [unique, not null]
+  telefono     varchar(50)
+  celular      varchar(50)
+  tipo_vehiculo varchar(100)
+  placa        varchar(20)
+  activo       boolean  [default: true]
+  created_at   timestamp [default: `now()`]
+
+  Note: &#x27;Conductores para transporte de equipos a obras&#x27;
+}
+
+Table remisiones {
+  id               uuid    [pk, default: `gen_random_uuid()`]
+  numero_remision  varchar(50) [unique, not null]
+  orden_compra_id  uuid    [not null, ref: &gt; ordenes_compra.id]
+  frente_id        uuid    [ref: &gt; frentes_obra.id]
+  tipo_remision    tipo_remision [not null]
+  fecha_remision   date    [not null]
+  responsable_id   uuid    [ref: &gt; usuarios.id]
+  conductor_id     uuid    [ref: &gt; conductores.id]
+  vehiculo         varchar(100)
+  placa            varchar(20)
+  direccion_destino text
+  observaciones    text
+  estado           estado_remision [default: &#x27;programada&#x27;]
+  created_at       timestamp [default: `now()`]
+  updated_at       timestamp [default: `now()`]
+
+  indexes {
+    orden_compra_id
+    tipo_remision
+    fecha_remision
+  }
+
+  Note: &#x27;Remisiones de salida y entrada al Kardex — control de equipos en obra&#x27;
+}
+
+Table remision_items {
+  id                  uuid    [pk, default: `gen_random_uuid()`]
+  remision_id         uuid    [not null, ref: &gt; remisiones.id]
+  producto_id         uuid    [not null, ref: &gt; catalogo_productos.id]
+  cantidad_programada integer [not null]
+  cantidad_real       integer
+  estado_item         estado_item_remision [default: &#x27;pendiente&#x27;]
+  novedad             text    [note: &#x27;Descripción de daño, faltante o novedad&#x27;]
+
+  Note: &#x27;Detalle de equipos por remisión — base para calcular reposiciones y actualizar Kardex&#x27;
+}
+
+Table agenda_transporte {
+  id                 uuid    [pk, default: `gen_random_uuid()`]
+  remision_id        uuid    [not null, ref: &gt; remisiones.id]
+  conductor_id       uuid    [not null, ref: &gt; conductores.id]
+  fecha_programada   date    [not null]
+  hora_inicio        time
+  hora_fin           time
+  direccion_recogida text
+  direccion_destino  text    [not null]
+  orden_compra_id    uuid    [ref: &gt; ordenes_compra.id]
+  estado_agenda      estado_agenda [default: &#x27;programado&#x27;]
+  notas              text
+  created_at         timestamp [default: `now()`]
+  updated_at         timestamp [default: `now()`]
+
+  indexes {
+    conductor_id
+    fecha_programada
+  }
+
+  Note: &#x27;Agenda del jefe de almacén: conductores, horarios y direcciones de recogida&#x27;
+}
+
+// ============================================================
+// MÓDULO: FACTURACIÓN Y CARTERA
+// ============================================================
+
+Table facturas {
+  id               uuid    [pk, default: `gen_random_uuid()`]
+  numero_factura   varchar(50)  [unique, not null]
+  orden_compra_id  uuid    [not null, ref: &gt; ordenes_compra.id]
+  cliente_id       uuid    [not null, ref: &gt; clientes.id]
+  estado           estado_factura [default: &#x27;pendiente&#x27;]
+  fecha_emision    date    [not null]
+  fecha_vencimiento date   [not null]
+
+  // Valores con retenciones (según condiciones FT-AC-001 Sección VI)
+  subtotal         decimal(18,2) [not null]
+  descuento        decimal(18,2) [default: 0]
+  iva              decimal(18,2) [default: 0]
+  rte_fuente       decimal(18,2) [default: 0]
+  rte_ica          decimal(18,2) [default: 0]
+  total            decimal(18,2) [not null]
+  saldo_pendiente  decimal(18,2) [not null]
+
+  pdf_url          varchar(500)
+  notas            text
+  created_at       timestamp [default: `now()`]
+  updated_at       timestamp [default: `now()`]
+
+  indexes {
+    cliente_id
+    estado
+    fecha_vencimiento
+  }
+
+  Note: &#x27;Facturación electrónica con retenciones, cálculo por m² y cruce contable&#x27;
+}
+
+Table factura_items {
+  id                 uuid    [pk, default: `gen_random_uuid()`]
+  factura_id         uuid    [not null, ref: &gt; facturas.id]
+  cotizacion_item_id uuid    [ref: &gt; cotizacion_items.id]
+  descripcion        text    [not null]
+  tipo_cobro         tipo_item_cotizacion [not null]
+  cantidad           decimal(12,3) [default: 1]
+  area_m2            decimal(12,2)
+  dias_alquiler      integer [note: &#x27;Calculado desde fecha remisión salida hasta devolución&#x27;]
+  precio_unitario    decimal(15,2) [not null]
+  subtotal           decimal(18,2) [not null]
+
+  Note: &#x27;Líneas de factura: soporta cobro por m², por unidad y por días de alquiler&#x27;
+}
+
+Table pagos {
+  id              uuid    [pk, default: `gen_random_uuid()`]
+  factura_id      uuid    [not null, ref: &gt; facturas.id]
+  monto           decimal(18,2) [not null]
+  fecha_pago      date    [not null]
+  metodo_pago     metodo_pago [not null]
+  referencia_pago varchar(200)
+  registrado_por  uuid    [ref: &gt; usuarios.id]
+  notas           text
+  created_at      timestamp [default: `now()`]
+
+  Note: &#x27;Registro de pagos recibidos — actualiza saldo_pendiente en facturas&#x27;
+}
+
+Table cartera {
+  id                   uuid    [pk, default: `gen_random_uuid()`]
+  factura_id           uuid    [unique, not null, ref: &gt; facturas.id]
+  cliente_id           uuid    [not null, ref: &gt; clientes.id]
+  dias_mora            integer [default: 0]
+  monto_mora           decimal(18,2) [default: 0]
+  estado_gestion       estado_cartera [default: &#x27;nueva&#x27;]
+  fecha_ultimo_contacto date
+  notas_gestion        text
+  responsable_id       uuid    [ref: &gt; usuarios.id]
+  created_at           timestamp [default: `now()`]
+  updated_at           timestamp [default: `now()`]
+
+  Note: &#x27;Gestión de clientes con facturas vencidas — coordinado entre contabilidad y jurídica&#x27;
+}
+</pre>
+  </details>
+</section>
+
+  <section id="historias">
+    <div class="section-header">
+      <h2>Historias de Usuario</h2>
+      <p class="section-sub">14 historias · 6 módulos · Criterios de aceptación verificables · Roles asignados</p>
+    </div>
+    <div class="md-content"><h1>Historias de Usuario — G&amp;H Sistema de Gestión</h1>
+<p><strong>G&amp;H Obras y Estructuras Metálicas S.A.S</strong></p>
+<p>Versión 1.0 — Sesión 2026-06-16</p>
+<hr>
+<h2>Roles del Sistema</h2>
+<div class="table-wrap"><table><thead><tr>
+<th>Rol</th>
+<th>Descripción</th>
+</tr></thead><tbody>
+<tr><td><strong>Comercial</strong></td><td>Gestiona prospectos, cotizaciones y relación con el cliente</td></tr>
+<tr><td><strong>Dibujante</strong></td><td>Realiza modelamiento técnico y genera cotizaciones de materiales</td></tr>
+<tr><td><strong>Contabilidad</strong></td><td>Valida viabilidad financiera, facturación y cartera</td></tr>
+<tr><td><strong>Jurídica</strong></td><td>Valida documentación legal, listas LAFT y contratos</td></tr>
+<tr><td><strong>Almacén</strong></td><td>Gestiona inventario, remisiones y agenda de transporte</td></tr>
+<tr><td><strong>Conductor</strong></td><td>Ejecuta transporte de equipos a obras</td></tr>
+<tr><td><strong>Admin</strong></td><td>Administra usuarios, catálogo y configuración del sistema</td></tr>
+</tbody></table></div>
+<hr>
+<h2>Módulo 1 — Cotizaciones</h2>
+<h3>US-001 · Creación de cotización técnica por dibujante</h3>
+<p><strong>Como</strong> Dibujante  </p>
+<p><strong>Quiero</strong> cargar los planos del cliente (DWG/DXF/PDF) y generar el desglose de materiales en el sistema  </p>
+<p><strong>Para</strong> reducir el tiempo de modelamiento actual de 4-6 horas en AutoCAD</p>
+<p><strong>Criterios de Aceptación</strong></p>
+<ul class="md-list">
+<li class="check-item"><span class="chk">☐</span> AC-001: El sistema permite subir archivos en formatos DWG, DXF, PDF y XLSX.</li>
+<li class="check-item"><span class="chk">☐</span> AC-002: Se puede asociar la cotización a un cliente, obra y frente de obra específicos.</li>
+<li class="check-item"><span class="chk">☐</span> AC-003: El dibujante puede importar el Excel de materiales exportado desde AutoCAD.</li>
+<li class="check-item"><span class="chk">☐</span> AC-004: El sistema consulta el catálogo oficial y asigna precios automáticamente a cada ítem importado.</li>
+<li class="check-item"><span class="chk">☐</span> AC-005: Se registra el tiempo de modelamiento (horas empleadas) como métrica del sistema.</li>
+<li class="check-item"><span class="chk">☐</span> AC-006: La cotización queda en estado &quot;Borrador&quot; hasta que el Comercial la revise.</li>
+</ul>
+<hr>
+<h3>US-002 · Completar cotización con valores comerciales</h3>
+<p><strong>Como</strong> Comercial  </p>
+<p><strong>Quiero</strong> recibir la cotización técnica del dibujante y agregarle los valores comerciales, descuentos e IVA  </p>
+<p><strong>Para</strong> generar el PDF final que se envía al cliente</p>
+<p><strong>Criterios de Aceptación</strong></p>
+<ul class="md-list">
+<li class="check-item"><span class="chk">☐</span> AC-001: El Comercial puede seleccionar los tipos de negocio aplicables: Venta, Alquiler, Transporte y/o Reposición.</li>
+<li class="check-item"><span class="chk">☐</span> AC-002: Se pueden agregar accesorios y servicios adicionales a la cotización.</li>
+<li class="check-item"><span class="chk">☐</span> AC-003: El sistema calcula automáticamente subtotales, IVA y total.</li>
+<li class="check-item"><span class="chk">☐</span> AC-004: Para ítems que aplican, el sistema soporta cálculo de precios por metro cuadrado ($/m²).</li>
+<li class="check-item"><span class="chk">☐</span> AC-005: El PDF generado incluye logo, datos de G&amp;H, cliente, obra, ítems y totales con retenciones.</li>
+<li class="check-item"><span class="chk">☐</span> AC-006: El PDF puede enviarse directamente al cliente desde el sistema.</li>
+</ul>
+<hr>
+<h3>US-003 · Consulta de catálogos de precios</h3>
+<p><strong>Como</strong> Dibujante o Comercial  </p>
+<p><strong>Quiero</strong> consultar el catálogo oficial de productos con precios vigentes  </p>
+<p><strong>Para</strong> asignar valores correctos a cada ítem sin depender de documentos físicos o Excel externos</p>
+<p><strong>Criterios de Aceptación</strong></p>
+<ul class="md-list">
+<li class="check-item"><span class="chk">☐</span> AC-001: El catálogo muestra código, nombre, descripción, precio de venta, precio de alquiler/día y precio de reposición.</li>
+<li class="check-item"><span class="chk">☐</span> AC-002: El catálogo indica si el producto aplica precio por m².</li>
+<li class="check-item"><span class="chk">☐</span> AC-003: Cada producto tiene un código de revisión para trazabilidad de cambios de precio.</li>
+<li class="check-item"><span class="chk">☐</span> AC-004: Solo el Admin puede crear, editar o desactivar productos del catálogo.</li>
+</ul>
+<hr>
+<h2>Módulo 2 — Registro y Aprobación de Clientes</h2>
+<h3>US-004 · Diligenciar formulario único de registro de cliente</h3>
+<p><strong>Como</strong> Comercial  </p>
+<p><strong>Quiero</strong> completar el formulario FT-AC-001 digitalmente en el sistema  </p>
+<p><strong>Para</strong> reemplazar el proceso manual en Excel y estandarizar la captura de datos</p>
+<p><strong>Criterios de Aceptación</strong></p>
+<ul class="md-list">
+<li class="check-item"><span class="chk">☐</span> AC-001: El formulario cubre las 8 secciones del FT-AC-001 v2.0: Info General, Contacto, Referencias Bancarias, Referencias Comerciales, Tributaria, Contable, Socios/Accionistas e Información de Obra.</li>
+<li class="check-item"><span class="chk">☐</span> AC-002: Se puede adjuntar: RUT, Cámara de Comercio, Cédula del Representante Legal, Estados Financieros, Autorización de Centrales de Riesgo y Carta de Presentación.</li>
+<li class="check-item"><span class="chk">☐</span> AC-003: Los campos obligatorios se validan antes de pasar al proceso de aprobación.</li>
+<li class="check-item"><span class="chk">☐</span> AC-004: El formulario genera automáticamente un código de revisión único por cliente.</li>
+<li class="check-item"><span class="chk">☐</span> AC-005: Se registra la ciudad de la sucursal asociada (Bogotá, Ibagué o Armenia).</li>
+</ul>
+<hr>
+<h3>US-005 · Dar concepto de aprobación de cliente</h3>
+<p><strong>Como</strong> Contabilidad, Jurídica o Comercial  </p>
+<p><strong>Quiero</strong> revisar la información del cliente y registrar mi concepto (Favorable / No Favorable) con comentarios  </p>
+<p><strong>Para</strong> cumplir el proceso de validación multi-área y permitir o bloquear el avance al contrato</p>
+<p><strong>Criterios de Aceptación</strong></p>
+<ul class="md-list">
+<li class="check-item"><span class="chk">☐</span> AC-001: Cada área visualiza la información del cliente y los documentos adjuntos antes de dar concepto.</li>
+<li class="check-item"><span class="chk">☐</span> AC-002: El campo de comentario es obligatorio — no se puede guardar el concepto sin justificarlo.</li>
+<li class="check-item"><span class="chk">☐</span> AC-003: Los tres conceptos son independientes y pueden darse simultáneamente.</li>
+<li class="check-item"><span class="chk">☐</span> AC-004: El sistema solo permite avanzar a Orden de Compra cuando los 3 conceptos son &quot;Favorable&quot;.</li>
+<li class="check-item"><span class="chk">☐</span> AC-005: Si algún área da concepto &quot;No Favorable&quot;, el cliente pasa a estado &quot;Rechazado&quot; y se notifica al equipo Comercial con los motivos.</li>
+<li class="check-item"><span class="chk">☐</span> AC-006: El sistema envía notificación automática a las áreas con conceptos pendientes para agilizar el proceso.</li>
+</ul>
+<hr>
+<h3>US-006 · Ver historial de aprobaciones y anotaciones</h3>
+<p><strong>Como</strong> cualquier usuario con acceso al módulo de clientes  </p>
+<p><strong>Quiero</strong> ver el historial de conceptos y comentarios de todas las áreas  </p>
+<p><strong>Para</strong> tener trazabilidad del proceso de aprobación de cada cliente</p>
+<p><strong>Criterios de Aceptación</strong></p>
+<ul class="md-list">
+<li class="check-item"><span class="chk">☐</span> AC-001: Se muestra quién dio el concepto, cuándo y cuál fue la decisión.</li>
+<li class="check-item"><span class="chk">☐</span> AC-002: Los comentarios de cada área son visibles para todos los roles autorizados.</li>
+<li class="check-item"><span class="chk">☐</span> AC-003: El historial es de solo lectura — no se puede modificar un concepto ya dado.</li>
+</ul>
+<hr>
+<h2>Módulo 3 — Contratos y Firma Electrónica</h2>
+<h3>US-007 · Generar y firmar contrato</h3>
+<p><strong>Como</strong> Comercial  </p>
+<p><strong>Quiero</strong> generar la Orden de Compra y enviar el contrato a firma electrónica  </p>
+<p><strong>Para</strong> oficializar la relación con el cliente sin depender de procesos físicos</p>
+<p><strong>Criterios de Aceptación</strong></p>
+<ul class="md-list">
+<li class="check-item"><span class="chk">☐</span> AC-001: La Orden de Compra se genera automáticamente a partir de la cotización aprobada por el cliente.</li>
+<li class="check-item"><span class="chk">☐</span> AC-002: El sistema se integra con DocuSign u Okc para enviar el contrato a firma.</li>
+<li class="check-item"><span class="chk">☐</span> AC-003: Se envía notificación al cliente y al equipo Comercial cuando el contrato está pendiente de firma.</li>
+<li class="check-item"><span class="chk">☐</span> AC-004: Al confirmar la firma, el contrato cambia automáticamente a estado &quot;Firmado&quot;.</li>
+<li class="check-item"><span class="chk">☐</span> AC-005: El estado &quot;Firmado&quot; dispara automáticamente la activación del cliente en el módulo de Operaciones/Inventarios.</li>
+</ul>
+<hr>
+<h2>Módulo 4 — Inventarios y Logística</h2>
+<h3>US-008 · Generar remisión de salida de equipos</h3>
+<p><strong>Como</strong> Jefe de Almacén  </p>
+<p><strong>Quiero</strong> generar la remisión de salida de equipos asociada a una Orden de Compra  </p>
+<p><strong>Para</strong> actualizar el Kardex y tener control del inventario enviado a cada frente de obra</p>
+<p><strong>Criterios de Aceptación</strong></p>
+<ul class="md-list">
+<li class="check-item"><span class="chk">☐</span> AC-001: La remisión se asocia a una Orden de Compra, obra y frente de obra específicos.</li>
+<li class="check-item"><span class="chk">☐</span> AC-002: Se registran los equipos, cantidades, conductor, vehículo, placa y dirección de destino.</li>
+<li class="check-item"><span class="chk">☐</span> AC-003: Al confirmar la remisión, el Kardex descuenta automáticamente el stock de cada producto.</li>
+<li class="check-item"><span class="chk">☐</span> AC-004: El conductor recibe notificación con el detalle del despacho.</li>
+</ul>
+<hr>
+<h3>US-009 · Programar agenda de transporte y recogidas</h3>
+<p><strong>Como</strong> Jefe de Almacén  </p>
+<p><strong>Quiero</strong> programar la agenda de conductores con fechas, horarios y direcciones de entrega y recogida  </p>
+<p><strong>Para</strong> coordinar eficientemente la logística de equipos entre bodega y obras</p>
+<p><strong>Criterios de Aceptación</strong></p>
+<ul class="md-list">
+<li class="check-item"><span class="chk">☐</span> AC-001: La agenda muestra un calendario interactivo con los despachos y recogidas programadas.</li>
+<li class="check-item"><span class="chk">☐</span> AC-002: Se puede asignar conductor, vehículo, hora de inicio, hora de fin y dirección a cada viaje.</li>
+<li class="check-item"><span class="chk">☐</span> AC-003: El sistema genera alertas automáticas de próximas recogidas para equipos en alquiler.</li>
+<li class="check-item"><span class="chk">☐</span> AC-004: El conductor puede ver su agenda asignada desde su perfil.</li>
+</ul>
+<hr>
+<h3>US-010 · Registrar devolución y calcular días de alquiler</h3>
+<p><strong>Como</strong> Jefe de Almacén  </p>
+<p><strong>Quiero</strong> registrar el retorno de equipos en alquiler e inspeccionar su estado  </p>
+<p><strong>Para</strong> actualizar el Kardex, calcular los días de alquiler transcurridos y gestionar reposiciones</p>
+<p><strong>Criterios de Aceptación</strong></p>
+<ul class="md-list">
+<li class="check-item"><span class="chk">☐</span> AC-001: La remisión de entrada se vincula a la remisión de salida original.</li>
+<li class="check-item"><span class="chk">☐</span> AC-002: Se puede marcar cada equipo como: OK, Dañado o Faltante.</li>
+<li class="check-item"><span class="chk">☐</span> AC-003: El sistema calcula automáticamente los días entre la fecha de remisión salida y la fecha de entrada.</li>
+<li class="check-item"><span class="chk">☐</span> AC-004: Los equipos marcados como &quot;Faltante&quot; generan automáticamente un ítem de Reposición en la factura.</li>
+<li class="check-item"><span class="chk">☐</span> AC-005: El Kardex se actualiza al confirmar la recepción de los equipos en buen estado.</li>
+</ul>
+<hr>
+<h2>Módulo 5 — Facturación y Cartera</h2>
+<h3>US-011 · Generar factura con cálculo de m² y días de alquiler</h3>
+<p><strong>Como</strong> Contabilidad  </p>
+<p><strong>Quiero</strong> generar la factura a partir de la Orden de Compra con todos los ítems, retenciones y cálculos automáticos  </p>
+<p><strong>Para</strong> asegurar un cobro correcto y ágil al cliente</p>
+<p><strong>Criterios de Aceptación</strong></p>
+<ul class="md-list">
+<li class="check-item"><span class="chk">☐</span> AC-001: La factura se genera a partir de los ítems de la cotización aprobada.</li>
+<li class="check-item"><span class="chk">☐</span> AC-002: Para productos de alquiler, el cálculo incluye automáticamente los días desde la remisión de salida hasta la entrada.</li>
+<li class="check-item"><span class="chk">☐</span> AC-003: Para productos que aplican, el sistema calcula el cobro por metro cuadrado ($/m²).</li>
+<li class="check-item"><span class="chk">☐</span> AC-004: La factura aplica automáticamente las retenciones del cliente: Rte. Fuente, Rte. ICA e IVA según el formulario FT-AC-001.</li>
+<li class="check-item"><span class="chk">☐</span> AC-005: Se genera el PDF de la factura electrónica.</li>
+<li class="check-item"><span class="chk">☐</span> AC-006: Se registra el pago del cliente y se actualiza el saldo pendiente.</li>
+</ul>
+<hr>
+<h3>US-012 · Gestionar cartera de clientes en mora</h3>
+<p><strong>Como</strong> Contabilidad o Jurídica  </p>
+<p><strong>Quiero</strong> ver las facturas vencidas, registrar gestiones de cobro y hacer seguimiento  </p>
+<p><strong>Para</strong> reducir la cartera y coordinar cobros jurídicos cuando sea necesario</p>
+<p><strong>Criterios de Aceptación</strong></p>
+<ul class="md-list">
+<li class="check-item"><span class="chk">☐</span> AC-001: La vista de cartera muestra cliente, factura, días en mora y monto pendiente.</li>
+<li class="check-item"><span class="chk">☐</span> AC-002: Se pueden registrar notas de gestión: contactos realizados, acuerdos de pago, etc.</li>
+<li class="check-item"><span class="chk">☐</span> AC-003: El sistema genera alertas automáticas para facturas que superan los días de plazo acordados.</li>
+<li class="check-item"><span class="chk">☐</span> AC-004: La cartera tiene estados: Nueva, En Gestión, Acuerdo de Pago, Demanda, Castigada, Recuperada.</li>
+</ul>
+<hr>
+<h2>Módulo 6 — Auditoría y Notificaciones (Transversal)</h2>
+<h3>US-013 · Consultar log global de auditoría</h3>
+<p><strong>Como</strong> Admin o Contabilidad  </p>
+<p><strong>Quiero</strong> consultar el registro de todas las acciones realizadas en el sistema  </p>
+<p><strong>Para</strong> tener trazabilidad completa de quién hizo qué y cuándo</p>
+<p><strong>Criterios de Aceptación</strong></p>
+<ul class="md-list">
+<li class="check-item"><span class="chk">☐</span> AC-001: El log registra: usuario, acción, módulo, registro afectado, fecha/hora e IP.</li>
+<li class="check-item"><span class="chk">☐</span> AC-002: Se puede filtrar por usuario, módulo, rango de fechas y tipo de acción.</li>
+<li class="check-item"><span class="chk">☐</span> AC-003: El log es de solo lectura — ningún usuario puede modificar o borrar registros.</li>
+<li class="check-item"><span class="chk">☐</span> AC-004: Los datos anteriores y nuevos de cada cambio quedan almacenados en JSON.</li>
+</ul>
+<hr>
+<h3>US-014 · Recibir notificaciones de procesos pendientes</h3>
+<p><strong>Como</strong> cualquier usuario del sistema  </p>
+<p><strong>Quiero</strong> recibir notificaciones cuando hay acciones que requieren mi atención  </p>
+<p><strong>Para</strong> no depender de comunicaciones manuales por WhatsApp o email para empujar los procesos</p>
+<p><strong>Criterios de Aceptación</strong></p>
+<ul class="md-list">
+<li class="check-item"><span class="chk">☐</span> AC-001: Contabilidad, Jurídica y Comercial reciben alerta cuando hay una aprobación de cliente pendiente de su concepto.</li>
+<li class="check-item"><span class="chk">☐</span> AC-002: El Almacén recibe alerta automática de próximas recogidas de equipos en alquiler.</li>
+<li class="check-item"><span class="chk">☐</span> AC-003: El Comercial recibe alerta cuando un contrato lleva más de X días sin ser firmado.</li>
+<li class="check-item"><span class="chk">☐</span> AC-004: Contabilidad recibe alerta cuando una factura está próxima a vencer o ya venció.</li>
+<li class="check-item"><span class="chk">☐</span> AC-005: Las notificaciones se muestran en el sistema y pueden enviarse por email.</li>
+</ul>
+<hr>
+<h2>Resumen de Métricas de Escala (para QA y Pruebas de Carga)</h2>
+<div class="table-wrap"><table><thead><tr>
+<th>Métrica</th>
+<th>Valor</th>
+</tr></thead><tbody>
+<tr><td>Clientes en migración inicial</td><td>~180 (130 Bogotá, 50 Ibagué/Armenia)</td></tr>
+<tr><td>Obras por cliente</td><td>Hasta 50</td></tr>
+<tr><td>Frentes por obra</td><td>3-4</td></tr>
+<tr><td>Cotizaciones por dibujante/semana</td><td>6-12</td></tr>
+<tr><td>Prospectos nuevos por mes</td><td>~50</td></tr>
+<tr><td>Tiempo modelamiento actual (AutoCAD)</td><td>4-6 horas</td></tr>
+<tr><td>Documentos del checklist por cliente</td><td>~6 tipos</td></tr>
+<tr><td>Áreas de aprobación</td><td>3 (Contabilidad, Jurídica, Comercial)</td></tr>
+</tbody></table></div></div>
+  </section>
+
+  <section id="checklist">
+    <div class="section-header">
+      <h2>Checklist Validado</h2>
+      <p class="section-sub">24 ítems originales + 6 adicionales identificados en documentos · 100% cubiertos en el schema</p>
+    </div>
+    <div class="md-content"><h1>Checklist Validado — G&amp;H Sistema de Gestión</h1>
+<p><strong>Validación cruzada con transcripción sesión 2026-06-16 y formularios FT-AC-001 v2.0</strong></p>
+<hr>
+<h2>Estado General</h2>
+<div class="table-wrap"><table><thead><tr>
+<th>Módulo</th>
+<th>Items</th>
+<th>Cubiertos</th>
+<th>Estado</th>
+</tr></thead><tbody>
+<tr><td>Datos y Migración</td><td>5</td><td>5</td><td>✅ Completo</td></tr>
+<tr><td>Módulo Comercial y Cotización</td><td>7</td><td>7</td><td>✅ Completo</td></tr>
+<tr><td>Registro y Aprobación de Clientes</td><td>3</td><td>3</td><td>✅ Completo</td></tr>
+<tr><td>Contratos y Firma</td><td>2</td><td>2</td><td>✅ Completo</td></tr>
+<tr><td>Inventarios y Logística</td><td>4</td><td>4</td><td>✅ Completo</td></tr>
+<tr><td>Requerimientos Transversales</td><td>3</td><td>3</td><td>✅ Completo</td></tr>
+<tr><td><strong>TOTAL</strong></td><td><strong>24</strong></td><td><strong>24</strong></td><td><strong>✅ 100%</strong></td></tr>
+</tbody></table></div>
+<hr>
+<h2>1. Checklist de Datos y Métricas de Migración</h2>
+<p>&gt; Valida la estructura de PostgreSQL para soportar el volumen histórico</p>
+<ul class="md-list">
+<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Capacidad de Carga de Clientes:</strong> Soporte para ~<strong>180 clientes</strong> (130 Bogotá, 50 Ibagué/Armenia).</li>
+<li><em>Cubierto en:</em> tabla <code>clientes</code> con campo <code>ciudad_sucursal</code> (enum: bogota, ibague, armenia).</li>
+</ul>
+<ul class="md-list">
+<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Estructura Geográfica / Sucursales:</strong> Campos de segmentación por ciudades core.</li>
+<li><em>Cubierto en:</em> <code>clientes.ciudad_sucursal</code> + índice en la columna para filtrado eficiente.</li>
+</ul>
+<ul class="md-list">
+<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Nivel 1 (Cliente):</strong> Registro único con código de revisión automático.</li>
+<li><em>Cubierto en:</em> <code>clientes.codigo_revision</code> (varchar unique auto-generado).</li>
+</ul>
+<ul class="md-list">
+<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Nivel 2 (Obra):</strong> Hasta <strong>50 obras independientes</strong> por cliente.</li>
+<li><em>Cubierto en:</em> tabla <code>obras</code> con FK a <code>clientes.id</code>.</li>
+</ul>
+<ul class="md-list">
+<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Nivel 3 (Frente de Obra):</strong> 3-4 frentes por obra.</li>
+<li><em>Cubierto en:</em> tabla <code>frentes_obra</code> con FK a <code>obras.id</code>.</li>
+</ul>
+<ul class="md-list">
+<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Historial de Prospección:</strong> Registro de ~<strong>50 prospectos nuevos/mes</strong> con trazabilidad.</li>
+<li><em>Cubierto en:</em> <code>clientes.estado_cliente = &#x27;prospecto&#x27;</code> + campo <code>created_at</code> + auditoría.</li>
+</ul>
+<hr>
+<h2>2. Checklist para el Módulo Comercial y de Cotización</h2>
+<p>&gt; Frontend React + Lógica FastAPI para el flujo de preventa</p>
+<ul class="md-list">
+<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Módulo de Dibujantes (Optimización):</strong> Flujo técnico para agilizar proceso actual (4-6 horas AutoCAD).</li>
+<li><em>Cubierto en:</em> tabla <code>cotizaciones</code> con <code>horas_modelamiento</code> + flujo en <code>03_modulo_cotizacion.mmd</code>.</li>
+<li><em>Historia de usuario:</em> US-001.</li>
+</ul>
+<ul class="md-list">
+<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Carga y Lectura de Archivos:</strong> Canal para planos (DWG/DXF) y exportación/importación Excel.</li>
+<li><em>Cubierto en:</em> tabla <code>archivos_planos</code> (formatos: dwg, dxf, pdf, xlsx) + <code>cotizaciones.archivo_excel_url</code>.</li>
+<li><em>Historia de usuario:</em> US-001, AC-001, AC-003.</li>
+</ul>
+<ul class="md-list">
+<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Integración de Catálogos Oficiales:</strong> Precios del cliente para asignación automática.</li>
+<li><em>Cubierto en:</em> tabla <code>catalogo_productos</code> con precios de venta, alquiler/día y reposición + US-003.</li>
+</ul>
+<ul class="md-list">
+<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Generador de Cotizaciones en PDF:</strong> Export final con valores comerciales e IVA.</li>
+<li><em>Cubierto en:</em> <code>cotizaciones.pdf_cotizacion_url</code> + US-002, AC-005.</li>
+</ul>
+<ul class="md-list">
+<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Venta:</strong> Productos/materiales existentes en catálogo.</li>
+<li><em>Cubierto en:</em> <code>cotizacion_items.tipo_item = &#x27;venta&#x27;</code> + <code>cotizaciones.incluye_venta</code>.</li>
+</ul>
+<ul class="md-list">
+<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Alquiler:</strong> Equipos y maquinaria temporal.</li>
+<li><em>Cubierto en:</em> <code>cotizacion_items.tipo_item = &#x27;alquiler&#x27;</code> + <code>cotizacion_items.dias_alquiler</code>.</li>
+</ul>
+<ul class="md-list">
+<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Transporte:</strong> Costos de logística, trayectos ida y vuelta.</li>
+<li><em>Cubierto en:</em> <code>tipo_item_cotizacion = &#x27;transporte_ida&#x27;</code> y <code>&#x27;transporte_vuelta&#x27;</code>.</li>
+</ul>
+<ul class="md-list">
+<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Reposición:</strong> Cobros por pérdida o no devolución.</li>
+<li><em>Cubierto en:</em> <code>tipo_item_cotizacion = &#x27;reposicion&#x27;</code> + <code>catalogo_productos.precio_reposicion</code>.</li>
+</ul>
+<hr>
+<h2>3. Checklist Documental para Registro de Clientes</h2>
+<p>&gt; Reemplaza el formato Excel CHECKLIST VALIDACION CLIENTES BOGOTA</p>
+<ul class="md-list">
+<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Validación de Roles Simultáneos:</strong> Bloqueo hasta que las 3 áreas den concepto.</li>
+<li><em>Cubierto en:</em> tabla <code>aprobaciones_cliente</code> con índice <code>UNIQUE(cliente_id, area)</code>.</li>
+<li><em>Lógica:</em> <code>estado_cliente</code> solo avanza a &#x27;aprobado&#x27; cuando las 3 áreas tienen <code>es_favorable = true</code>.</li>
+<li><em>Historia de usuario:</em> US-005.</li>
+</ul>
+<ul class="md-list">
+<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Contabilidad:</strong> Validación financiera y de crédito.</li>
+<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Jurídica:</strong> Validación documental y listas LAFT (Circular 09/2016, Ley 1581/2012).</li>
+<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Comercial:</strong> Validación de la oportunidad de negocio.</li>
+</ul>
+<ul class="md-list">
+<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Conceptos Obligatorios:</strong> Estado Favorable / No Favorable.</li>
+<li><em>Cubierto en:</em> <code>aprobaciones_cliente.es_favorable</code> (boolean) + <code>estado_aprobacion</code> (enum).</li>
+</ul>
+<ul class="md-list">
+<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Caja de Anotaciones / Comentarios:</strong> Campo de texto obligatorio por área.</li>
+<li><em>Cubierto en:</em> <code>aprobaciones_cliente.concepto</code> (text, NOT NULL en lógica de negocio).</li>
+<li><em>Historia de usuario:</em> US-005, AC-002.</li>
+</ul>
+<ul class="md-list">
+<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Formulario FT-AC-001 v2.0 completo:</strong> Secciones I-IX capturadas.</li>
+<li><em>Cubierto en:</em> tablas <code>clientes</code>, <code>contactos_cliente</code>, <code>referencias_bancarias</code>, <code>referencias_comerciales</code>, <code>accionistas</code>, <code>autorizacion_centrales_riesgo</code>, <code>documentos_registro</code>.</li>
+</ul>
+<hr>
+<h2>4. Checklist para el Módulo de Contratos y Firma</h2>
+<ul class="md-list">
+<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Firma Electrónica:</strong> Integración API con plataformas de firma digital (DocuSign / Okc).</li>
+<li><em>Cubierto en:</em> tabla <code>contratos</code> con campos <code>plataforma_firma</code>, <code>id_documento_externo</code>, <code>url_documento_firmado</code>, <code>fecha_firma</code>.</li>
+<li><em>Historia de usuario:</em> US-007.</li>
+</ul>
+<ul class="md-list">
+<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Transición a Operaciones:</strong> Contrato firmado activa automáticamente el módulo de Inventarios.</li>
+<li><em>Cubierto en:</em> trigger automático en <code>contratos.estado = &#x27;firmado&#x27;</code> → <code>ordenes_compra.estado = &#x27;activa&#x27;</code>.</li>
+<li><em>Historia de usuario:</em> US-007, AC-005.</li>
+</ul>
+<hr>
+<h2>5. Checklist para el Módulo de Inventarios</h2>
+<ul class="md-list">
+<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Remisiones de Salida:</strong> Generación automática en el Kardex al despacho.</li>
+<li><em>Cubierto en:</em> tablas <code>remisiones</code> + <code>remision_items</code> con actualización de <code>catalogo_productos.stock_actual</code>.</li>
+<li><em>Historia de usuario:</em> US-008.</li>
+</ul>
+<ul class="md-list">
+<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Módulo de Agenda y Próximas Recogidas:</strong> Calendario interactivo para el Jefe de Almacén.</li>
+<li><em>Cubierto en:</em> tabla <code>agenda_transporte</code> + <code>sitemap → /inventarios/agenda</code>.</li>
+<li><em>Historia de usuario:</em> US-009.</li>
+</ul>
+<ul class="md-list">
+<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Asignación de Conductores:</strong> Conductor, vehículo, horario y dirección por orden de recogida.</li>
+<li><em>Cubierto en:</em> tabla <code>conductores</code> + FK en <code>remisiones.conductor_id</code> y <code>agenda_transporte.conductor_id</code>.</li>
+<li><em>Historia de usuario:</em> US-009, AC-002.</li>
+</ul>
+<ul class="md-list">
+<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Cruce de Devoluciones:</strong> Lógica de entrada para restaurar Kardex y calcular días de alquiler.</li>
+<li><em>Cubierto en:</em> <code>tipo_remision = &#x27;entrada_devolucion&#x27;</code> + cálculo de días entre remisión salida y entrada.</li>
+<li><em>Historia de usuario:</em> US-010.</li>
+</ul>
+<hr>
+<h2>6. Checklist de Requerimientos Transversales</h2>
+<ul class="md-list">
+<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Cálculo por Metro Cuadrado ($/m²):</strong> Lógica en facturación y cotizaciones.</li>
+<li><em>Cubierto en:</em> <code>catalogo_productos.calcula_por_m2</code> + <code>catalogo_productos.precio_por_m2</code> + campos <code>area_m2</code> en <code>cotizacion_items</code> y <code>factura_items</code>.</li>
+<li><em>Historia de usuario:</em> US-002 AC-004, US-011 AC-003.</li>
+</ul>
+<ul class="md-list">
+<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Módulo de Auditoría Global:</strong> ¿Quién? ¿Cuándo? ¿Qué tipo de cambio?</li>
+<li><em>Cubierto en:</em> tabla <code>auditoria</code> con campos: <code>usuario_id</code>, <code>created_at</code>, <code>accion</code>, <code>tabla_afectada</code>, <code>datos_anteriores</code>, <code>datos_nuevos</code>.</li>
+<li><em>Historia de usuario:</em> US-013.</li>
+</ul>
+<ul class="md-list">
+<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Motor de Notificaciones:</strong></li>
+<li class="check-item done"><span class="chk chk-ok">✓</span> Alertas para aprobaciones pendientes entre áreas.</li>
+<li><em>Cubierto en:</em> tabla <code>notificaciones</code> con <code>tipo = &#x27;aprobacion_pendiente&#x27;</code> + US-014 AC-001.</li>
+<li class="check-item done"><span class="chk chk-ok">✓</span> Alertas logísticas para recogida de maquinaria.</li>
+<li><em>Cubierto en:</em> <code>tipo_notificacion = &#x27;recogida_programada&#x27;</code> + US-014 AC-002.</li>
+</ul>
+<hr>
+<h2>Items adicionales identificados en documentos (no estaban en checklist original)</h2>
+<ul class="md-list">
+<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Autorización de Centrales de Riesgo (Ley 1581/2012):</strong> Capturada como documento adjunto y tabla propia <code>autorizacion_centrales_riesgo</code>.</li>
+<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Listas LAFT:</strong> Campo de validación en <code>aprobaciones_cliente</code> para el área de Jurídica.</li>
+<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Cláusulas de Arrendamiento:</strong> El contrato incluye cláusulas del FT-AC-001 Sección IX (tarifa inicia desde remisión, faltantes se cobran a valor comercial, no traslado sin autorización).</li>
+<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Accionistas &gt;5% capital:</strong> Capturados en tabla <code>accionistas</code> con campo <code>es_pep</code> para Personas Expuestas Políticamente.</li>
+<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Retenciones (Rte. Fuente + ICA):</strong> Campos en tabla <code>clientes</code> y <code>facturas</code> para gestión por cliente.</li>
+<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Prospectos sin venta:</strong> El campo <code>estado_cliente = &#x27;prospecto&#x27;</code> permite registrar los ~50 contactos mensuales que no siempre concretan compra.</li>
+</ul></div>
+  </section>
+
+  <footer>
+    <p><strong>G&amp;H Obras y Estructuras Metálicas S.A.S</strong> &nbsp;·&nbsp; NIT: 901.218.896-8 &nbsp;·&nbsp; Calle 64 #112C-27, Engativá, Bogotá — Colombia</p>
+    <p style="margin-top:.4rem">Generado el 24 de June de 2026 &nbsp;·&nbsp; Sesión: 2026-06-16 &nbsp;·&nbsp; Fase de Inception v1.0 &nbsp;·&nbsp; imagineapps.co</p>
+  </footer>
+
+</main>
+</div>
+</body>
+</html>

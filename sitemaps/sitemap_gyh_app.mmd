@@ -1,0 +1,124 @@
+%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'primaryColor': '#1A365D',
+    'primaryTextColor': '#FFFFFF',
+    'primaryBorderColor': '#1A365D',
+    'lineColor': '#4A5568',
+    'secondaryColor': '#EDF2F7',
+    'clusterBkg': '#EDF2F7',
+    'clusterBorder': '#1A365D',
+    'fontFamily': 'Montserrat, sans-serif'
+  }
+}}%%
+
+flowchart TD
+    classDef root        fill:#1A365D,color:#FFFFFF,stroke:#0F2440,stroke-width:3px,font-weight:bold
+    classDef modulo      fill:#1A365D,color:#FFFFFF,stroke:#2C5282,stroke-width:2px,font-weight:bold
+    classDef submod      fill:#2D3748,color:#FFFFFF,stroke:#1A202C,stroke-width:1px
+    classDef pagina      fill:#EDF2F7,color:#1A365D,stroke:#CBD5E0,stroke-width:1px
+    classDef cta         fill:#FF9F1C,color:#1A365D,stroke:#E8910A,stroke-width:2px,font-weight:bold
+    classDef alerta      fill:#E53E3E,color:#FFFFFF,stroke:#C53030,stroke-width:1px
+    classDef exito       fill:#38A169,color:#FFFFFF,stroke:#2F855A,stroke-width:1px
+    classDef auth        fill:#4A5568,color:#FFFFFF,stroke:#2D3748,stroke-width:2px
+
+    %% ── RAÍZ
+    ROOT(["🏗️ G&H Sistema\ngyh.com.co"]):::root
+
+    %% ── AUTH
+    AUTH["🔐 Autenticación"]:::auth
+    LOGIN["Iniciar Sesión\n/login"]:::pagina
+    FORGOT["Recuperar Contraseña\n/forgot-password"]:::pagina
+    AUTH --> LOGIN & FORGOT
+
+    %% ── DASHBOARD
+    DASH["🏠 Dashboard\n/dashboard"]:::modulo
+    DASH_KPI["📊 KPIs y Métricas\nCotizaciones · Clientes · Ingresos"]:::pagina
+    DASH_ALERTS["🔔 Alertas Pendientes\nAprobaciones · Recogidas · Vencimientos"]:::pagina
+    DASH_ACT["📋 Actividad Reciente\nLog de acciones del sistema"]:::pagina
+    DASH --> DASH_KPI & DASH_ALERTS & DASH_ACT
+
+    %% ── CLIENTES
+    CLI["👥 Clientes\n/clientes"]:::modulo
+    CLI_LIST["📋 Lista de Clientes\n/clientes"]:::pagina
+    CLI_NEW["➕ Nuevo Cliente\n/clientes/nuevo"]:::cta
+    CLI_DET["👤 Detalle Cliente\n/clientes/:id"]:::pagina
+    CLI_FORM["📝 Formulario FT-AC-001\n/clientes/:id/registro"]:::pagina
+    CLI_DOCS["📂 Documentos\n/clientes/:id/documentos"]:::pagina
+    CLI_APROB["✅ Aprobación Multi-Área\n/clientes/:id/aprobacion"]:::cta
+    CLI_OBRAS["🏗️ Obras y Frentes\n/clientes/:id/obras"]:::pagina
+    CLI_HIST["🕐 Historial\n/clientes/:id/historial"]:::pagina
+    CLI --> CLI_LIST & CLI_NEW
+    CLI_LIST --> CLI_DET
+    CLI_DET --> CLI_FORM & CLI_DOCS & CLI_APROB & CLI_OBRAS & CLI_HIST
+
+    %% ── COTIZACIONES
+    COT["📋 Cotizaciones\n/cotizaciones"]:::modulo
+    COT_LIST["📋 Lista de Cotizaciones\n/cotizaciones"]:::pagina
+    COT_NEW["➕ Nueva Cotización\n/cotizaciones/nueva"]:::cta
+    COT_DET["📄 Detalle Cotización\n/cotizaciones/:id"]:::pagina
+    COT_PLAN["📐 Carga de Planos\n/cotizaciones/:id/planos"]:::pagina
+    COT_MAT["📊 Desglose Materiales\n/cotizaciones/:id/materiales\n(Import desde Excel)"]:::pagina
+    COT_ITEMS["🛒 Ítems y Precios\n/cotizaciones/:id/items\nVenta · Alquiler · Transp. · Repos."]:::pagina
+    COT_PDF["📄 Generar PDF\n/cotizaciones/:id/pdf"]:::cta
+    COT_CATALOG["📚 Catálogo de Precios\n/catalogo"]:::pagina
+    COT --> COT_LIST & COT_NEW & COT_CATALOG
+    COT_LIST --> COT_DET
+    COT_DET --> COT_PLAN & COT_MAT & COT_ITEMS & COT_PDF
+
+    %% ── CONTRATOS
+    CONT["📝 Contratos\n/contratos"]:::modulo
+    CONT_LIST["📋 Lista de Contratos\n/contratos"]:::pagina
+    CONT_OC["📝 Orden de Compra\n/contratos/:id/orden-compra"]:::pagina
+    CONT_FIRMA["✍️ Firma Electrónica\n/contratos/:id/firma\nDocuSign / Okc"]:::cta
+    CONT_EST["📊 Estado del Contrato\n/contratos/:id/estado"]:::pagina
+    CONT --> CONT_LIST
+    CONT_LIST --> CONT_OC & CONT_FIRMA & CONT_EST
+
+    %% ── INVENTARIOS
+    INV["📦 Inventarios\n/inventarios"]:::modulo
+    INV_STOCK["🗄️ Stock / Kardex\n/inventarios/stock"]:::pagina
+    INV_REM["📤 Remisiones\n/inventarios/remisiones"]:::pagina
+    INV_REM_NEW["➕ Nueva Remisión\n/inventarios/remisiones/nueva"]:::cta
+    INV_AGENDA["🗓️ Agenda de Transporte\n/inventarios/agenda"]:::cta
+    INV_COND["🚛 Conductores\n/inventarios/conductores"]:::pagina
+    INV_DEV["📥 Devoluciones\n/inventarios/devoluciones"]:::pagina
+    INV_ALERTA["🔔 Próximas Recogidas\n/inventarios/alertas"]:::alerta
+    INV --> INV_STOCK & INV_REM & INV_AGENDA & INV_COND & INV_DEV & INV_ALERTA
+    INV_REM --> INV_REM_NEW
+
+    %% ── FACTURACIÓN
+    FAC["💳 Facturación\n/facturacion"]:::modulo
+    FAC_LIST["📋 Facturas\n/facturacion/facturas"]:::pagina
+    FAC_NEW["➕ Nueva Factura\n/facturacion/facturas/nueva"]:::cta
+    FAC_CART["⚠️ Cartera\n/facturacion/cartera"]:::alerta
+    FAC_PAG["💰 Registrar Pago\n/facturacion/:id/pago"]:::pagina
+    FAC_RET["🧾 Retenciones\n/facturacion/retenciones\nRte. Fuente · ICA · IVA"]:::pagina
+    FAC --> FAC_LIST & FAC_CART & FAC_RET
+    FAC_LIST --> FAC_NEW & FAC_PAG
+
+    %% ── AUDITORÍA
+    AUD["🔍 Auditoría\n/auditoria"]:::modulo
+    AUD_LOG["📋 Log Global\n/auditoria/log\nQuién · Cuándo · Qué"]:::pagina
+    AUD_USR["👥 Por Usuario\n/auditoria/usuario/:id"]:::pagina
+    AUD_MOD["📦 Por Módulo\n/auditoria/modulo/:name"]:::pagina
+    AUD --> AUD_LOG & AUD_USR & AUD_MOD
+
+    %% ── CONFIGURACIÓN
+    CONF["⚙️ Configuración\n/configuracion"]:::modulo
+    CONF_USR["👤 Usuarios y Roles\n/configuracion/usuarios"]:::pagina
+    CONF_CAT["📚 Catálogo Productos\n/configuracion/catalogo"]:::pagina
+    CONF_NOTIF["🔔 Notificaciones\n/configuracion/notificaciones"]:::pagina
+    CONF_FIRMA["✍️ Integración Firma\nDocuSign / Okc API Keys"]:::pagina
+    CONF --> CONF_USR & CONF_CAT & CONF_NOTIF & CONF_FIRMA
+
+    %% ── CONEXIONES RAÍZ
+    ROOT --> AUTH
+    ROOT --> DASH
+    ROOT --> CLI
+    ROOT --> COT
+    ROOT --> CONT
+    ROOT --> INV
+    ROOT --> FAC
+    ROOT --> AUD
+    ROOT --> CONF

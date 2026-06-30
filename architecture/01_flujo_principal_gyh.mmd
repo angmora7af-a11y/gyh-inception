@@ -1,0 +1,124 @@
+%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'primaryColor': '#1A365D',
+    'primaryTextColor': '#FFFFFF',
+    'primaryBorderColor': '#1A365D',
+    'lineColor': '#4A5568',
+    'secondaryColor': '#EDF2F7',
+    'tertiaryColor': '#FF9F1C',
+    'clusterBkg': '#EDF2F7',
+    'clusterBorder': '#CBD5E0',
+    'edgeLabelBackground': '#FFFFFF',
+    'fontFamily': 'Montserrat, sans-serif'
+  }
+}}%%
+
+flowchart TD
+    classDef azul       fill:#1A365D,color:#FFFFFF,stroke:#0F2440,stroke-width:2px
+    classDef naranja     fill:#FF9F1C,color:#1A365D,stroke:#E8910A,stroke-width:2px,font-weight:bold
+    classDef gris        fill:#4A5568,color:#FFFFFF,stroke:#2D3748,stroke-width:1px
+    classDef grisClaro   fill:#EDF2F7,color:#1A365D,stroke:#CBD5E0,stroke-width:1px
+    classDef exito       fill:#38A169,color:#FFFFFF,stroke:#2F855A,stroke-width:2px
+    classDef peligro     fill:#E53E3E,color:#FFFFFF,stroke:#C53030,stroke-width:2px
+    classDef inicio      fill:#FF9F1C,color:#1A365D,stroke:#E8910A,stroke-width:3px,font-weight:bold
+    classDef fin         fill:#38A169,color:#FFFFFF,stroke:#2F855A,stroke-width:3px
+
+    %% ── INICIO
+    INICIO(["🏗️ Cliente Prospecto"]):::inicio
+
+    %% ── MÓDULO 1: COTIZACIÓN
+    subgraph PREVENTA["⬛  ÁREA COMERCIAL — PREVENTA"]
+        direction TB
+        COT["📋 Cotización\n― Catálogos de precios\n― Dibujante + AutoCAD"]:::azul
+        TIPO{"¿Tipo de\nnegocio?"}:::naranja
+        VENTA["📦 Venta\nProductos catálogo"]:::grisClaro
+        ALQUILER["🏗️ Alquiler\nMaquinaria temporal"]:::grisClaro
+        TRANSP["🚛 Transporte\nFlete ida y vuelta"]:::grisClaro
+        REPOS["🔄 Reposición\nCobro por pérdida"]:::grisClaro
+        PDF["📄 PDF Cotización\nValores comerciales agregados"]:::azul
+    end
+
+    %% ── MÓDULO 2: APROBACIÓN
+    subgraph APROBACION["⬛  APROBACIÓN MULTI-ÁREA (3 conceptos obligatorios)"]
+        direction TB
+        REVISION["👥 Revisión Simultánea"]:::gris
+        CONTA["📊 Contabilidad\nViabilidad financiera\ny de crédito"]:::grisClaro
+        JURI["⚖️ Jurídica\nValidación documental\nListas LAFT"]:::grisClaro
+        COMER["💼 Comercial\nOportunidad\nde negocio"]:::grisClaro
+        APROBQ{"¿Todos\nFavorable?"}:::naranja
+        RECHAZA["❌ Notificar Rechazo\nal Prospecto"]:::peligro
+        REGISTRO["✅ Registro de Cliente\nChecklist FT-AC-001\n+ Documentos"]:::exito
+    end
+
+    %% ── MÓDULO 3: CONTRATOS
+    subgraph CONTRATO["⬛  ORDEN DE COMPRA & CONTRATO"]
+        direction TB
+        ORDEN["📝 Orden de Compra\nGenerada"]:::azul
+        FIRMA["✍️ Firma Electrónica\nDocuSign / Okc"]:::azul
+        FIRMAQ{"¿Firmado?"}:::naranja
+        NOTIFIRMA["⏰ Notificar\nPendiente de Firma"]:::grisClaro
+        ACTIVAR["🚀 Activar Operaciones"]:::exito
+    end
+
+    %% ── MÓDULO 4: INVENTARIOS
+    subgraph INVENTARIOS["⬛  INVENTARIOS Y LOGÍSTICA"]
+        direction TB
+        SALIDA["📤 Remisión de Salida\n(Kardex actualizado)"]:::azul
+        AGENDA["🗓️ Agenda Transporte\nProgramar conductor\n+ horario + dirección"]:::grisClaro
+        ESALQUILER{"¿Es alquiler?"}:::naranja
+        FACDIR["➡️ Pasar a Facturación"]:::grisClaro
+        PERIODO["⏳ Periodo de Alquiler\nen Obra"]:::grisClaro
+        DEVQ{"¿Equipos\ndevueltos?"}:::naranja
+        ENTRADA["📥 Remisión de Entrada\n(Kardex — días calculados)"]:::azul
+        REPOS2["🔄 Reposición\nCobro comercial\npor faltante"]:::peligro
+    end
+
+    %% ── MÓDULO 5: FACTURACIÓN
+    subgraph FACTURACION["⬛  FACTURACIÓN Y CARTERA"]
+        direction TB
+        FACTURA["📃 Generar Factura\n― Cálculo m²\n― Días alquiler\n― Retenciones (Rte. Fuente / ICA)"]:::azul
+        VALIDA["✅ Validación Contable\ny Cruce"]:::grisClaro
+        PAGOQ{"¿Pago\nrecibido?"}:::naranja
+        EXITO(["🏆 Cobro Exitoso\nCierre del ciclo"]):::fin
+        CARTERA["📋 Gestión de Cartera\nSeguimiento y cobro\njurídico"]:::peligro
+    end
+
+    %% ── CONEXIONES PRINCIPALES
+    INICIO --> COT
+    COT --> TIPO
+    TIPO -->|"Venta"| VENTA
+    TIPO -->|"Alquiler"| ALQUILER
+    TIPO -->|"Transporte"| TRANSP
+    TIPO -->|"Reposición"| REPOS
+    VENTA & ALQUILER & TRANSP & REPOS --> PDF
+
+    PDF --> REVISION
+    REVISION --> CONTA & JURI & COMER
+    CONTA & JURI & COMER --> APROBQ
+    APROBQ -->|"No"| RECHAZA
+    APROBQ -->|"Sí"| REGISTRO
+
+    REGISTRO --> ORDEN
+    ORDEN --> FIRMA
+    FIRMA --> FIRMAQ
+    FIRMAQ -->|"No"| NOTIFIRMA
+    NOTIFIRMA --> FIRMA
+    FIRMAQ -->|"Sí"| ACTIVAR
+
+    ACTIVAR --> SALIDA
+    SALIDA --> AGENDA
+    AGENDA --> ESALQUILER
+    ESALQUILER -->|"No — Venta"| FACDIR
+    ESALQUILER -->|"Sí"| PERIODO
+    PERIODO --> DEVQ
+    DEVQ -->|"Sí"| ENTRADA
+    DEVQ -->|"No / Faltante"| REPOS2
+    ENTRADA --> FACDIR
+    REPOS2 --> FACDIR
+
+    FACDIR --> FACTURA
+    FACTURA --> VALIDA
+    VALIDA --> PAGOQ
+    PAGOQ -->|"Sí"| EXITO
+    PAGOQ -->|"No / Mora"| CARTERA

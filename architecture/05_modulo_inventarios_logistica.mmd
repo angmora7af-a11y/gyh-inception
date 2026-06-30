@@ -1,0 +1,86 @@
+%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'primaryColor': '#1A365D',
+    'primaryTextColor': '#FFFFFF',
+    'primaryBorderColor': '#1A365D',
+    'lineColor': '#4A5568',
+    'secondaryColor': '#EDF2F7',
+    'clusterBkg': '#EDF2F7',
+    'clusterBorder': '#CBD5E0',
+    'fontFamily': 'Montserrat, sans-serif'
+  }
+}}%%
+
+flowchart TD
+    classDef azul       fill:#1A365D,color:#FFFFFF,stroke:#0F2440,stroke-width:2px
+    classDef naranja     fill:#FF9F1C,color:#1A365D,stroke:#E8910A,stroke-width:2px,font-weight:bold
+    classDef grisClaro   fill:#EDF2F7,color:#1A365D,stroke:#CBD5E0,stroke-width:1px
+    classDef exito       fill:#38A169,color:#FFFFFF,stroke:#2F855A,stroke-width:2px
+    classDef peligro     fill:#E53E3E,color:#FFFFFF,stroke:#C53030,stroke-width:2px
+
+    INICIO(["📝 Contrato firmado\n→ Operaciones Activas"]):::naranja
+
+    %% ── SALIDA
+    subgraph ALMACEN["🏭  JEFE DE ALMACÉN — DESPACHO"]
+        direction TB
+        REMSAL["📤 Generar Remisión de Salida\n― Productos por frente de obra\n― Cantidades e items del contrato"]:::azul
+        KARDEX_OUT["🗄️ Kardex actualizado\n(Stock disminuye)"]:::grisClaro
+        AGENDA["🗓️ Programar Agenda de Transporte\n― Seleccionar conductor\n― Asignar vehículo + placa\n― Hora de salida y llegada\n― Dirección de la obra"]:::azul
+        NOTIF_COND["🔔 Notificar al Conductor\nDetalle del despacho"]:::grisClaro
+        DESPACHO["🚛 Equipo en Tránsito\nhacia la Obra"]:::azul
+        ENTREGA["📦 Confirmación de Entrega\nen el Frente de Obra"]:::exito
+    end
+
+    %% ── PERÍODO EN OBRA
+    subgraph OBRA["🏗️  PERIODO EN OBRA (solo alquiler)"]
+        direction TB
+        ALQUILER_VIGENTE["⏳ Alquiler Vigente\nContador de días iniciado\ndesde fecha de remisión salida"]:::grisClaro
+        DEVQ{"¿Se programa\ndevolución?"}:::naranja
+        NOTIF_DEV["🔔 Alerta Próxima Recogida\nNotificación automática\nal jefe de almacén"]:::grisClaro
+        AGENDA_REC["🗓️ Programar Recogida\n― Conductor\n― Horario\n― Dirección del frente"]:::azul
+    end
+
+    %% ── DEVOLUCIÓN / REPOSICIÓN
+    subgraph RETORNO["📥  RETORNO DE EQUIPOS"]
+        direction TB
+        RECOGIDA["🚛 Recogida en Obra\nTransporte de vuelta"]:::azul
+        INSPECCION["🔍 Inspección de Equipos\nen Bodega"]:::grisClaro
+        ITEMQ{"Estado de\ncada equipo"}:::naranja
+        ITEM_OK["✅ Buen Estado\nKardex restaurado"]:::exito
+        ITEM_DAÑ["🔧 Dañado\nRegistrar novedad\n+ presupuesto reparación"]:::peligro
+        ITEM_FALT["❌ Faltante\nGenerar Reposición\n(cobro al cliente)"]:::peligro
+        KARDEX_IN["🗄️ Kardex actualizado\n(Stock aumenta)"]:::grisClaro
+        DIAS["📅 Calcular días de alquiler\nfecha salida → fecha entrada"]:::azul
+    end
+
+    %% ── FACTURACIÓN
+    FAC["💳 Pasar a Facturación\ncon días calculados\n+ reposiciones si aplica"]:::azul
+
+    %% ── FLUJO
+    INICIO --> REMSAL
+    REMSAL --> KARDEX_OUT
+    KARDEX_OUT --> AGENDA
+    AGENDA --> NOTIF_COND
+    NOTIF_COND --> DESPACHO
+    DESPACHO --> ENTREGA
+
+    ENTREGA --> ALQUILER_VIGENTE
+    ALQUILER_VIGENTE --> DEVQ
+    DEVQ -->|"Sí — programar retorno"| NOTIF_DEV
+    DEVQ -->|"Sí — ya en fecha"| AGENDA_REC
+    NOTIF_DEV --> AGENDA_REC
+    AGENDA_REC --> RECOGIDA
+
+    RECOGIDA --> INSPECCION
+    INSPECCION --> ITEMQ
+    ITEMQ -->|"OK"| ITEM_OK
+    ITEMQ -->|"Daño"| ITEM_DAÑ
+    ITEMQ -->|"No retornó"| ITEM_FALT
+    ITEM_OK --> KARDEX_IN
+    ITEM_DAÑ --> KARDEX_IN
+    ITEM_FALT --> FAC
+    KARDEX_IN --> DIAS
+    DIAS --> FAC
+
+    ENTREGA -->|"Si es Venta (no alquiler)"| FAC
