@@ -1,0 +1,35 @@
+# Feedback y Modificaciones - Fase de Inception (Módulo de Facturación/Procesos)
+
+## 📌 Cambios y Ajustes en el Sistema
+
+- [ ] [cite_start]**Subdivisión por Unidades de Negocio en Catálogos:** Se debe ajustar el catálogo de precios e inventario para que permita filtrar y subdividir los elementos según la unidad de negocio específica[cite: 58, 60, 61]. Las unidades identificadas son:
+  - [cite_start]Formaleta Metálica [cite: 53, 62]
+  - [cite_start]Multidireccional [cite: 55]
+  - [cite_start]Transporte [cite: 55]
+  - [cite_start]Formaleta Plástica [cite: 57]
+  - [cite_start]Formaleta Tradicional [cite: 57]
+
+- [ ] [cite_start]**Notas por Especialidad en la Aprobación de Clientes:** En el submódulo de aprobación simultánea (donde participan Comercial, Jurídica y Contabilidad), la plataforma debe habilitar un campo de texto ("un clic") para que cada área no solo otorgue su *check*, sino que deje una anotación o justificación desde su respectiva especialidad[cite: 65, 66, 70, 71].
+
+- [ ] [cite_start]**Usuario de Consulta y Flujo para el Rango Superior (Ingeniero/CEO):** - Se debe garantizar que el usuario de mayor rango (el Ingeniero/CEO) cuente con un perfil que le permita ingresar al sistema y auditar detalladamente los motivos y notas de rechazo de un prospecto o cliente[cite: 93, 94, 95, 96].
+  - [cite_start]El sistema debe contemplar una regla de negocio donde este rol de rango superior tenga la última palabra para aprobar o forzar el paso de un cliente en el flujo bajo su estricta responsabilidad[cite: 98, 99, 102, 103].
+
+- [ ] [cite_start]**Inclusión del Área de Producción en la Lógica de Inventario:** Se debe añadir de forma explícita el concepto de "Producción" dentro del cálculo del Cardex en el sistema[cite: 114, 115, 120]. [cite_start]El inventario total disponible (Momento Cero) debe calcularse mediante la sumatoria de: `Bodega + Equipos en Clientes (Alquilados) + Equipos en Proceso de Producción`[cite: 117, 118, 122, 123, 125].
+
+- [ ] [cite_start]**Alertas Críticas de Logística y Recogidas:** Implementar un sistema de alertas proactivas o triggers visuales que notifique al equipo cuando existan devoluciones o recogidas pendientes en las obras de ciertos clientes[cite: 126, 128, 132]. [cite_start]El objetivo es optimizar rutas de transporte para recoger equipos a tiempo y poder entregárselos a otros clientes sin que pasen por bodega física[cite: 126, 130, 131, 132].
+
+- [ ] [cite_start]**Inclusión de Campos Globales (Hora y Fecha):** Se identificó que faltan los atributos de hora y fecha en algunas tablas base del sistema; se requiere añadir estos campos para tener un rastreo preciso de las transacciones[cite: 170].
+
+- [ ] [cite_start]**Evidencias de Entrega (Fase Futura - Conductores):** Dejar abierta la arquitectura (posible Fase 3) para que el módulo de conductores permita capturar firmas digitales y fotografías (evidencias contra entrega), similar al modelo operativo de Farmatodo[cite: 177, 178].
+
+---
+
+## 📅 Acciones y Próximos Pasos (Inception)
+
+- [ ] [cite_start]**Proceso de Mitigación y Respaldos Inmediatos:** Debido a un fallo físico crítico en el servidor actual (pérdida de discos), el cliente está realizando copias de seguridad manuales de emergencia[cite: 215, 216, 228]. [cite_start]Es imperativo acelerar el levantamiento de información para migrar todo a un entorno web/nube resiliente a desastres físicos[cite: 218, 227, 230].
+- [ ] [cite_start]**Evaluación de Reducción del Cronograma:** Revisar internamente si es viable acortar los tiempos de la fase de inception/levantamiento para iniciar el desarrollo del software lo antes posible[cite: 224, 225, 226].
+- [ ] **Envío de Información por el Cliente:** El equipo de Alforequipos compartirá los listados base de datos en formatos Excel/TXT correspondientes a:
+  - [cite_start]Catálogo de productos actual[cite: 185, 198, 199].
+  - [cite_start]Listado de empresas, clientes y obras[cite: 198, 199].
+  - [cite_start]Correos electrónicos del personal de cada área para habilitar feedback continuo[cite: 185].
+- [ ] [cite_start]**Siguiente Sesión Técnica:** Agendar la próxima reunión de manera presencial el próximo jueves, enfocada específicamente en los módulos de **Logística, Inventarios y Órdenes de Compra**[cite: 207, 209].

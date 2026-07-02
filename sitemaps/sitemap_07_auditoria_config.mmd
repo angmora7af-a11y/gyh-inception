@@ -1,0 +1,41 @@
+%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'primaryColor': '#1A365D',
+    'primaryTextColor': '#FFFFFF',
+    'primaryBorderColor': '#1A365D',
+    'lineColor': '#4A5568',
+    'secondaryColor': '#EDF2F7',
+    'clusterBkg': '#2D3748',
+    'clusterBorder': '#1A365D',
+    'titleColor': '#FFFFFF',
+    'edgeLabelBackground': '#F7FAFC',
+    'fontFamily': 'Montserrat, sans-serif'
+  }
+}}%%
+
+flowchart TD
+    classDef modulo  fill:#1A365D,color:#FFFFFF,stroke:#2C5282,stroke-width:2px,font-weight:bold
+    classDef pagina  fill:#EDF2F7,color:#1A365D,stroke:#CBD5E0,stroke-width:1px
+    classDef cta     fill:#FF9F1C,color:#1A365D,stroke:#E8910A,stroke-width:2px,font-weight:bold
+    classDef gris    fill:#4A5568,color:#FFFFFF,stroke:#2D3748,stroke-width:1px
+
+    subgraph S_AUD["🔍 AUDITORÍA"]
+        AUD["🔍 Auditoría\n/auditoria"]:::modulo
+        AUD_LOG["📋 Log Global\n/auditoria/log\nQuién · Cuándo · Qué · Hora"]:::pagina
+        AUD_USR["👥 Por Usuario\n/auditoria/usuario/:id"]:::pagina
+        AUD_MOD["📦 Por Módulo\n/auditoria/modulo/:name"]:::pagina
+        AUD_REJ["❌ Rechazos y Motivos\n/auditoria/rechazos\nDetalle para CEO/Ingeniero"]:::pagina
+        AUD --> AUD_LOG & AUD_USR & AUD_MOD & AUD_REJ
+    end
+
+    subgraph S_CONF["⚙️ CONFIGURACIÓN"]
+        CONF["⚙️ Configuración\n/configuracion"]:::modulo
+        CONF_USR["👤 Usuarios y Roles\n/configuracion/usuarios\n8 roles · RBAC"]:::pagina
+        CONF_CAT["📚 Catálogo Productos\n/configuracion/catalogo\nPor unidad de negocio"]:::pagina
+        CONF_UNI["🏭 Unidades de Negocio\n/configuracion/unidades\nFM · Multi · Transp. · FP · FT"]:::pagina
+        CONF_NOTIF["🔔 Notificaciones\n/configuracion/notificaciones\nAlertas de recogidas · Vencimientos"]:::pagina
+        CONF_FIRMA["✍️ Integración Firma\n/configuracion/firma\nDocuSign / Okc API Keys"]:::pagina
+        CONF --> CONF_USR & CONF_CAT & CONF_NOTIF & CONF_FIRMA
+        CONF_CAT --> CONF_UNI
+    end

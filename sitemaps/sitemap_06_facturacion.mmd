@@ -1,0 +1,41 @@
+%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'primaryColor': '#1A365D',
+    'primaryTextColor': '#FFFFFF',
+    'primaryBorderColor': '#1A365D',
+    'lineColor': '#4A5568',
+    'secondaryColor': '#EDF2F7',
+    'clusterBkg': '#2D3748',
+    'clusterBorder': '#1A365D',
+    'titleColor': '#FFFFFF',
+    'edgeLabelBackground': '#F7FAFC',
+    'fontFamily': 'Montserrat, sans-serif'
+  }
+}}%%
+
+flowchart TD
+    classDef modulo  fill:#1A365D,color:#FFFFFF,stroke:#2C5282,stroke-width:2px,font-weight:bold
+    classDef pagina  fill:#EDF2F7,color:#1A365D,stroke:#CBD5E0,stroke-width:1px
+    classDef cta     fill:#FF9F1C,color:#1A365D,stroke:#E8910A,stroke-width:2px,font-weight:bold
+    classDef alerta  fill:#E53E3E,color:#FFFFFF,stroke:#C53030,stroke-width:1px
+    classDef exito   fill:#38A169,color:#FFFFFF,stroke:#2F855A,stroke-width:1px
+
+    FAC["💳 Facturación\n/facturacion"]:::modulo
+
+    subgraph S_FAC["FACTURACIÓN"]
+        FAC_LIST["📋 Facturas\n/facturacion/facturas"]:::pagina
+        FAC_NEW["➕ Nueva Factura\n/facturacion/facturas/nueva\nDías alquiler · m² · Retenciones"]:::cta
+        FAC_PAG["💰 Registrar Pago\n/facturacion/:id/pago\nFecha · Hora · Valor · Método"]:::pagina
+        FAC_LIST --> FAC_NEW & FAC_PAG
+    end
+
+    subgraph S_RET["RETENCIONES"]
+        FAC_RET["🧾 Retenciones\n/facturacion/retenciones\nRte. Fuente · ICA · IVA"]:::pagina
+    end
+
+    subgraph S_CART["CARTERA"]
+        FAC_CART["⚠️ Cartera\n/facturacion/cartera\nMora · Seguimiento · Cobro jurídico"]:::alerta
+    end
+
+    FAC --> S_FAC & S_RET & S_CART

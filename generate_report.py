@@ -156,7 +156,7 @@ def parse_dbml(src):
 def diagram_section(sec_id, title, subtitle, filepath):
     raw   = rf(filepath)
     fname = Path(filepath).name
-    stem  = Path(filepath).stem          # e.g. 01_flujo_principal_gyh
+    stem  = Path(filepath).stem
     return f'''
 <section id="{sec_id}">
   <div class="section-header">
@@ -179,6 +179,69 @@ def diagram_section(sec_id, title, subtitle, filepath):
   </div>
 </section>'''
 
+def multi_diagram_section(sec_id, title, subtitle, diagrams):
+    """Renderiza múltiples diagramas dentro de una sección (para sitemaps segmentados)."""
+    blocks = ''
+    for (sub_id, label, filepath) in diagrams:
+        raw  = rf(filepath)
+        fname = Path(filepath).name
+        stem  = Path(filepath).stem
+        blocks += f'''
+  <div class="diagram-block" style="margin-bottom:1.5rem">
+    <div class="diagram-label">
+      <span>📊 {label} &nbsp;·&nbsp; {fname}</span>
+      <button class="btn-dl-svg"
+              data-wrap="wrap-{sub_id}"
+              data-filename="{stem}.svg"
+              title="Descargar como SVG vectorial">
+        ⬇ Descargar SVG
+      </button>
+    </div>
+    <div class="mermaid-wrap" id="wrap-{sub_id}">
+      <pre class="mermaid">{raw}</pre>
+    </div>
+  </div>'''
+    return f'''
+<section id="{sec_id}">
+  <div class="section-header">
+    <h2>{title}</h2>
+    <p class="section-sub">{subtitle}</p>
+  </div>
+  {blocks}
+</section>'''
+
+def roles_section(tabla_md, mmd_path):
+    tabla_html = md2html(tabla_md)
+    raw   = rf(mmd_path)
+    fname = Path(mmd_path).name
+    stem  = Path(mmd_path).stem
+    return f'''
+<section id="roles">
+  <div class="section-header">
+    <h2>Roles y Permisos (RBAC)</h2>
+    <p class="section-sub">8 roles · CEO/Ingeniero · Admin · Comercial · Dibujante · Contabilidad · Jurídica · Almacén · Conductor</p>
+  </div>
+  <div class="callout warn">
+    <strong>Nuevo (Feedback 24-jun):</strong> Se añadió el rol <strong>CEO/Ingeniero</strong> con perfil de consulta, acceso a motivos de rechazo y capacidad de forzar la aprobación de un cliente bajo su estricta responsabilidad.
+  </div>
+  <div class="md-content">{tabla_html}</div>
+  <h3 style="margin-top:2rem">Diagrama de Permisos por Rol</h3>
+  <div class="diagram-block">
+    <div class="diagram-label">
+      <span>📊 {fname}</span>
+      <button class="btn-dl-svg"
+              data-wrap="wrap-roles-mmd"
+              data-filename="{stem}.svg"
+              title="Descargar como SVG vectorial">
+        ⬇ Descargar SVG
+      </button>
+    </div>
+    <div class="mermaid-wrap" id="wrap-roles-mmd">
+      <pre class="mermaid">{raw}</pre>
+    </div>
+  </div>
+</section>'''
+
 def db_section(tables, enums, raw):
     # Enum pills
     enum_html = ''
@@ -187,7 +250,6 @@ def db_section(tables, enums, raw):
         more = f' +{len(e["values"])-6}' if len(e['values']) > 6 else ''
         enum_html += f'<div class="enum-pill"><strong>{e["name"]}</strong><span class="enum-vals">{vals}{more}</span></div>\n'
 
-    # Table cards — group by module (prefix detection)
     MODULE_COLORS = {
         'usuarios': '#1A365D', 'auditoria': '#1A365D', 'notificaciones': '#1A365D',
         'clientes': '#2C7A7B', 'contactos': '#2C7A7B', 'referencias': '#2C7A7B',
@@ -234,7 +296,7 @@ def db_section(tables, enums, raw):
 <section id="database">
   <div class="section-header">
     <h2>Base de Datos — Schema PostgreSQL</h2>
-    <p class="section-sub">DBML v1.0 · {len(tables)} tablas · {len(enums)} enumeraciones · Generado 2026-06-24</p>
+    <p class="section-sub">DBML v1.0 · {len(tables)} tablas · {len(enums)} enumeraciones</p>
   </div>
   <div class="callout">
     <strong>Motor:</strong> PostgreSQL &nbsp;·&nbsp; <strong>Escala inicial:</strong> ~180 clientes · 50 obras/cliente · 3-4 frentes/obra
@@ -269,7 +331,7 @@ OVERVIEW = '''
 <section id="overview">
   <div class="section-header">
     <h2>Resumen del Proyecto</h2>
-    <p class="section-sub">G&H Obras y Estructuras Metálicas S.A.S · NIT: 901.218.896-8 · Bogotá · Sesión 2026-06-16</p>
+    <p class="section-sub">G&H Obras y Estructuras Metálicas S.A.S · NIT: 901.218.896-8 · Bogotá · Sesión 2026-06-16 + Feedback 2026-06-24</p>
   </div>
 
   <div class="metrics-grid">
@@ -307,7 +369,7 @@ OVERVIEW = '''
   </div>
 
   <div class="info-card" style="margin-top:1rem">
-    <h3>Roles del Sistema (7)</h3>
+    <h3>Roles del Sistema (8)</h3>
     <div class="roles-grid">
       <div class="role-chip">💼 Comercial</div>
       <div class="role-chip">✏️ Dibujante</div>
@@ -316,10 +378,21 @@ OVERVIEW = '''
       <div class="role-chip">🏭 Almacén</div>
       <div class="role-chip">🚛 Conductor</div>
       <div class="role-chip admin">👑 Admin</div>
+      <div class="role-chip ceo">🏗️ CEO/Ingeniero</div>
     </div>
   </div>
 
-  <div class="callout warn" style="margin-top:1.25rem">
+  <div class="callout" style="margin-top:1.25rem">
+    <strong>🆕 Ajustes Feedback 24-jun:</strong>
+    Subdivisión del catálogo por unidades de negocio (5) ·
+    Notas por especialidad en aprobación de clientes ·
+    Rol CEO/Ingeniero con aprobación final ·
+    Producción incluida en el Kardex de inventario ·
+    Alertas de recogidas logísticas ·
+    Campos de fecha y hora en transacciones
+  </div>
+
+  <div class="callout warn" style="margin-top:.75rem">
     <strong>📍 Ciudades:</strong> Bogotá (130 clientes) · Ibagué + Armenia (50 clientes) &nbsp;·&nbsp;
     <strong>Documentos de referencia:</strong> FT-AC-001 v2.0 · CHECKLIST VALIDACION CLIENTES BOGOTA ·
     Autorización Centrales de Riesgo (Ley 1581/2012 · Circular 09/2016)
@@ -410,6 +483,7 @@ section h3{font-size:1.05rem;color:var(--primary);margin:1.75rem 0 .75rem;font-w
 .roles-grid{display:flex;flex-wrap:wrap;gap:.5rem;padding-top:.25rem}
 .role-chip{background:var(--surface2);border:1px solid var(--border);border-radius:999px;padding:.28rem .82rem;font-size:.8rem;color:var(--primary);font-weight:600}
 .role-chip.admin{background:#FFFBEB;border-color:var(--accent);color:#92400E}
+.role-chip.ceo{background:#FFF5F5;border-color:#E53E3E;color:#C53030}
 
 /* Callout */
 .callout{background:#EBF8FF;border-left:4px solid #3182CE;border-radius:0 8px 8px 0;padding:.85rem 1.1rem;margin:1rem 0;font-size:.86rem}
@@ -461,7 +535,8 @@ details summary{cursor:pointer;color:var(--primary);font-size:.88rem;font-weight
 .table-wrap{overflow-x:auto;margin:1rem 0}
 .md-content table{width:100%;border-collapse:collapse;font-size:.82rem;background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden}
 .md-content th{background:var(--primary);color:#fff;padding:.45rem .75rem;text-align:left;font-size:.8rem;font-weight:600}
-.md-content td{padding:.4rem .75rem;border-bottom:1px solid var(--border);vertical-align:top}
+.md-content td{padding:.4rem .75rem;border-bottom:1px solid var(--border);vertical-align:top;text-align:center}
+.md-content td:first-child{text-align:left}
 .md-content tr:nth-child(even) td{background:var(--surface2)}
 
 /* Footer */
@@ -480,8 +555,22 @@ def generate():
     tables, enums     = parse_dbml(dbml_raw)
     us_html           = md2html(rf('user-stories/historias_usuario.md'))
     ck_html           = md2html(rf('checklist-validado.md'))
+    roles_tabla_md    = rf('architecture/06_roles_y_permisos_tabla.md')
     db_html           = db_section(tables, enums, dbml_raw)
     today             = date.today().strftime("%d de %B de %Y")
+
+    num_sitemaps = len(list((BASE / 'sitemaps').glob('sitemap_0*.mmd')))
+    num_diagrams = 6 + num_sitemaps  # 6 architecture + sitemaps
+
+    SITEMAPS = [
+        ('sm-auth',     'Auth y Dashboard',       'sitemaps/sitemap_01_auth_dashboard.mmd'),
+        ('sm-clientes', 'Clientes y Aprobación',  'sitemaps/sitemap_02_clientes.mmd'),
+        ('sm-cot',      'Cotizaciones y Catálogo', 'sitemaps/sitemap_03_cotizaciones.mmd'),
+        ('sm-contratos','Contratos',               'sitemaps/sitemap_04_contratos.mmd'),
+        ('sm-inv',      'Inventarios y Logística', 'sitemaps/sitemap_05_inventarios.mmd'),
+        ('sm-fac',      'Facturación',             'sitemaps/sitemap_06_facturacion.mmd'),
+        ('sm-aud',      'Auditoría y Config',      'sitemaps/sitemap_07_auditoria_config.mmd'),
+    ]
 
     html = f"""<!DOCTYPE html>
 <html lang="es">
@@ -497,10 +586,13 @@ def generate():
       securityLevel: 'loose',
       themeVariables: {{
         primaryColor: '#1A365D',
-        primaryTextColor: '#ffffff',
+        primaryTextColor: '#FFFFFF',
         primaryBorderColor: '#1A365D',
         lineColor: '#4A5568',
         secondaryColor: '#EDF2F7',
+        clusterBkg: '#2D3748',
+        titleColor: '#FFFFFF',
+        edgeLabelBackground: '#F7FAFC',
         fontFamily: 'Segoe UI, system-ui, sans-serif'
       }}
     }});
@@ -510,7 +602,6 @@ def generate():
       const clone = svgEl.cloneNode(true);
       clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
       clone.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
-      // Embed inline styles so the SVG is self-contained
       const styles = Array.from(document.styleSheets)
         .flatMap(s => {{ try {{ return Array.from(s.cssRules); }} catch {{ return []; }} }})
         .map(r => r.cssText).join('\\n');
@@ -549,7 +640,6 @@ def generate():
         }}
       }}
 
-      /* Wire download buttons after all diagrams are rendered */
       document.querySelectorAll('.btn-dl-svg').forEach(btn => {{
         btn.addEventListener('click', () => {{
           const wrapEl = document.getElementById(btn.dataset.wrap);
@@ -598,7 +688,11 @@ def generate():
   <a href="#registro-cliente">👥 Registro y Aprobación</a>
   <a href="#inventarios">📦 Inventarios y Logística</a>
   <a href="#roles">🔐 Roles y Permisos</a>
-  <a href="#sitemap">🗺️ Sitemap de la App</a>
+  <div class="nav-group">Sitemaps por Flujo</div>
+  <a href="#sitemaps">🗺️ Auth · Dashboard</a>
+  <a href="#sitemaps">👥 Clientes · Cotizaciones</a>
+  <a href="#sitemaps">📦 Inventarios · Facturación</a>
+  <a href="#sitemaps">🔍 Auditoría · Config</a>
   <div class="nav-group">Base de Datos</div>
   <a href="#database">🗄️ Schema PostgreSQL</a>
   <div class="nav-group">Requerimientos</div>
@@ -615,10 +709,10 @@ def generate():
     <div class="hero-meta">
       <span class="hero-chip">📅 {today}</span>
       <span class="hero-chip">🗄️ {len(tables)} tablas PostgreSQL</span>
-      <span class="hero-chip">📊 7 diagramas Mermaid</span>
-      <span class="hero-chip">📖 14 historias de usuario</span>
-      <span class="hero-chip">✅ 30 ítems de checklist</span>
-      <span class="hero-chip">👤 7 roles del sistema</span>
+      <span class="hero-chip">📊 {num_diagrams} diagramas Mermaid</span>
+      <span class="hero-chip">👤 8 roles del sistema</span>
+      <span class="hero-chip">🗺️ 7 sitemaps por flujo</span>
+      <span class="hero-chip">🆕 Feedback 24-jun aplicado</span>
     </div>
   </header>
 
@@ -636,35 +730,32 @@ def generate():
 
   {diagram_section("cotizacion",
     "Módulo de Cotizaciones",
-    "Dibujante (AutoCAD 4-6h) → Importar Excel → Catálogo → Comercial → PDF → Orden de Compra",
+    "Dibujante (AutoCAD 4-6h) → Importar Excel → Catálogo por Unidad de Negocio → Comercial → PDF → Orden de Compra",
     "architecture/03_modulo_cotizacion.mmd")}
 
   {diagram_section("registro-cliente",
     "Registro y Aprobación de Clientes",
-    "Formulario FT-AC-001 v2.0 · 9 secciones · Checklist documental · Concepto obligatorio 3 áreas",
+    "Formulario FT-AC-001 v2.0 · 9 secciones · Checklist documental · Concepto + nota obligatoria por 3 áreas · Aprobación final CEO",
     "architecture/04_registro_aprobacion_cliente.mmd")}
 
   {diagram_section("inventarios",
     "Inventarios y Logística",
-    "Kardex · Remisiones de salida/entrada · Agenda de transporte · Conductores · Devoluciones · Reposiciones",
+    "Kardex (Bodega + Clientes + Producción) · Remisiones · Agenda de transporte · Alertas de recogidas · Devoluciones",
     "architecture/05_modulo_inventarios_logistica.mmd")}
 
-  {diagram_section("roles",
-    "Roles y Permisos (RBAC)",
-    "7 roles · Admin · Comercial · Dibujante · Contabilidad · Jurídica · Almacén · Conductor",
-    "architecture/06_roles_y_permisos.mmd")}
+  {roles_section(roles_tabla_md, "architecture/06_roles_y_permisos.mmd")}
 
-  {diagram_section("sitemap",
-    "Sitemap de la Aplicación",
-    "Mapa completo de rutas · 8 módulos · Autenticación · Dashboard · Config",
-    "sitemap/sitemap_gyh_app.mmd")}
+  {multi_diagram_section("sitemaps",
+    "Sitemaps por Flujo Principal",
+    "Mapa de rutas segmentado por módulo — 7 flujos independientes",
+    SITEMAPS)}
 
   {db_html}
 
   <section id="historias">
     <div class="section-header">
       <h2>Historias de Usuario</h2>
-      <p class="section-sub">14 historias · 6 módulos · Criterios de aceptación verificables · Roles asignados</p>
+      <p class="section-sub">Sesión 2026-06-16 · Criterios de aceptación verificables · Roles asignados</p>
     </div>
     <div class="md-content">{us_html}</div>
   </section>
@@ -672,14 +763,14 @@ def generate():
   <section id="checklist">
     <div class="section-header">
       <h2>Checklist Validado</h2>
-      <p class="section-sub">24 ítems originales + 6 adicionales identificados en documentos · 100% cubiertos en el schema</p>
+      <p class="section-sub">Ítems de la sesión + ajustes del feedback 24-jun · Cubre todos los módulos del sistema</p>
     </div>
     <div class="md-content">{ck_html}</div>
   </section>
 
   <footer>
     <p><strong>G&amp;H Obras y Estructuras Metálicas S.A.S</strong> &nbsp;·&nbsp; NIT: 901.218.896-8 &nbsp;·&nbsp; Calle 64 #112C-27, Engativá, Bogotá — Colombia</p>
-    <p style="margin-top:.4rem">Generado el {today} &nbsp;·&nbsp; Sesión: 2026-06-16 &nbsp;·&nbsp; Fase de Inception v1.0 &nbsp;·&nbsp; imagineapps.co</p>
+    <p style="margin-top:.4rem">Generado el {today} &nbsp;·&nbsp; Sesión: 2026-06-16 &nbsp;·&nbsp; Feedback: 2026-06-24 &nbsp;·&nbsp; Fase de Inception v2.0 &nbsp;·&nbsp; imagineapps.co</p>
   </footer>
 
 </main>
@@ -691,6 +782,7 @@ def generate():
     size_kb = OUT.stat().st_size / 1024
     print(f"✅ Generado: {OUT.name}  ({size_kb:.0f} KB)")
     print(f"   Tablas: {len(tables)}  ·  Enums: {len(enums)}")
+    print(f"   Sitemaps: {num_sitemaps}")
     print(f"   Abre en el navegador:")
     print(f"   file://{OUT}")
 

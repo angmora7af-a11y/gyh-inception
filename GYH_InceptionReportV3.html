@@ -12,19 +12,46 @@
       securityLevel: 'loose',
       themeVariables: {
         primaryColor: '#1A365D',
-        primaryTextColor: '#ffffff',
+        primaryTextColor: '#FFFFFF',
         primaryBorderColor: '#1A365D',
         lineColor: '#4A5568',
         secondaryColor: '#EDF2F7',
+        clusterBkg: '#2D3748',
+        titleColor: '#FFFFFF',
+        edgeLabelBackground: '#F7FAFC',
         fontFamily: 'Segoe UI, system-ui, sans-serif'
       }
     });
+
+    /* ── SVG download helper ─────────────────────────────────── */
+    function downloadSVG(svgEl, filename) {
+      const clone = svgEl.cloneNode(true);
+      clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+      clone.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
+      const styles = Array.from(document.styleSheets)
+        .flatMap(s => { try { return Array.from(s.cssRules); } catch { return []; } })
+        .map(r => r.cssText).join('\n');
+      const styleEl = document.createElementNS('http://www.w3.org/2000/svg', 'style');
+      styleEl.textContent = styles;
+      clone.insertBefore(styleEl, clone.firstChild);
+      const src = '<?xml version="1.0" encoding="UTF-8"?>\n' +
+                  new XMLSerializer().serializeToString(clone);
+      const blob = new Blob([src], { type: 'image/svg+xml;charset=utf-8' });
+      const url  = URL.createObjectURL(blob);
+      const a    = Object.assign(document.createElement('a'), { href: url, download: filename });
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 1500);
+    }
+
+    /* ── Render Mermaid + wire download buttons ──────────────── */
     document.addEventListener('DOMContentLoaded', async () => {
       const blocks = document.querySelectorAll('pre.mermaid');
       for (let i = 0; i < blocks.length; i++) {
-        const el = blocks[i];
+        const el   = blocks[i];
         const code = el.textContent.trim();
-        const id = 'mmd-gyh-' + i;
+        const id   = 'mmd-gyh-' + i;
         try {
           const { svg } = await mermaid.render(id, code);
           const wrap = document.createElement('div');
@@ -38,6 +65,34 @@
           el.replaceWith(errEl);
         }
       }
+
+      document.querySelectorAll('.btn-dl-svg').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const wrapEl = document.getElementById(btn.dataset.wrap);
+          if (!wrapEl) return;
+          const svgEl = wrapEl.querySelector('svg');
+          if (!svgEl) {
+            btn.textContent = '⏳ Cargando…';
+            setTimeout(() => { btn.textContent = '⬇ Descargar SVG'; }, 1500);
+            return;
+          }
+          btn.classList.add('loading');
+          btn.textContent = '⏳ Generando…';
+          setTimeout(() => {
+            try {
+              downloadSVG(svgEl, btn.dataset.filename);
+              btn.textContent = '✓ Descargado';
+              setTimeout(() => {
+                btn.textContent = '⬇ Descargar SVG';
+                btn.classList.remove('loading');
+              }, 1800);
+            } catch(e) {
+              btn.textContent = '⬇ Descargar SVG';
+              btn.classList.remove('loading');
+            }
+          }, 80);
+        });
+      });
     });
   </script>
   <style>
@@ -90,7 +145,11 @@ section h3{font-size:1.05rem;color:var(--primary);margin:1.75rem 0 .75rem;font-w
 
 /* Diagrams */
 .diagram-block{border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface);box-shadow:0 2px 10px rgba(0,0,0,.07);margin-bottom:1rem}
-.diagram-label{background:var(--primary);color:rgba(255,255,255,.75);padding:.45rem 1rem;font-size:.72rem;font-family:ui-monospace,monospace;letter-spacing:.04em}
+.diagram-label{background:var(--primary);color:rgba(255,255,255,.75);padding:.4rem 1rem;font-size:.72rem;font-family:ui-monospace,monospace;letter-spacing:.04em;display:flex;align-items:center;justify-content:space-between;gap:.75rem}
+.btn-dl-svg{flex-shrink:0;background:var(--accent);color:var(--primary);border:none;border-radius:5px;padding:.28rem .75rem;font-size:.72rem;font-weight:700;cursor:pointer;letter-spacing:.02em;font-family:inherit;transition:background .15s,transform .1s}
+.btn-dl-svg:hover{background:var(--accent2);transform:translateY(-1px)}
+.btn-dl-svg:active{transform:translateY(0)}
+.btn-dl-svg.loading{opacity:.6;cursor:wait}
 .mermaid-wrap{padding:1.5rem;overflow-x:auto;background:#fff;min-height:80px}
 .mmd-svg-wrap svg{max-width:100%;height:auto}
 
@@ -118,6 +177,7 @@ section h3{font-size:1.05rem;color:var(--primary);margin:1.75rem 0 .75rem;font-w
 .roles-grid{display:flex;flex-wrap:wrap;gap:.5rem;padding-top:.25rem}
 .role-chip{background:var(--surface2);border:1px solid var(--border);border-radius:999px;padding:.28rem .82rem;font-size:.8rem;color:var(--primary);font-weight:600}
 .role-chip.admin{background:#FFFBEB;border-color:var(--accent);color:#92400E}
+.role-chip.ceo{background:#FFF5F5;border-color:#E53E3E;color:#C53030}
 
 /* Callout */
 .callout{background:#EBF8FF;border-left:4px solid #3182CE;border-radius:0 8px 8px 0;padding:.85rem 1.1rem;margin:1rem 0;font-size:.86rem}
@@ -169,7 +229,8 @@ details summary{cursor:pointer;color:var(--primary);font-size:.88rem;font-weight
 .table-wrap{overflow-x:auto;margin:1rem 0}
 .md-content table{width:100%;border-collapse:collapse;font-size:.82rem;background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden}
 .md-content th{background:var(--primary);color:#fff;padding:.45rem .75rem;text-align:left;font-size:.8rem;font-weight:600}
-.md-content td{padding:.4rem .75rem;border-bottom:1px solid var(--border);vertical-align:top}
+.md-content td{padding:.4rem .75rem;border-bottom:1px solid var(--border);vertical-align:top;text-align:center}
+.md-content td:first-child{text-align:left}
 .md-content tr:nth-child(even) td{background:var(--surface2)}
 
 /* Footer */
@@ -196,7 +257,11 @@ footer strong{color:var(--primary)}
   <a href="#registro-cliente">👥 Registro y Aprobación</a>
   <a href="#inventarios">📦 Inventarios y Logística</a>
   <a href="#roles">🔐 Roles y Permisos</a>
-  <a href="#sitemap">🗺️ Sitemap de la App</a>
+  <div class="nav-group">Sitemaps por Flujo</div>
+  <a href="#sitemaps">🗺️ Auth · Dashboard</a>
+  <a href="#sitemaps">👥 Clientes · Cotizaciones</a>
+  <a href="#sitemaps">📦 Inventarios · Facturación</a>
+  <a href="#sitemaps">🔍 Auditoría · Config</a>
   <div class="nav-group">Base de Datos</div>
   <a href="#database">🗄️ Schema PostgreSQL</a>
   <div class="nav-group">Requerimientos</div>
@@ -211,12 +276,12 @@ footer strong{color:var(--primary)}
     <h1>Sistema de Gestión G&amp;H</h1>
     <p>Cotizaciones · Clientes · Contratos · Inventarios · Facturación · Auditoría</p>
     <div class="hero-meta">
-      <span class="hero-chip">📅 24 de June de 2026</span>
+      <span class="hero-chip">📅 02 de July de 2026</span>
       <span class="hero-chip">🗄️ 27 tablas PostgreSQL</span>
-      <span class="hero-chip">📊 7 diagramas Mermaid</span>
-      <span class="hero-chip">📖 14 historias de usuario</span>
-      <span class="hero-chip">✅ 30 ítems de checklist</span>
-      <span class="hero-chip">👤 7 roles del sistema</span>
+      <span class="hero-chip">📊 13 diagramas Mermaid</span>
+      <span class="hero-chip">👤 8 roles del sistema</span>
+      <span class="hero-chip">🗺️ 7 sitemaps por flujo</span>
+      <span class="hero-chip">🆕 Feedback 24-jun aplicado</span>
     </div>
   </header>
 
@@ -224,7 +289,7 @@ footer strong{color:var(--primary)}
 <section id="overview">
   <div class="section-header">
     <h2>Resumen del Proyecto</h2>
-    <p class="section-sub">G&H Obras y Estructuras Metálicas S.A.S · NIT: 901.218.896-8 · Bogotá · Sesión 2026-06-16</p>
+    <p class="section-sub">G&H Obras y Estructuras Metálicas S.A.S · NIT: 901.218.896-8 · Bogotá · Sesión 2026-06-16 + Feedback 2026-06-24</p>
   </div>
 
   <div class="metrics-grid">
@@ -262,7 +327,7 @@ footer strong{color:var(--primary)}
   </div>
 
   <div class="info-card" style="margin-top:1rem">
-    <h3>Roles del Sistema (7)</h3>
+    <h3>Roles del Sistema (8)</h3>
     <div class="roles-grid">
       <div class="role-chip">💼 Comercial</div>
       <div class="role-chip">✏️ Dibujante</div>
@@ -271,10 +336,21 @@ footer strong{color:var(--primary)}
       <div class="role-chip">🏭 Almacén</div>
       <div class="role-chip">🚛 Conductor</div>
       <div class="role-chip admin">👑 Admin</div>
+      <div class="role-chip ceo">🏗️ CEO/Ingeniero</div>
     </div>
   </div>
 
-  <div class="callout warn" style="margin-top:1.25rem">
+  <div class="callout" style="margin-top:1.25rem">
+    <strong>🆕 Ajustes Feedback 24-jun:</strong>
+    Subdivisión del catálogo por unidades de negocio (5) ·
+    Notas por especialidad en aprobación de clientes ·
+    Rol CEO/Ingeniero con aprobación final ·
+    Producción incluida en el Kardex de inventario ·
+    Alertas de recogidas logísticas ·
+    Campos de fecha y hora en transacciones
+  </div>
+
+  <div class="callout warn" style="margin-top:.75rem">
     <strong>📍 Ciudades:</strong> Bogotá (130 clientes) · Ibagué + Armenia (50 clientes) &nbsp;·&nbsp;
     <strong>Documentos de referencia:</strong> FT-AC-001 v2.0 · CHECKLIST VALIDACION CLIENTES BOGOTA ·
     Autorización Centrales de Riesgo (Ley 1581/2012 · Circular 09/2016)
@@ -288,8 +364,16 @@ footer strong{color:var(--primary)}
     <p class="section-sub">React + FastAPI + PostgreSQL · Módulos · Integraciones externas: DocuSign / Okc · Email · WhatsApp</p>
   </div>
   <div class="diagram-block">
-    <div class="diagram-label">📊 02_arquitectura_sistema.mmd</div>
-    <div class="mermaid-wrap">
+    <div class="diagram-label">
+      <span>📊 02_arquitectura_sistema.mmd</span>
+      <button class="btn-dl-svg"
+              data-wrap="wrap-arquitectura"
+              data-filename="02_arquitectura_sistema.svg"
+              title="Descargar como SVG vectorial">
+        ⬇ Descargar SVG
+      </button>
+    </div>
+    <div class="mermaid-wrap" id="wrap-arquitectura">
       <pre class="mermaid">%%{init: {
   'theme': 'base',
   'themeVariables': {
@@ -298,8 +382,10 @@ footer strong{color:var(--primary)}
     'primaryBorderColor': '#1A365D',
     'lineColor': '#4A5568',
     'secondaryColor': '#EDF2F7',
-    'clusterBkg': '#EDF2F7',
+    'clusterBkg': '#2D3748',
     'clusterBorder': '#1A365D',
+    'titleColor': '#FFFFFF',
+    'edgeLabelBackground': '#F7FAFC',
     'fontFamily': 'Montserrat, sans-serif'
   }
 }}%%
@@ -408,8 +494,16 @@ graph TB
     <p class="section-sub">Ciclo completo: Cotización → Aprobación multi-área → Contrato → Inventarios → Facturación → Cartera</p>
   </div>
   <div class="diagram-block">
-    <div class="diagram-label">📊 01_flujo_principal_gyh.mmd</div>
-    <div class="mermaid-wrap">
+    <div class="diagram-label">
+      <span>📊 01_flujo_principal_gyh.mmd</span>
+      <button class="btn-dl-svg"
+              data-wrap="wrap-flujo-principal"
+              data-filename="01_flujo_principal_gyh.svg"
+              title="Descargar como SVG vectorial">
+        ⬇ Descargar SVG
+      </button>
+    </div>
+    <div class="mermaid-wrap" id="wrap-flujo-principal">
       <pre class="mermaid">%%{init: {
   'theme': 'base',
   'themeVariables': {
@@ -421,7 +515,8 @@ graph TB
     'tertiaryColor': '#FF9F1C',
     'clusterBkg': '#EDF2F7',
     'clusterBorder': '#CBD5E0',
-    'edgeLabelBackground': '#FFFFFF',
+    'titleColor': '#1A365D',
+    'edgeLabelBackground': '#F7FAFC',
     'fontFamily': 'Montserrat, sans-serif'
   }
 }}%%
@@ -543,11 +638,19 @@ flowchart TD
 <section id="cotizacion">
   <div class="section-header">
     <h2>Módulo de Cotizaciones</h2>
-    <p class="section-sub">Dibujante (AutoCAD 4-6h) → Importar Excel → Catálogo → Comercial → PDF → Orden de Compra</p>
+    <p class="section-sub">Dibujante (AutoCAD 4-6h) → Importar Excel → Catálogo por Unidad de Negocio → Comercial → PDF → Orden de Compra</p>
   </div>
   <div class="diagram-block">
-    <div class="diagram-label">📊 03_modulo_cotizacion.mmd</div>
-    <div class="mermaid-wrap">
+    <div class="diagram-label">
+      <span>📊 03_modulo_cotizacion.mmd</span>
+      <button class="btn-dl-svg"
+              data-wrap="wrap-cotizacion"
+              data-filename="03_modulo_cotizacion.svg"
+              title="Descargar como SVG vectorial">
+        ⬇ Descargar SVG
+      </button>
+    </div>
+    <div class="mermaid-wrap" id="wrap-cotizacion">
       <pre class="mermaid">%%{init: {
   'theme': 'base',
   'themeVariables': {
@@ -556,8 +659,10 @@ flowchart TD
     'primaryBorderColor': '#1A365D',
     'lineColor': '#4A5568',
     'secondaryColor': '#EDF2F7',
-    'clusterBkg': '#EDF2F7',
-    'clusterBorder': '#CBD5E0',
+    'clusterBkg': '#2D3748',
+    'clusterBorder': '#1A202C',
+    'titleColor': '#FFFFFF',
+    'edgeLabelBackground': '#F7FAFC',
     'fontFamily': 'Montserrat, sans-serif'
   }
 }}%%
@@ -654,11 +759,19 @@ flowchart TD
 <section id="registro-cliente">
   <div class="section-header">
     <h2>Registro y Aprobación de Clientes</h2>
-    <p class="section-sub">Formulario FT-AC-001 v2.0 · 9 secciones · Checklist documental · Concepto obligatorio 3 áreas</p>
+    <p class="section-sub">Formulario FT-AC-001 v2.0 · 9 secciones · Checklist documental · Concepto + nota obligatoria por 3 áreas · Aprobación final CEO</p>
   </div>
   <div class="diagram-block">
-    <div class="diagram-label">📊 04_registro_aprobacion_cliente.mmd</div>
-    <div class="mermaid-wrap">
+    <div class="diagram-label">
+      <span>📊 04_registro_aprobacion_cliente.mmd</span>
+      <button class="btn-dl-svg"
+              data-wrap="wrap-registro-cliente"
+              data-filename="04_registro_aprobacion_cliente.svg"
+              title="Descargar como SVG vectorial">
+        ⬇ Descargar SVG
+      </button>
+    </div>
+    <div class="mermaid-wrap" id="wrap-registro-cliente">
       <pre class="mermaid">%%{init: {
   'theme': 'base',
   'themeVariables': {
@@ -667,8 +780,10 @@ flowchart TD
     'primaryBorderColor': '#1A365D',
     'lineColor': '#4A5568',
     'secondaryColor': '#EDF2F7',
-    'clusterBkg': '#EDF2F7',
-    'clusterBorder': '#CBD5E0',
+    'clusterBkg': '#2D3748',
+    'clusterBorder': '#1A202C',
+    'titleColor': '#FFFFFF',
+    'edgeLabelBackground': '#F7FAFC',
     'fontFamily': 'Montserrat, sans-serif'
   }
 }}%%
@@ -765,11 +880,19 @@ flowchart TD
 <section id="inventarios">
   <div class="section-header">
     <h2>Inventarios y Logística</h2>
-    <p class="section-sub">Kardex · Remisiones de salida/entrada · Agenda de transporte · Conductores · Devoluciones · Reposiciones</p>
+    <p class="section-sub">Kardex (Bodega + Clientes + Producción) · Remisiones · Agenda de transporte · Alertas de recogidas · Devoluciones</p>
   </div>
   <div class="diagram-block">
-    <div class="diagram-label">📊 05_modulo_inventarios_logistica.mmd</div>
-    <div class="mermaid-wrap">
+    <div class="diagram-label">
+      <span>📊 05_modulo_inventarios_logistica.mmd</span>
+      <button class="btn-dl-svg"
+              data-wrap="wrap-inventarios"
+              data-filename="05_modulo_inventarios_logistica.svg"
+              title="Descargar como SVG vectorial">
+        ⬇ Descargar SVG
+      </button>
+    </div>
+    <div class="mermaid-wrap" id="wrap-inventarios">
       <pre class="mermaid">%%{init: {
   'theme': 'base',
   'themeVariables': {
@@ -778,8 +901,10 @@ flowchart TD
     'primaryBorderColor': '#1A365D',
     'lineColor': '#4A5568',
     'secondaryColor': '#EDF2F7',
-    'clusterBkg': '#EDF2F7',
-    'clusterBorder': '#CBD5E0',
+    'clusterBkg': '#2D3748',
+    'clusterBorder': '#1A202C',
+    'titleColor': '#FFFFFF',
+    'edgeLabelBackground': '#F7FAFC',
     'fontFamily': 'Montserrat, sans-serif'
   }
 }}%%
@@ -793,11 +918,14 @@ flowchart TD
 
     INICIO(["📝 Contrato firmado\n→ Operaciones Activas"]):::naranja
 
+    %% ── MOMENTO CERO: STOCK TOTAL
+    KARDEX_TOTAL["📊 Stock Total (Momento Cero)\nBodega + Equipos en Clientes\n+ Equipos en Producción"]:::azul
+
     %% ── SALIDA
     subgraph ALMACEN["🏭  JEFE DE ALMACÉN — DESPACHO"]
         direction TB
         REMSAL["📤 Generar Remisión de Salida\n― Productos por frente de obra\n― Cantidades e items del contrato"]:::azul
-        KARDEX_OUT["🗄️ Kardex actualizado\n(Stock disminuye)"]:::grisClaro
+        KARDEX_OUT["🗄️ Kardex actualizado\n(Stock disminuye — Bodega)"]:::grisClaro
         AGENDA["🗓️ Programar Agenda de Transporte\n― Seleccionar conductor\n― Asignar vehículo + placa\n― Hora de salida y llegada\n― Dirección de la obra"]:::azul
         NOTIF_COND["🔔 Notificar al Conductor\nDetalle del despacho"]:::grisClaro
         DESPACHO["🚛 Equipo en Tránsito\nhacia la Obra"]:::azul
@@ -830,7 +958,8 @@ flowchart TD
     FAC["💳 Pasar a Facturación\ncon días calculados\n+ reposiciones si aplica"]:::azul
 
     %% ── FLUJO
-    INICIO --> REMSAL
+    INICIO --> KARDEX_TOTAL
+    KARDEX_TOTAL --> REMSAL
     REMSAL --> KARDEX_OUT
     KARDEX_OUT --> AGENDA
     AGENDA --> NOTIF_COND
@@ -865,11 +994,155 @@ flowchart TD
 <section id="roles">
   <div class="section-header">
     <h2>Roles y Permisos (RBAC)</h2>
-    <p class="section-sub">7 roles · Admin · Comercial · Dibujante · Contabilidad · Jurídica · Almacén · Conductor</p>
+    <p class="section-sub">8 roles · CEO/Ingeniero · Admin · Comercial · Dibujante · Contabilidad · Jurídica · Almacén · Conductor</p>
   </div>
+  <div class="callout warn">
+    <strong>Nuevo (Feedback 24-jun):</strong> Se añadió el rol <strong>CEO/Ingeniero</strong> con perfil de consulta, acceso a motivos de rechazo y capacidad de forzar la aprobación de un cliente bajo su estricta responsabilidad.
+  </div>
+  <div class="md-content"><h1>Matriz de Roles y Permisos — G&amp;H Sistema</h1>
+<p><strong>8 roles · Control de acceso basado en roles (RBAC)</strong></p>
+<p>&gt; ✓ = Acceso completo · ◎ = Solo lectura / parcial · — = Sin acceso</p>
+<hr>
+<h2>Módulo Clientes y Prospectos</h2>
+<div class="table-wrap"><table><thead><tr>
+<th>Acción</th>
+<th>CEO</th>
+<th>Admin</th>
+<th>Comercial</th>
+<th>Dibujante</th>
+<th>Contabilidad</th>
+<th>Jurídica</th>
+<th>Almacén</th>
+<th>Conductor</th>
+</tr></thead><tbody>
+<tr><td>Ver lista de clientes/prospectos</td><td>✓</td><td>✓</td><td>✓</td><td>◎</td><td>✓</td><td>✓</td><td>◎</td><td>—</td></tr>
+<tr><td>Crear / editar cliente</td><td>—</td><td>✓</td><td>✓</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>Subir documentos del cliente</td><td>—</td><td>✓</td><td>✓</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>Dar concepto favorable/no favorable</td><td>—</td><td>✓</td><td>✓</td><td>—</td><td>✓</td><td>✓</td><td>—</td><td>—</td></tr>
+<tr><td>Ver todos los conceptos de aprobación</td><td>✓</td><td>✓</td><td>✓</td><td>—</td><td>✓</td><td>✓</td><td>—</td><td>—</td></tr>
+<tr><td>Aprobar cliente (si los 3 dan favorable)</td><td>—</td><td>✓</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><strong>Ver motivos de rechazo detallados</strong></td><td>✓</td><td>✓</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><strong>Forzar aprobación (última palabra CEO)</strong></td><td>✓</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+</tbody></table></div>
+<hr>
+<h2>Módulo Cotizaciones</h2>
+<div class="table-wrap"><table><thead><tr>
+<th>Acción</th>
+<th>CEO</th>
+<th>Admin</th>
+<th>Comercial</th>
+<th>Dibujante</th>
+<th>Contabilidad</th>
+<th>Jurídica</th>
+<th>Almacén</th>
+<th>Conductor</th>
+</tr></thead><tbody>
+<tr><td>Ver cotizaciones asignadas</td><td>—</td><td>✓</td><td>✓</td><td>✓</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>Cargar planos y archivos</td><td>—</td><td>✓</td><td>—</td><td>✓</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>Crear cotización técnica (materiales)</td><td>—</td><td>✓</td><td>—</td><td>✓</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>Agregar valores comerciales</td><td>—</td><td>✓</td><td>✓</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>Generar PDF y enviar al cliente</td><td>—</td><td>✓</td><td>✓</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>Ver todas las cotizaciones</td><td>◎</td><td>✓</td><td>✓</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+</tbody></table></div>
+<hr>
+<h2>Módulo Contratos</h2>
+<div class="table-wrap"><table><thead><tr>
+<th>Acción</th>
+<th>CEO</th>
+<th>Admin</th>
+<th>Comercial</th>
+<th>Dibujante</th>
+<th>Contabilidad</th>
+<th>Jurídica</th>
+<th>Almacén</th>
+<th>Conductor</th>
+</tr></thead><tbody>
+<tr><td>Crear orden de compra</td><td>—</td><td>✓</td><td>✓</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>Enviar contrato a firma electrónica</td><td>—</td><td>✓</td><td>✓</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>Confirmar firma del contrato</td><td>—</td><td>✓</td><td>—</td><td>—</td><td>—</td><td>✓</td><td>—</td><td>—</td></tr>
+</tbody></table></div>
+<hr>
+<h2>Módulo Inventarios y Logística</h2>
+<div class="table-wrap"><table><thead><tr>
+<th>Acción</th>
+<th>CEO</th>
+<th>Admin</th>
+<th>Comercial</th>
+<th>Dibujante</th>
+<th>Contabilidad</th>
+<th>Jurídica</th>
+<th>Almacén</th>
+<th>Conductor</th>
+</tr></thead><tbody>
+<tr><td>Ver stock / Kardex (Bodega + Clientes + Producción)</td><td>◎</td><td>✓</td><td>—</td><td>—</td><td>—</td><td>—</td><td>✓</td><td>—</td></tr>
+<tr><td>Generar remisión de salida</td><td>—</td><td>✓</td><td>—</td><td>—</td><td>—</td><td>—</td><td>✓</td><td>—</td></tr>
+<tr><td>Programar agenda de transporte</td><td>—</td><td>✓</td><td>—</td><td>—</td><td>—</td><td>—</td><td>✓</td><td>—</td></tr>
+<tr><td>Asignar conductor y vehículo</td><td>—</td><td>✓</td><td>—</td><td>—</td><td>—</td><td>—</td><td>✓</td><td>—</td></tr>
+<tr><td>Confirmar entrega / recepción en obra</td><td>—</td><td>✓</td><td>—</td><td>—</td><td>—</td><td>—</td><td>✓</td><td>✓</td></tr>
+<tr><td>Ver agenda de despacho asignada</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>✓</td></tr>
+<tr><td>Alertas de recogidas pendientes</td><td>◎</td><td>✓</td><td>—</td><td>—</td><td>—</td><td>—</td><td>✓</td><td>—</td></tr>
+</tbody></table></div>
+<hr>
+<h2>Módulo Facturación</h2>
+<div class="table-wrap"><table><thead><tr>
+<th>Acción</th>
+<th>CEO</th>
+<th>Admin</th>
+<th>Comercial</th>
+<th>Dibujante</th>
+<th>Contabilidad</th>
+<th>Jurídica</th>
+<th>Almacén</th>
+<th>Conductor</th>
+</tr></thead><tbody>
+<tr><td>Generar factura</td><td>—</td><td>✓</td><td>—</td><td>—</td><td>✓</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>Registrar pagos</td><td>—</td><td>✓</td><td>—</td><td>—</td><td>✓</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>Gestionar cartera</td><td>—</td><td>✓</td><td>—</td><td>—</td><td>✓</td><td>✓</td><td>—</td><td>—</td></tr>
+<tr><td>Ver facturas propias del área</td><td>—</td><td>✓</td><td>—</td><td>—</td><td>✓</td><td>✓</td><td>—</td><td>—</td></tr>
+</tbody></table></div>
+<hr>
+<h2>Auditoría y Configuración</h2>
+<div class="table-wrap"><table><thead><tr>
+<th>Acción</th>
+<th>CEO</th>
+<th>Admin</th>
+<th>Comercial</th>
+<th>Dibujante</th>
+<th>Contabilidad</th>
+<th>Jurídica</th>
+<th>Almacén</th>
+<th>Conductor</th>
+</tr></thead><tbody>
+<tr><td>Ver log completo de auditoría</td><td>✓</td><td>✓</td><td>—</td><td>—</td><td>✓</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>Gestionar usuarios y roles</td><td>—</td><td>✓</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>Configurar catálogo de productos</td><td>—</td><td>✓</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td>Configurar unidades de negocio (catálogo)</td><td>—</td><td>✓</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+</tbody></table></div>
+<hr>
+<h2>Catálogo de Productos — Unidades de Negocio</h2>
+<p>El catálogo de precios e inventario se subdivide por unidad de negocio para filtrar disponibilidad y precios:</p>
+<div class="table-wrap"><table><thead><tr>
+<th>Unidad de Negocio</th>
+<th>Descripción</th>
+</tr></thead><tbody>
+<tr><td><strong>Formaleta Metálica</strong></td><td>Sistemas de encofrado metálico para estructuras</td></tr>
+<tr><td><strong>Multidireccional</strong></td><td>Andamios y sistemas multidireccionales</td></tr>
+<tr><td><strong>Transporte</strong></td><td>Fletes, servicios de transporte y logística</td></tr>
+<tr><td><strong>Formaleta Plástica</strong></td><td>Encofrados en material plástico</td></tr>
+<tr><td><strong>Formaleta Tradicional</strong></td><td>Sistemas de encofrado en madera/tradicional</td></tr>
+</tbody></table></div></div>
+  <h3 style="margin-top:2rem">Diagrama de Permisos por Rol</h3>
   <div class="diagram-block">
-    <div class="diagram-label">📊 06_roles_y_permisos.mmd</div>
-    <div class="mermaid-wrap">
+    <div class="diagram-label">
+      <span>📊 06_roles_y_permisos.mmd</span>
+      <button class="btn-dl-svg"
+              data-wrap="wrap-roles-mmd"
+              data-filename="06_roles_y_permisos.svg"
+              title="Descargar como SVG vectorial">
+        ⬇ Descargar SVG
+      </button>
+    </div>
+    <div class="mermaid-wrap" id="wrap-roles-mmd">
       <pre class="mermaid">%%{init: {
   'theme': 'base',
   'themeVariables': {
@@ -878,8 +1151,10 @@ flowchart TD
     'primaryBorderColor': '#1A365D',
     'lineColor': '#4A5568',
     'secondaryColor': '#EDF2F7',
-    'clusterBkg': '#EDF2F7',
+    'clusterBkg': '#2D3748',
     'clusterBorder': '#1A365D',
+    'titleColor': '#FFFFFF',
+    'edgeLabelBackground': '#F7FAFC',
     'fontFamily': 'Montserrat, sans-serif'
   }
 }}%%
@@ -892,6 +1167,7 @@ graph LR
     classDef admin      fill:#38A169,color:#FFFFFF,stroke:#2F855A,stroke-width:3px
 
     %% ── ROLES
+    R_CEO["🏗️ INGENIERO/CEO\nAprobación final · Veto"]:::critico
     R_ADMIN["👑 ADMIN"]:::admin
     R_COM["💼 COMERCIAL"]:::rol
     R_DIB["✏️ DIBUJANTE"]:::rol
@@ -946,9 +1222,14 @@ graph LR
         AU1["Ver log completo de auditoría"]:::critico
         AU2["Gestionar usuarios y roles"]:::critico
         AU3["Configurar catálogo de productos"]:::critico
+        AU4["Ver motivos de rechazo detallados"]:::critico
+        AU5["Forzar aprobación de cliente (bajo su responsabilidad)"]:::critico
     end
 
     %% ── PERMISOS POR ROL
+    R_CEO --- MC1 & MC5 & MC6
+    R_CEO --- AU1 & AU4 & AU5
+
     R_ADMIN --- MC1 & MC2 & MC4 & MC5 & MC6
     R_ADMIN --- CQ5 & CQ6
     R_ADMIN --- CT1 & CT2 & CT3
@@ -981,14 +1262,23 @@ graph LR
 </section>
 
   
-<section id="sitemap">
+<section id="sitemaps">
   <div class="section-header">
-    <h2>Sitemap de la Aplicación</h2>
-    <p class="section-sub">Mapa completo de rutas · 8 módulos · Autenticación · Dashboard · Config</p>
+    <h2>Sitemaps por Flujo Principal</h2>
+    <p class="section-sub">Mapa de rutas segmentado por módulo — 7 flujos independientes</p>
   </div>
-  <div class="diagram-block">
-    <div class="diagram-label">📊 sitemap_gyh_app.mmd</div>
-    <div class="mermaid-wrap">
+  
+  <div class="diagram-block" style="margin-bottom:1.5rem">
+    <div class="diagram-label">
+      <span>📊 Auth y Dashboard &nbsp;·&nbsp; sitemap_01_auth_dashboard.mmd</span>
+      <button class="btn-dl-svg"
+              data-wrap="wrap-sm-auth"
+              data-filename="sitemap_01_auth_dashboard.svg"
+              title="Descargar como SVG vectorial">
+        ⬇ Descargar SVG
+      </button>
+    </div>
+    <div class="mermaid-wrap" id="wrap-sm-auth">
       <pre class="mermaid">%%{init: {
   'theme': 'base',
   'themeVariables': {
@@ -997,122 +1287,392 @@ graph LR
     'primaryBorderColor': '#1A365D',
     'lineColor': '#4A5568',
     'secondaryColor': '#EDF2F7',
-    'clusterBkg': '#EDF2F7',
+    'clusterBkg': '#2D3748',
     'clusterBorder': '#1A365D',
+    'titleColor': '#FFFFFF',
+    'edgeLabelBackground': '#F7FAFC',
     'fontFamily': 'Montserrat, sans-serif'
   }
 }}%%
 
 flowchart TD
-    classDef root        fill:#1A365D,color:#FFFFFF,stroke:#0F2440,stroke-width:3px,font-weight:bold
-    classDef modulo      fill:#1A365D,color:#FFFFFF,stroke:#2C5282,stroke-width:2px,font-weight:bold
-    classDef submod      fill:#2D3748,color:#FFFFFF,stroke:#1A202C,stroke-width:1px
-    classDef pagina      fill:#EDF2F7,color:#1A365D,stroke:#CBD5E0,stroke-width:1px
-    classDef cta         fill:#FF9F1C,color:#1A365D,stroke:#E8910A,stroke-width:2px,font-weight:bold
-    classDef alerta      fill:#E53E3E,color:#FFFFFF,stroke:#C53030,stroke-width:1px
-    classDef exito       fill:#38A169,color:#FFFFFF,stroke:#2F855A,stroke-width:1px
-    classDef auth        fill:#4A5568,color:#FFFFFF,stroke:#2D3748,stroke-width:2px
+    classDef root    fill:#1A365D,color:#FFFFFF,stroke:#0F2440,stroke-width:3px,font-weight:bold
+    classDef modulo  fill:#1A365D,color:#FFFFFF,stroke:#2C5282,stroke-width:2px,font-weight:bold
+    classDef pagina  fill:#EDF2F7,color:#1A365D,stroke:#CBD5E0,stroke-width:1px
+    classDef cta     fill:#FF9F1C,color:#1A365D,stroke:#E8910A,stroke-width:2px,font-weight:bold
+    classDef alerta  fill:#E53E3E,color:#FFFFFF,stroke:#C53030,stroke-width:1px
+    classDef auth    fill:#4A5568,color:#FFFFFF,stroke:#2D3748,stroke-width:2px
 
-    %% ── RAÍZ
     ROOT(["🏗️ G&H Sistema\ngyh.com.co"]):::root
 
     %% ── AUTH
-    AUTH["🔐 Autenticación"]:::auth
-    LOGIN["Iniciar Sesión\n/login"]:::pagina
-    FORGOT["Recuperar Contraseña\n/forgot-password"]:::pagina
-    AUTH --> LOGIN & FORGOT
+    subgraph S_AUTH["🔐 FLUJO 1 — Autenticación"]
+        AUTH["🔐 Autenticación"]:::auth
+        LOGIN["Iniciar Sesión\n/login"]:::pagina
+        FORGOT["Recuperar Contraseña\n/forgot-password"]:::pagina
+        RESET["Nueva Contraseña\n/reset-password"]:::pagina
+        AUTH --> LOGIN & FORGOT
+        FORGOT --> RESET
+    end
 
     %% ── DASHBOARD
-    DASH["🏠 Dashboard\n/dashboard"]:::modulo
-    DASH_KPI["📊 KPIs y Métricas\nCotizaciones · Clientes · Ingresos"]:::pagina
-    DASH_ALERTS["🔔 Alertas Pendientes\nAprobaciones · Recogidas · Vencimientos"]:::pagina
-    DASH_ACT["📋 Actividad Reciente\nLog de acciones del sistema"]:::pagina
-    DASH --> DASH_KPI & DASH_ALERTS & DASH_ACT
+    subgraph S_DASH["🏠 FLUJO 2 — Dashboard Principal"]
+        DASH["🏠 Dashboard\n/dashboard"]:::modulo
+        DASH_KPI["📊 KPIs y Métricas\nCotizaciones · Clientes · Ingresos"]:::pagina
+        DASH_ALERTS["🔔 Alertas Pendientes\nAprobaciones · Recogidas · Vencimientos"]:::alerta
+        DASH_ACT["📋 Actividad Reciente\nLog de acciones del sistema"]:::pagina
+        DASH --> DASH_KPI & DASH_ALERTS & DASH_ACT
+    end
 
-    %% ── CLIENTES
+    ROOT --> S_AUTH
+    ROOT --> S_DASH
+</pre>
+    </div>
+  </div>
+  <div class="diagram-block" style="margin-bottom:1.5rem">
+    <div class="diagram-label">
+      <span>📊 Clientes y Aprobación &nbsp;·&nbsp; sitemap_02_clientes.mmd</span>
+      <button class="btn-dl-svg"
+              data-wrap="wrap-sm-clientes"
+              data-filename="sitemap_02_clientes.svg"
+              title="Descargar como SVG vectorial">
+        ⬇ Descargar SVG
+      </button>
+    </div>
+    <div class="mermaid-wrap" id="wrap-sm-clientes">
+      <pre class="mermaid">%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'primaryColor': '#1A365D',
+    'primaryTextColor': '#FFFFFF',
+    'primaryBorderColor': '#1A365D',
+    'lineColor': '#4A5568',
+    'secondaryColor': '#EDF2F7',
+    'clusterBkg': '#2D3748',
+    'clusterBorder': '#1A365D',
+    'titleColor': '#FFFFFF',
+    'edgeLabelBackground': '#F7FAFC',
+    'fontFamily': 'Montserrat, sans-serif'
+  }
+}}%%
+
+flowchart TD
+    classDef modulo  fill:#1A365D,color:#FFFFFF,stroke:#2C5282,stroke-width:2px,font-weight:bold
+    classDef pagina  fill:#EDF2F7,color:#1A365D,stroke:#CBD5E0,stroke-width:1px
+    classDef cta     fill:#FF9F1C,color:#1A365D,stroke:#E8910A,stroke-width:2px,font-weight:bold
+    classDef alerta  fill:#E53E3E,color:#FFFFFF,stroke:#C53030,stroke-width:1px
+    classDef exito   fill:#38A169,color:#FFFFFF,stroke:#2F855A,stroke-width:1px
+
     CLI["👥 Clientes\n/clientes"]:::modulo
-    CLI_LIST["📋 Lista de Clientes\n/clientes"]:::pagina
-    CLI_NEW["➕ Nuevo Cliente\n/clientes/nuevo"]:::cta
-    CLI_DET["👤 Detalle Cliente\n/clientes/:id"]:::pagina
-    CLI_FORM["📝 Formulario FT-AC-001\n/clientes/:id/registro"]:::pagina
-    CLI_DOCS["📂 Documentos\n/clientes/:id/documentos"]:::pagina
-    CLI_APROB["✅ Aprobación Multi-Área\n/clientes/:id/aprobacion"]:::cta
-    CLI_OBRAS["🏗️ Obras y Frentes\n/clientes/:id/obras"]:::pagina
-    CLI_HIST["🕐 Historial\n/clientes/:id/historial"]:::pagina
-    CLI --> CLI_LIST & CLI_NEW
-    CLI_LIST --> CLI_DET
-    CLI_DET --> CLI_FORM & CLI_DOCS & CLI_APROB & CLI_OBRAS & CLI_HIST
 
-    %% ── COTIZACIONES
+    subgraph S_LISTA["LISTADO"]
+        CLI_LIST["📋 Lista de Clientes / Prospectos\n/clientes"]:::pagina
+        CLI_NEW["➕ Nuevo Cliente\n/clientes/nuevo"]:::cta
+    end
+
+    subgraph S_DETALLE["DETALLE DE CLIENTE"]
+        CLI_DET["👤 Detalle Cliente\n/clientes/:id"]:::pagina
+        CLI_FORM["📝 Formulario FT-AC-001\n/clientes/:id/registro\n9 secciones obligatorias"]:::pagina
+        CLI_DOCS["📂 Documentos Adjuntos\n/clientes/:id/documentos\nRUT · CC · Cámara · EEFF"]:::pagina
+        CLI_OBRAS["🏗️ Obras y Frentes\n/clientes/:id/obras"]:::pagina
+        CLI_HIST["🕐 Historial\n/clientes/:id/historial"]:::pagina
+    end
+
+    subgraph S_APROB["APROBACIÓN MULTI-ÁREA"]
+        CLI_APROB["✅ Aprobación Simultánea\n/clientes/:id/aprobacion\nComercial · Jurídica · Contabilidad"]:::cta
+        CLI_NOTA["💬 Notas por Especialidad\nCampo de texto obligatorio\npor cada área"]:::pagina
+        CLI_CEO["🏗️ Revisión CEO/Ingeniero\n/clientes/:id/revision-ceo\nAprobación final · Veto"]:::alerta
+        CLI_STATUS["📊 Estado del Cliente\nAprobado · Rechazado · Pendiente"]:::pagina
+    end
+
+    CLI --> S_LISTA
+    CLI_LIST --> CLI_DET
+    CLI_NEW --> CLI_DET
+    CLI_DET --> CLI_FORM & CLI_DOCS & CLI_OBRAS & CLI_HIST & S_APROB
+    CLI_APROB --> CLI_NOTA --> CLI_CEO --> CLI_STATUS
+</pre>
+    </div>
+  </div>
+  <div class="diagram-block" style="margin-bottom:1.5rem">
+    <div class="diagram-label">
+      <span>📊 Cotizaciones y Catálogo &nbsp;·&nbsp; sitemap_03_cotizaciones.mmd</span>
+      <button class="btn-dl-svg"
+              data-wrap="wrap-sm-cot"
+              data-filename="sitemap_03_cotizaciones.svg"
+              title="Descargar como SVG vectorial">
+        ⬇ Descargar SVG
+      </button>
+    </div>
+    <div class="mermaid-wrap" id="wrap-sm-cot">
+      <pre class="mermaid">%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'primaryColor': '#1A365D',
+    'primaryTextColor': '#FFFFFF',
+    'primaryBorderColor': '#1A365D',
+    'lineColor': '#4A5568',
+    'secondaryColor': '#EDF2F7',
+    'clusterBkg': '#2D3748',
+    'clusterBorder': '#1A365D',
+    'titleColor': '#FFFFFF',
+    'edgeLabelBackground': '#F7FAFC',
+    'fontFamily': 'Montserrat, sans-serif'
+  }
+}}%%
+
+flowchart TD
+    classDef modulo  fill:#1A365D,color:#FFFFFF,stroke:#2C5282,stroke-width:2px,font-weight:bold
+    classDef pagina  fill:#EDF2F7,color:#1A365D,stroke:#CBD5E0,stroke-width:1px
+    classDef cta     fill:#FF9F1C,color:#1A365D,stroke:#E8910A,stroke-width:2px,font-weight:bold
+    classDef gris    fill:#4A5568,color:#FFFFFF,stroke:#2D3748,stroke-width:1px
+
     COT["📋 Cotizaciones\n/cotizaciones"]:::modulo
-    COT_LIST["📋 Lista de Cotizaciones\n/cotizaciones"]:::pagina
-    COT_NEW["➕ Nueva Cotización\n/cotizaciones/nueva"]:::cta
-    COT_DET["📄 Detalle Cotización\n/cotizaciones/:id"]:::pagina
-    COT_PLAN["📐 Carga de Planos\n/cotizaciones/:id/planos"]:::pagina
-    COT_MAT["📊 Desglose Materiales\n/cotizaciones/:id/materiales\n(Import desde Excel)"]:::pagina
-    COT_ITEMS["🛒 Ítems y Precios\n/cotizaciones/:id/items\nVenta · Alquiler · Transp. · Repos."]:::pagina
-    COT_PDF["📄 Generar PDF\n/cotizaciones/:id/pdf"]:::cta
-    COT_CATALOG["📚 Catálogo de Precios\n/catalogo"]:::pagina
-    COT --> COT_LIST & COT_NEW & COT_CATALOG
+
+    subgraph S_LISTA["LISTADO"]
+        COT_LIST["📋 Lista de Cotizaciones\n/cotizaciones"]:::pagina
+        COT_NEW["➕ Nueva Cotización\n/cotizaciones/nueva"]:::cta
+    end
+
+    subgraph S_CATALOGO["CATÁLOGO (por Unidad de Negocio)"]
+        COT_CAT["📚 Catálogo de Precios\n/catalogo"]:::pagina
+        CAT_FM["🔩 Formaleta Metálica"]:::pagina
+        CAT_MD["🏗️ Multidireccional"]:::pagina
+        CAT_TR["🚛 Transporte"]:::pagina
+        CAT_FP["🧱 Formaleta Plástica"]:::pagina
+        CAT_FT["🪵 Formaleta Tradicional"]:::pagina
+        COT_CAT --> CAT_FM & CAT_MD & CAT_TR & CAT_FP & CAT_FT
+    end
+
+    subgraph S_DETALLE["DETALLE COTIZACIÓN"]
+        COT_DET["📄 Detalle Cotización\n/cotizaciones/:id"]:::pagina
+        COT_PLAN["📐 Carga de Planos\n/cotizaciones/:id/planos\nDWG · DXF · PDF"]:::pagina
+        COT_MAT["📊 Desglose Materiales\n/cotizaciones/:id/materiales\nImport desde Excel AutoCAD"]:::pagina
+        COT_ITEMS["🛒 Ítems y Precios\n/cotizaciones/:id/items\nVenta · Alquiler · Transp. · Repos."]:::pagina
+        COT_PDF["📄 Generar PDF\n/cotizaciones/:id/pdf"]:::cta
+    end
+
+    COT --> S_LISTA & S_CATALOGO
     COT_LIST --> COT_DET
     COT_DET --> COT_PLAN & COT_MAT & COT_ITEMS & COT_PDF
+</pre>
+    </div>
+  </div>
+  <div class="diagram-block" style="margin-bottom:1.5rem">
+    <div class="diagram-label">
+      <span>📊 Contratos &nbsp;·&nbsp; sitemap_04_contratos.mmd</span>
+      <button class="btn-dl-svg"
+              data-wrap="wrap-sm-contratos"
+              data-filename="sitemap_04_contratos.svg"
+              title="Descargar como SVG vectorial">
+        ⬇ Descargar SVG
+      </button>
+    </div>
+    <div class="mermaid-wrap" id="wrap-sm-contratos">
+      <pre class="mermaid">%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'primaryColor': '#1A365D',
+    'primaryTextColor': '#FFFFFF',
+    'primaryBorderColor': '#1A365D',
+    'lineColor': '#4A5568',
+    'secondaryColor': '#EDF2F7',
+    'clusterBkg': '#2D3748',
+    'clusterBorder': '#1A365D',
+    'titleColor': '#FFFFFF',
+    'edgeLabelBackground': '#F7FAFC',
+    'fontFamily': 'Montserrat, sans-serif'
+  }
+}}%%
 
-    %% ── CONTRATOS
+flowchart TD
+    classDef modulo  fill:#1A365D,color:#FFFFFF,stroke:#2C5282,stroke-width:2px,font-weight:bold
+    classDef pagina  fill:#EDF2F7,color:#1A365D,stroke:#CBD5E0,stroke-width:1px
+    classDef cta     fill:#FF9F1C,color:#1A365D,stroke:#E8910A,stroke-width:2px,font-weight:bold
+    classDef exito   fill:#38A169,color:#FFFFFF,stroke:#2F855A,stroke-width:1px
+
     CONT["📝 Contratos\n/contratos"]:::modulo
-    CONT_LIST["📋 Lista de Contratos\n/contratos"]:::pagina
-    CONT_OC["📝 Orden de Compra\n/contratos/:id/orden-compra"]:::pagina
-    CONT_FIRMA["✍️ Firma Electrónica\n/contratos/:id/firma\nDocuSign / Okc"]:::cta
-    CONT_EST["📊 Estado del Contrato\n/contratos/:id/estado"]:::pagina
+
+    subgraph S_CONT["GESTIÓN DE CONTRATOS"]
+        CONT_LIST["📋 Lista de Contratos\n/contratos"]:::pagina
+        CONT_OC["📝 Orden de Compra\n/contratos/:id/orden-compra\nGenerada desde cotización aprobada"]:::pagina
+        CONT_FIRMA["✍️ Firma Electrónica\n/contratos/:id/firma\nDocuSign / Okc"]:::cta
+        CONT_EST["📊 Estado del Contrato\n/contratos/:id/estado\nPendiente · Firmado · Activo"]:::pagina
+        CONT_ACT["🚀 Activar Operaciones\n/contratos/:id/activar"]:::exito
+    end
+
     CONT --> CONT_LIST
-    CONT_LIST --> CONT_OC & CONT_FIRMA & CONT_EST
+    CONT_LIST --> CONT_OC --> CONT_FIRMA --> CONT_EST --> CONT_ACT
+</pre>
+    </div>
+  </div>
+  <div class="diagram-block" style="margin-bottom:1.5rem">
+    <div class="diagram-label">
+      <span>📊 Inventarios y Logística &nbsp;·&nbsp; sitemap_05_inventarios.mmd</span>
+      <button class="btn-dl-svg"
+              data-wrap="wrap-sm-inv"
+              data-filename="sitemap_05_inventarios.svg"
+              title="Descargar como SVG vectorial">
+        ⬇ Descargar SVG
+      </button>
+    </div>
+    <div class="mermaid-wrap" id="wrap-sm-inv">
+      <pre class="mermaid">%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'primaryColor': '#1A365D',
+    'primaryTextColor': '#FFFFFF',
+    'primaryBorderColor': '#1A365D',
+    'lineColor': '#4A5568',
+    'secondaryColor': '#EDF2F7',
+    'clusterBkg': '#2D3748',
+    'clusterBorder': '#1A365D',
+    'titleColor': '#FFFFFF',
+    'edgeLabelBackground': '#F7FAFC',
+    'fontFamily': 'Montserrat, sans-serif'
+  }
+}}%%
 
-    %% ── INVENTARIOS
+flowchart TD
+    classDef modulo  fill:#1A365D,color:#FFFFFF,stroke:#2C5282,stroke-width:2px,font-weight:bold
+    classDef pagina  fill:#EDF2F7,color:#1A365D,stroke:#CBD5E0,stroke-width:1px
+    classDef cta     fill:#FF9F1C,color:#1A365D,stroke:#E8910A,stroke-width:2px,font-weight:bold
+    classDef alerta  fill:#E53E3E,color:#FFFFFF,stroke:#C53030,stroke-width:1px
+    classDef exito   fill:#38A169,color:#FFFFFF,stroke:#2F855A,stroke-width:1px
+
     INV["📦 Inventarios\n/inventarios"]:::modulo
-    INV_STOCK["🗄️ Stock / Kardex\n/inventarios/stock"]:::pagina
-    INV_REM["📤 Remisiones\n/inventarios/remisiones"]:::pagina
-    INV_REM_NEW["➕ Nueva Remisión\n/inventarios/remisiones/nueva"]:::cta
-    INV_AGENDA["🗓️ Agenda de Transporte\n/inventarios/agenda"]:::cta
-    INV_COND["🚛 Conductores\n/inventarios/conductores"]:::pagina
-    INV_DEV["📥 Devoluciones\n/inventarios/devoluciones"]:::pagina
-    INV_ALERTA["🔔 Próximas Recogidas\n/inventarios/alertas"]:::alerta
-    INV --> INV_STOCK & INV_REM & INV_AGENDA & INV_COND & INV_DEV & INV_ALERTA
-    INV_REM --> INV_REM_NEW
 
-    %% ── FACTURACIÓN
+    subgraph S_STOCK["STOCK Y KARDEX"]
+        INV_STOCK["🗄️ Stock Total (Momento Cero)\n/inventarios/stock\nBodega + En Clientes + En Producción"]:::pagina
+        INV_PROD["🏭 Equipos en Producción\n/inventarios/produccion"]:::pagina
+        INV_STOCK --> INV_PROD
+    end
+
+    subgraph S_REM["REMISIONES"]
+        INV_REM["📤 Remisiones\n/inventarios/remisiones"]:::pagina
+        INV_REM_NEW["➕ Nueva Remisión de Salida\n/inventarios/remisiones/nueva\nFecha · Hora · Conductor · Obra"]:::cta
+        INV_DEV["📥 Devoluciones / Entrada\n/inventarios/devoluciones\nInspección · Novedad · Reposición"]:::pagina
+        INV_REM --> INV_REM_NEW
+        INV_REM --> INV_DEV
+    end
+
+    subgraph S_LOGISTICA["LOGÍSTICA"]
+        INV_AGENDA["🗓️ Agenda de Transporte\n/inventarios/agenda\nFecha · Hora · Vehículo · Dirección"]:::cta
+        INV_COND["🚛 Conductores\n/inventarios/conductores\nAgenda asignada · Historial"]:::pagina
+        INV_ALERTA["🔔 Alertas de Recogidas Pendientes\n/inventarios/alertas\nOptimización de rutas"]:::alerta
+        INV_AGENDA --> INV_COND
+    end
+
+    INV --> S_STOCK & S_REM & S_LOGISTICA
+</pre>
+    </div>
+  </div>
+  <div class="diagram-block" style="margin-bottom:1.5rem">
+    <div class="diagram-label">
+      <span>📊 Facturación &nbsp;·&nbsp; sitemap_06_facturacion.mmd</span>
+      <button class="btn-dl-svg"
+              data-wrap="wrap-sm-fac"
+              data-filename="sitemap_06_facturacion.svg"
+              title="Descargar como SVG vectorial">
+        ⬇ Descargar SVG
+      </button>
+    </div>
+    <div class="mermaid-wrap" id="wrap-sm-fac">
+      <pre class="mermaid">%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'primaryColor': '#1A365D',
+    'primaryTextColor': '#FFFFFF',
+    'primaryBorderColor': '#1A365D',
+    'lineColor': '#4A5568',
+    'secondaryColor': '#EDF2F7',
+    'clusterBkg': '#2D3748',
+    'clusterBorder': '#1A365D',
+    'titleColor': '#FFFFFF',
+    'edgeLabelBackground': '#F7FAFC',
+    'fontFamily': 'Montserrat, sans-serif'
+  }
+}}%%
+
+flowchart TD
+    classDef modulo  fill:#1A365D,color:#FFFFFF,stroke:#2C5282,stroke-width:2px,font-weight:bold
+    classDef pagina  fill:#EDF2F7,color:#1A365D,stroke:#CBD5E0,stroke-width:1px
+    classDef cta     fill:#FF9F1C,color:#1A365D,stroke:#E8910A,stroke-width:2px,font-weight:bold
+    classDef alerta  fill:#E53E3E,color:#FFFFFF,stroke:#C53030,stroke-width:1px
+    classDef exito   fill:#38A169,color:#FFFFFF,stroke:#2F855A,stroke-width:1px
+
     FAC["💳 Facturación\n/facturacion"]:::modulo
-    FAC_LIST["📋 Facturas\n/facturacion/facturas"]:::pagina
-    FAC_NEW["➕ Nueva Factura\n/facturacion/facturas/nueva"]:::cta
-    FAC_CART["⚠️ Cartera\n/facturacion/cartera"]:::alerta
-    FAC_PAG["💰 Registrar Pago\n/facturacion/:id/pago"]:::pagina
-    FAC_RET["🧾 Retenciones\n/facturacion/retenciones\nRte. Fuente · ICA · IVA"]:::pagina
-    FAC --> FAC_LIST & FAC_CART & FAC_RET
-    FAC_LIST --> FAC_NEW & FAC_PAG
 
-    %% ── AUDITORÍA
-    AUD["🔍 Auditoría\n/auditoria"]:::modulo
-    AUD_LOG["📋 Log Global\n/auditoria/log\nQuién · Cuándo · Qué"]:::pagina
-    AUD_USR["👥 Por Usuario\n/auditoria/usuario/:id"]:::pagina
-    AUD_MOD["📦 Por Módulo\n/auditoria/modulo/:name"]:::pagina
-    AUD --> AUD_LOG & AUD_USR & AUD_MOD
+    subgraph S_FAC["FACTURACIÓN"]
+        FAC_LIST["📋 Facturas\n/facturacion/facturas"]:::pagina
+        FAC_NEW["➕ Nueva Factura\n/facturacion/facturas/nueva\nDías alquiler · m² · Retenciones"]:::cta
+        FAC_PAG["💰 Registrar Pago\n/facturacion/:id/pago\nFecha · Hora · Valor · Método"]:::pagina
+        FAC_LIST --> FAC_NEW & FAC_PAG
+    end
 
-    %% ── CONFIGURACIÓN
-    CONF["⚙️ Configuración\n/configuracion"]:::modulo
-    CONF_USR["👤 Usuarios y Roles\n/configuracion/usuarios"]:::pagina
-    CONF_CAT["📚 Catálogo Productos\n/configuracion/catalogo"]:::pagina
-    CONF_NOTIF["🔔 Notificaciones\n/configuracion/notificaciones"]:::pagina
-    CONF_FIRMA["✍️ Integración Firma\nDocuSign / Okc API Keys"]:::pagina
-    CONF --> CONF_USR & CONF_CAT & CONF_NOTIF & CONF_FIRMA
+    subgraph S_RET["RETENCIONES"]
+        FAC_RET["🧾 Retenciones\n/facturacion/retenciones\nRte. Fuente · ICA · IVA"]:::pagina
+    end
 
-    %% ── CONEXIONES RAÍZ
-    ROOT --> AUTH
-    ROOT --> DASH
-    ROOT --> CLI
-    ROOT --> COT
-    ROOT --> CONT
-    ROOT --> INV
-    ROOT --> FAC
-    ROOT --> AUD
-    ROOT --> CONF
+    subgraph S_CART["CARTERA"]
+        FAC_CART["⚠️ Cartera\n/facturacion/cartera\nMora · Seguimiento · Cobro jurídico"]:::alerta
+    end
+
+    FAC --> S_FAC & S_RET & S_CART
+</pre>
+    </div>
+  </div>
+  <div class="diagram-block" style="margin-bottom:1.5rem">
+    <div class="diagram-label">
+      <span>📊 Auditoría y Config &nbsp;·&nbsp; sitemap_07_auditoria_config.mmd</span>
+      <button class="btn-dl-svg"
+              data-wrap="wrap-sm-aud"
+              data-filename="sitemap_07_auditoria_config.svg"
+              title="Descargar como SVG vectorial">
+        ⬇ Descargar SVG
+      </button>
+    </div>
+    <div class="mermaid-wrap" id="wrap-sm-aud">
+      <pre class="mermaid">%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'primaryColor': '#1A365D',
+    'primaryTextColor': '#FFFFFF',
+    'primaryBorderColor': '#1A365D',
+    'lineColor': '#4A5568',
+    'secondaryColor': '#EDF2F7',
+    'clusterBkg': '#2D3748',
+    'clusterBorder': '#1A365D',
+    'titleColor': '#FFFFFF',
+    'edgeLabelBackground': '#F7FAFC',
+    'fontFamily': 'Montserrat, sans-serif'
+  }
+}}%%
+
+flowchart TD
+    classDef modulo  fill:#1A365D,color:#FFFFFF,stroke:#2C5282,stroke-width:2px,font-weight:bold
+    classDef pagina  fill:#EDF2F7,color:#1A365D,stroke:#CBD5E0,stroke-width:1px
+    classDef cta     fill:#FF9F1C,color:#1A365D,stroke:#E8910A,stroke-width:2px,font-weight:bold
+    classDef gris    fill:#4A5568,color:#FFFFFF,stroke:#2D3748,stroke-width:1px
+
+    subgraph S_AUD["🔍 AUDITORÍA"]
+        AUD["🔍 Auditoría\n/auditoria"]:::modulo
+        AUD_LOG["📋 Log Global\n/auditoria/log\nQuién · Cuándo · Qué · Hora"]:::pagina
+        AUD_USR["👥 Por Usuario\n/auditoria/usuario/:id"]:::pagina
+        AUD_MOD["📦 Por Módulo\n/auditoria/modulo/:name"]:::pagina
+        AUD_REJ["❌ Rechazos y Motivos\n/auditoria/rechazos\nDetalle para CEO/Ingeniero"]:::pagina
+        AUD --> AUD_LOG & AUD_USR & AUD_MOD & AUD_REJ
+    end
+
+    subgraph S_CONF["⚙️ CONFIGURACIÓN"]
+        CONF["⚙️ Configuración\n/configuracion"]:::modulo
+        CONF_USR["👤 Usuarios y Roles\n/configuracion/usuarios\n8 roles · RBAC"]:::pagina
+        CONF_CAT["📚 Catálogo Productos\n/configuracion/catalogo\nPor unidad de negocio"]:::pagina
+        CONF_UNI["🏭 Unidades de Negocio\n/configuracion/unidades\nFM · Multi · Transp. · FP · FT"]:::pagina
+        CONF_NOTIF["🔔 Notificaciones\n/configuracion/notificaciones\nAlertas de recogidas · Vencimientos"]:::pagina
+        CONF_FIRMA["✍️ Integración Firma\n/configuracion/firma\nDocuSign / Okc API Keys"]:::pagina
+        CONF --> CONF_USR & CONF_CAT & CONF_NOTIF & CONF_FIRMA
+        CONF_CAT --> CONF_UNI
+    end
 </pre>
     </div>
   </div>
@@ -1122,7 +1682,7 @@ flowchart TD
 <section id="database">
   <div class="section-header">
     <h2>Base de Datos — Schema PostgreSQL</h2>
-    <p class="section-sub">DBML v1.0 · 27 tablas · 27 enumeraciones · Generado 2026-06-24</p>
+    <p class="section-sub">DBML v1.0 · 27 tablas · 27 enumeraciones</p>
   </div>
   <div class="callout">
     <strong>Motor:</strong> PostgreSQL &nbsp;·&nbsp; <strong>Escala inicial:</strong> ~180 clientes · 50 obras/cliente · 3-4 frentes/obra
@@ -2240,7 +2800,7 @@ Table cartera {
   <section id="historias">
     <div class="section-header">
       <h2>Historias de Usuario</h2>
-      <p class="section-sub">14 historias · 6 módulos · Criterios de aceptación verificables · Roles asignados</p>
+      <p class="section-sub">Sesión 2026-06-16 · Criterios de aceptación verificables · Roles asignados</p>
     </div>
     <div class="md-content"><h1>Historias de Usuario — G&amp;H Sistema de Gestión</h1>
 <p><strong>G&amp;H Obras y Estructuras Metálicas S.A.S</strong></p>
@@ -2464,185 +3024,99 @@ Table cartera {
   <section id="checklist">
     <div class="section-header">
       <h2>Checklist Validado</h2>
-      <p class="section-sub">24 ítems originales + 6 adicionales identificados en documentos · 100% cubiertos en el schema</p>
+      <p class="section-sub">Ítems de la sesión + ajustes del feedback 24-jun · Cubre todos los módulos del sistema</p>
     </div>
     <div class="md-content"><h1>Checklist Validado — G&amp;H Sistema de Gestión</h1>
-<p><strong>Validación cruzada con transcripción sesión 2026-06-16 y formularios FT-AC-001 v2.0</strong></p>
+<p><strong>Sesión 2026-06-16 + Ajustes Feedback 2026-06-24</strong></p>
 <hr>
-<h2>Estado General</h2>
-<div class="table-wrap"><table><thead><tr>
-<th>Módulo</th>
-<th>Items</th>
-<th>Cubiertos</th>
-<th>Estado</th>
-</tr></thead><tbody>
-<tr><td>Datos y Migración</td><td>5</td><td>5</td><td>✅ Completo</td></tr>
-<tr><td>Módulo Comercial y Cotización</td><td>7</td><td>7</td><td>✅ Completo</td></tr>
-<tr><td>Registro y Aprobación de Clientes</td><td>3</td><td>3</td><td>✅ Completo</td></tr>
-<tr><td>Contratos y Firma</td><td>2</td><td>2</td><td>✅ Completo</td></tr>
-<tr><td>Inventarios y Logística</td><td>4</td><td>4</td><td>✅ Completo</td></tr>
-<tr><td>Requerimientos Transversales</td><td>3</td><td>3</td><td>✅ Completo</td></tr>
-<tr><td><strong>TOTAL</strong></td><td><strong>24</strong></td><td><strong>24</strong></td><td><strong>✅ 100%</strong></td></tr>
-</tbody></table></div>
-<hr>
-<h2>1. Checklist de Datos y Métricas de Migración</h2>
-<p>&gt; Valida la estructura de PostgreSQL para soportar el volumen histórico</p>
+<h2>✅ Módulo de Clientes y Aprobación</h2>
 <ul class="md-list">
-<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Capacidad de Carga de Clientes:</strong> Soporte para ~<strong>180 clientes</strong> (130 Bogotá, 50 Ibagué/Armenia).</li>
-<li><em>Cubierto en:</em> tabla <code>clientes</code> con campo <code>ciudad_sucursal</code> (enum: bogota, ibague, armenia).</li>
-</ul>
-<ul class="md-list">
-<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Estructura Geográfica / Sucursales:</strong> Campos de segmentación por ciudades core.</li>
-<li><em>Cubierto en:</em> <code>clientes.ciudad_sucursal</code> + índice en la columna para filtrado eficiente.</li>
-</ul>
-<ul class="md-list">
-<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Nivel 1 (Cliente):</strong> Registro único con código de revisión automático.</li>
-<li><em>Cubierto en:</em> <code>clientes.codigo_revision</code> (varchar unique auto-generado).</li>
-</ul>
-<ul class="md-list">
-<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Nivel 2 (Obra):</strong> Hasta <strong>50 obras independientes</strong> por cliente.</li>
-<li><em>Cubierto en:</em> tabla <code>obras</code> con FK a <code>clientes.id</code>.</li>
-</ul>
-<ul class="md-list">
-<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Nivel 3 (Frente de Obra):</strong> 3-4 frentes por obra.</li>
-<li><em>Cubierto en:</em> tabla <code>frentes_obra</code> con FK a <code>obras.id</code>.</li>
-</ul>
-<ul class="md-list">
-<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Historial de Prospección:</strong> Registro de ~<strong>50 prospectos nuevos/mes</strong> con trazabilidad.</li>
-<li><em>Cubierto en:</em> <code>clientes.estado_cliente = &#x27;prospecto&#x27;</code> + campo <code>created_at</code> + auditoría.</li>
+<li class="check-item done"><span class="chk chk-ok">✓</span> Formulario FT-AC-001 v2.0 — 9 secciones digitalizadas en el sistema</li>
+<li class="check-item done"><span class="chk chk-ok">✓</span> Checklist documental: RUT, Cámara de Comercio, Cédula Rep. Legal, EEFF, Autorización Centrales de Riesgo, Carta de Presentación</li>
+<li class="check-item done"><span class="chk chk-ok">✓</span> Aprobación simultánea de 3 áreas: Comercial, Jurídica, Contabilidad</li>
+<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Notas por especialidad obligatorias</strong> — cada área registra justificación textual al dar concepto</li>
+<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Rol CEO/Ingeniero</strong> — perfil de consulta con acceso a motivos de rechazo detallados</li>
+<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Aprobación forzada por CEO</strong> — regla de negocio: el CEO tiene la última palabra bajo su responsabilidad</li>
+<li class="check-item done"><span class="chk chk-ok">✓</span> Notificación automática a todas las áreas para agilizar proceso de aprobación</li>
 </ul>
 <hr>
-<h2>2. Checklist para el Módulo Comercial y de Cotización</h2>
-<p>&gt; Frontend React + Lógica FastAPI para el flujo de preventa</p>
+<h2>✅ Módulo de Cotizaciones</h2>
 <ul class="md-list">
-<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Módulo de Dibujantes (Optimización):</strong> Flujo técnico para agilizar proceso actual (4-6 horas AutoCAD).</li>
-<li><em>Cubierto en:</em> tabla <code>cotizaciones</code> con <code>horas_modelamiento</code> + flujo en <code>03_modulo_cotizacion.mmd</code>.</li>
-<li><em>Historia de usuario:</em> US-001.</li>
-</ul>
-<ul class="md-list">
-<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Carga y Lectura de Archivos:</strong> Canal para planos (DWG/DXF) y exportación/importación Excel.</li>
-<li><em>Cubierto en:</em> tabla <code>archivos_planos</code> (formatos: dwg, dxf, pdf, xlsx) + <code>cotizaciones.archivo_excel_url</code>.</li>
-<li><em>Historia de usuario:</em> US-001, AC-001, AC-003.</li>
-</ul>
-<ul class="md-list">
-<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Integración de Catálogos Oficiales:</strong> Precios del cliente para asignación automática.</li>
-<li><em>Cubierto en:</em> tabla <code>catalogo_productos</code> con precios de venta, alquiler/día y reposición + US-003.</li>
-</ul>
-<ul class="md-list">
-<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Generador de Cotizaciones en PDF:</strong> Export final con valores comerciales e IVA.</li>
-<li><em>Cubierto en:</em> <code>cotizaciones.pdf_cotizacion_url</code> + US-002, AC-005.</li>
-</ul>
-<ul class="md-list">
-<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Venta:</strong> Productos/materiales existentes en catálogo.</li>
-<li><em>Cubierto en:</em> <code>cotizacion_items.tipo_item = &#x27;venta&#x27;</code> + <code>cotizaciones.incluye_venta</code>.</li>
-</ul>
-<ul class="md-list">
-<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Alquiler:</strong> Equipos y maquinaria temporal.</li>
-<li><em>Cubierto en:</em> <code>cotizacion_items.tipo_item = &#x27;alquiler&#x27;</code> + <code>cotizacion_items.dias_alquiler</code>.</li>
-</ul>
-<ul class="md-list">
-<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Transporte:</strong> Costos de logística, trayectos ida y vuelta.</li>
-<li><em>Cubierto en:</em> <code>tipo_item_cotizacion = &#x27;transporte_ida&#x27;</code> y <code>&#x27;transporte_vuelta&#x27;</code>.</li>
-</ul>
-<ul class="md-list">
-<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Reposición:</strong> Cobros por pérdida o no devolución.</li>
-<li><em>Cubierto en:</em> <code>tipo_item_cotizacion = &#x27;reposicion&#x27;</code> + <code>catalogo_productos.precio_reposicion</code>.</li>
+<li class="check-item done"><span class="chk chk-ok">✓</span> Carga de planos en DWG, DXF, PDF desde el sistema</li>
+<li class="check-item done"><span class="chk chk-ok">✓</span> Importación de Excel de materiales exportado desde AutoCAD</li>
+<li class="check-item done"><span class="chk chk-ok">✓</span> Consulta automática del catálogo de precios y asignación de valores</li>
+<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Catálogo subdividido por unidades de negocio:</strong></li>
+<li class="check-item done"><span class="chk chk-ok">✓</span> Formaleta Metálica</li>
+<li class="check-item done"><span class="chk chk-ok">✓</span> Multidireccional</li>
+<li class="check-item done"><span class="chk chk-ok">✓</span> Transporte</li>
+<li class="check-item done"><span class="chk chk-ok">✓</span> Formaleta Plástica</li>
+<li class="check-item done"><span class="chk chk-ok">✓</span> Formaleta Tradicional</li>
+<li class="check-item done"><span class="chk chk-ok">✓</span> Tipos de negocio: Venta, Alquiler, Transporte, Reposición</li>
+<li class="check-item done"><span class="chk chk-ok">✓</span> Validación de retenciones: Rte. Fuente, Rte. ICA, IVA</li>
+<li class="check-item done"><span class="chk chk-ok">✓</span> Generación de PDF oficial con logo y datos completos</li>
+<li class="check-item done"><span class="chk chk-ok">✓</span> Envío de PDF directamente al cliente desde el sistema</li>
 </ul>
 <hr>
-<h2>3. Checklist Documental para Registro de Clientes</h2>
-<p>&gt; Reemplaza el formato Excel CHECKLIST VALIDACION CLIENTES BOGOTA</p>
+<h2>✅ Módulo de Contratos</h2>
 <ul class="md-list">
-<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Validación de Roles Simultáneos:</strong> Bloqueo hasta que las 3 áreas den concepto.</li>
-<li><em>Cubierto en:</em> tabla <code>aprobaciones_cliente</code> con índice <code>UNIQUE(cliente_id, area)</code>.</li>
-<li><em>Lógica:</em> <code>estado_cliente</code> solo avanza a &#x27;aprobado&#x27; cuando las 3 áreas tienen <code>es_favorable = true</code>.</li>
-<li><em>Historia de usuario:</em> US-005.</li>
-</ul>
-<ul class="md-list">
-<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Contabilidad:</strong> Validación financiera y de crédito.</li>
-<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Jurídica:</strong> Validación documental y listas LAFT (Circular 09/2016, Ley 1581/2012).</li>
-<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Comercial:</strong> Validación de la oportunidad de negocio.</li>
-</ul>
-<ul class="md-list">
-<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Conceptos Obligatorios:</strong> Estado Favorable / No Favorable.</li>
-<li><em>Cubierto en:</em> <code>aprobaciones_cliente.es_favorable</code> (boolean) + <code>estado_aprobacion</code> (enum).</li>
-</ul>
-<ul class="md-list">
-<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Caja de Anotaciones / Comentarios:</strong> Campo de texto obligatorio por área.</li>
-<li><em>Cubierto en:</em> <code>aprobaciones_cliente.concepto</code> (text, NOT NULL en lógica de negocio).</li>
-<li><em>Historia de usuario:</em> US-005, AC-002.</li>
-</ul>
-<ul class="md-list">
-<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Formulario FT-AC-001 v2.0 completo:</strong> Secciones I-IX capturadas.</li>
-<li><em>Cubierto en:</em> tablas <code>clientes</code>, <code>contactos_cliente</code>, <code>referencias_bancarias</code>, <code>referencias_comerciales</code>, <code>accionistas</code>, <code>autorizacion_centrales_riesgo</code>, <code>documentos_registro</code>.</li>
+<li class="check-item done"><span class="chk chk-ok">✓</span> Generación de Orden de Compra a partir de cotización aprobada</li>
+<li class="check-item done"><span class="chk chk-ok">✓</span> Firma electrónica vía DocuSign / Okc</li>
+<li class="check-item done"><span class="chk chk-ok">✓</span> Seguimiento del estado del contrato (Pendiente → Firmado → Activo)</li>
+<li class="check-item done"><span class="chk chk-ok">✓</span> Activación automática de operaciones al completar la firma</li>
 </ul>
 <hr>
-<h2>4. Checklist para el Módulo de Contratos y Firma</h2>
+<h2>✅ Módulo de Inventarios y Logística</h2>
 <ul class="md-list">
-<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Firma Electrónica:</strong> Integración API con plataformas de firma digital (DocuSign / Okc).</li>
-<li><em>Cubierto en:</em> tabla <code>contratos</code> con campos <code>plataforma_firma</code>, <code>id_documento_externo</code>, <code>url_documento_firmado</code>, <code>fecha_firma</code>.</li>
-<li><em>Historia de usuario:</em> US-007.</li>
-</ul>
-<ul class="md-list">
-<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Transición a Operaciones:</strong> Contrato firmado activa automáticamente el módulo de Inventarios.</li>
-<li><em>Cubierto en:</em> trigger automático en <code>contratos.estado = &#x27;firmado&#x27;</code> → <code>ordenes_compra.estado = &#x27;activa&#x27;</code>.</li>
-<li><em>Historia de usuario:</em> US-007, AC-005.</li>
-</ul>
-<hr>
-<h2>5. Checklist para el Módulo de Inventarios</h2>
-<ul class="md-list">
-<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Remisiones de Salida:</strong> Generación automática en el Kardex al despacho.</li>
-<li><em>Cubierto en:</em> tablas <code>remisiones</code> + <code>remision_items</code> con actualización de <code>catalogo_productos.stock_actual</code>.</li>
-<li><em>Historia de usuario:</em> US-008.</li>
-</ul>
-<ul class="md-list">
-<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Módulo de Agenda y Próximas Recogidas:</strong> Calendario interactivo para el Jefe de Almacén.</li>
-<li><em>Cubierto en:</em> tabla <code>agenda_transporte</code> + <code>sitemap → /inventarios/agenda</code>.</li>
-<li><em>Historia de usuario:</em> US-009.</li>
-</ul>
-<ul class="md-list">
-<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Asignación de Conductores:</strong> Conductor, vehículo, horario y dirección por orden de recogida.</li>
-<li><em>Cubierto en:</em> tabla <code>conductores</code> + FK en <code>remisiones.conductor_id</code> y <code>agenda_transporte.conductor_id</code>.</li>
-<li><em>Historia de usuario:</em> US-009, AC-002.</li>
-</ul>
-<ul class="md-list">
-<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Cruce de Devoluciones:</strong> Lógica de entrada para restaurar Kardex y calcular días de alquiler.</li>
-<li><em>Cubierto en:</em> <code>tipo_remision = &#x27;entrada_devolucion&#x27;</code> + cálculo de días entre remisión salida y entrada.</li>
-<li><em>Historia de usuario:</em> US-010.</li>
+<li class="check-item done"><span class="chk chk-ok">✓</span> Kardex con remisiones de salida y entrada</li>
+<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Stock total (Momento Cero): Bodega + Equipos en Clientes + Equipos en Producción</strong></li>
+<li class="check-item done"><span class="chk chk-ok">✓</span> Agenda de transporte: conductor, vehículo, placa, hora, dirección</li>
+<li class="check-item done"><span class="chk chk-ok">✓</span> Cálculo de días de alquiler: fecha remisión salida → fecha remisión entrada</li>
+<li class="check-item done"><span class="chk chk-ok">✓</span> Inspección de equipos devueltos: Buen Estado / Dañado / Faltante</li>
+<li class="check-item done"><span class="chk chk-ok">✓</span> Reposición automática por faltante (cobro al cliente)</li>
+<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Alertas proactivas de recogidas pendientes</strong> — triggers para optimizar rutas de transporte</li>
+<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Registro de fecha y hora en todas las transacciones</strong> (campos globales)</li>
+<li class="check-item"><span class="chk">☐</span> <em>(Fase 3)</em> Evidencias de entrega: firma digital + fotografías por conductores</li>
 </ul>
 <hr>
-<h2>6. Checklist de Requerimientos Transversales</h2>
+<h2>✅ Módulo de Facturación</h2>
 <ul class="md-list">
-<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Cálculo por Metro Cuadrado ($/m²):</strong> Lógica en facturación y cotizaciones.</li>
-<li><em>Cubierto en:</em> <code>catalogo_productos.calcula_por_m2</code> + <code>catalogo_productos.precio_por_m2</code> + campos <code>area_m2</code> en <code>cotizacion_items</code> y <code>factura_items</code>.</li>
-<li><em>Historia de usuario:</em> US-002 AC-004, US-011 AC-003.</li>
-</ul>
-<ul class="md-list">
-<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Módulo de Auditoría Global:</strong> ¿Quién? ¿Cuándo? ¿Qué tipo de cambio?</li>
-<li><em>Cubierto en:</em> tabla <code>auditoria</code> con campos: <code>usuario_id</code>, <code>created_at</code>, <code>accion</code>, <code>tabla_afectada</code>, <code>datos_anteriores</code>, <code>datos_nuevos</code>.</li>
-<li><em>Historia de usuario:</em> US-013.</li>
-</ul>
-<ul class="md-list">
-<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Motor de Notificaciones:</strong></li>
-<li class="check-item done"><span class="chk chk-ok">✓</span> Alertas para aprobaciones pendientes entre áreas.</li>
-<li><em>Cubierto en:</em> tabla <code>notificaciones</code> con <code>tipo = &#x27;aprobacion_pendiente&#x27;</code> + US-014 AC-001.</li>
-<li class="check-item done"><span class="chk chk-ok">✓</span> Alertas logísticas para recogida de maquinaria.</li>
-<li><em>Cubierto en:</em> <code>tipo_notificacion = &#x27;recogida_programada&#x27;</code> + US-014 AC-002.</li>
+<li class="check-item done"><span class="chk chk-ok">✓</span> Generación de factura con cálculo de m² y días de alquiler</li>
+<li class="check-item done"><span class="chk chk-ok">✓</span> Retenciones: Rte. Fuente, ICA, IVA según configuración del cliente</li>
+<li class="check-item done"><span class="chk chk-ok">✓</span> Registro de pagos con validación contable</li>
+<li class="check-item done"><span class="chk chk-ok">✓</span> Gestión de cartera: seguimiento, mora y cobro jurídico</li>
 </ul>
 <hr>
-<h2>Items adicionales identificados en documentos (no estaban en checklist original)</h2>
+<h2>✅ Módulo de Auditoría</h2>
 <ul class="md-list">
-<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Autorización de Centrales de Riesgo (Ley 1581/2012):</strong> Capturada como documento adjunto y tabla propia <code>autorizacion_centrales_riesgo</code>.</li>
-<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Listas LAFT:</strong> Campo de validación en <code>aprobaciones_cliente</code> para el área de Jurídica.</li>
-<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Cláusulas de Arrendamiento:</strong> El contrato incluye cláusulas del FT-AC-001 Sección IX (tarifa inicia desde remisión, faltantes se cobran a valor comercial, no traslado sin autorización).</li>
-<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Accionistas &gt;5% capital:</strong> Capturados en tabla <code>accionistas</code> con campo <code>es_pep</code> para Personas Expuestas Políticamente.</li>
-<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Retenciones (Rte. Fuente + ICA):</strong> Campos en tabla <code>clientes</code> y <code>facturas</code> para gestión por cliente.</li>
-<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Prospectos sin venta:</strong> El campo <code>estado_cliente = &#x27;prospecto&#x27;</code> permite registrar los ~50 contactos mensuales que no siempre concretan compra.</li>
+<li class="check-item done"><span class="chk chk-ok">✓</span> Log inmutable con: Quién · Cuándo (fecha + hora) · Qué acción</li>
+<li class="check-item done"><span class="chk chk-ok">✓</span> Filtro de log por usuario y por módulo</li>
+<li class="check-item done"><span class="chk chk-ok">✓</span> <strong>Vista de rechazos con motivos detallados</strong> — acceso CEO/Ingeniero</li>
+<li class="check-item done"><span class="chk chk-ok">✓</span> Rastreo de aprobaciones y conceptos de cada área</li>
+</ul>
+<hr>
+<h2>✅ Configuración y Seguridad</h2>
+<ul class="md-list">
+<li class="check-item done"><span class="chk chk-ok">✓</span> Control de acceso basado en roles (RBAC) — 8 roles</li>
+<li class="check-item done"><span class="chk chk-ok">✓</span> Catálogo configurable de productos y precios por unidad de negocio</li>
+<li class="check-item done"><span class="chk chk-ok">✓</span> Gestión de usuarios desde el panel de administración</li>
+<li class="check-item done"><span class="chk chk-ok">✓</span> Integración de firma electrónica (API keys configurables)</li>
+<li class="check-item done"><span class="chk chk-ok">✓</span> Alertas y notificaciones configurables (Email + WhatsApp)</li>
+</ul>
+<hr>
+<h2>📌 Pendientes (Próxima Sesión)</h2>
+<ul class="md-list">
+<li class="check-item"><span class="chk">☐</span> Detalle del módulo de Logística, Inventarios y Órdenes de Compra</li>
+<li class="check-item"><span class="chk">☐</span> Envío de catálogo de productos actual (Excel/TXT) por parte del cliente</li>
+<li class="check-item"><span class="chk">☐</span> Listado de empresas, clientes y obras para migración (~180 registros)</li>
+<li class="check-item"><span class="chk">☐</span> Correos del personal de cada área para habilitar accesos y feedback</li>
+<li class="check-item"><span class="chk">☐</span> Evaluación de acortar cronograma de inception para iniciar desarrollo</li>
+<li class="check-item"><span class="chk">☐</span> Plan de migración y respaldos (fallo crítico del servidor actual — prioridad alta)</li>
 </ul></div>
   </section>
 
   <footer>
     <p><strong>G&amp;H Obras y Estructuras Metálicas S.A.S</strong> &nbsp;·&nbsp; NIT: 901.218.896-8 &nbsp;·&nbsp; Calle 64 #112C-27, Engativá, Bogotá — Colombia</p>
-    <p style="margin-top:.4rem">Generado el 24 de June de 2026 &nbsp;·&nbsp; Sesión: 2026-06-16 &nbsp;·&nbsp; Fase de Inception v1.0 &nbsp;·&nbsp; imagineapps.co</p>
+    <p style="margin-top:.4rem">Generado el 02 de July de 2026 &nbsp;·&nbsp; Sesión: 2026-06-16 &nbsp;·&nbsp; Feedback: 2026-06-24 &nbsp;·&nbsp; Fase de Inception v2.0 &nbsp;·&nbsp; imagineapps.co</p>
   </footer>
 
 </main>

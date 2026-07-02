@@ -1,0 +1,47 @@
+%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'primaryColor': '#1A365D',
+    'primaryTextColor': '#FFFFFF',
+    'primaryBorderColor': '#1A365D',
+    'lineColor': '#4A5568',
+    'secondaryColor': '#EDF2F7',
+    'clusterBkg': '#2D3748',
+    'clusterBorder': '#1A365D',
+    'titleColor': '#FFFFFF',
+    'edgeLabelBackground': '#F7FAFC',
+    'fontFamily': 'Montserrat, sans-serif'
+  }
+}}%%
+
+flowchart TD
+    classDef root    fill:#1A365D,color:#FFFFFF,stroke:#0F2440,stroke-width:3px,font-weight:bold
+    classDef modulo  fill:#1A365D,color:#FFFFFF,stroke:#2C5282,stroke-width:2px,font-weight:bold
+    classDef pagina  fill:#EDF2F7,color:#1A365D,stroke:#CBD5E0,stroke-width:1px
+    classDef cta     fill:#FF9F1C,color:#1A365D,stroke:#E8910A,stroke-width:2px,font-weight:bold
+    classDef alerta  fill:#E53E3E,color:#FFFFFF,stroke:#C53030,stroke-width:1px
+    classDef auth    fill:#4A5568,color:#FFFFFF,stroke:#2D3748,stroke-width:2px
+
+    ROOT(["🏗️ G&H Sistema\ngyh.com.co"]):::root
+
+    %% ── AUTH
+    subgraph S_AUTH["🔐 FLUJO 1 — Autenticación"]
+        AUTH["🔐 Autenticación"]:::auth
+        LOGIN["Iniciar Sesión\n/login"]:::pagina
+        FORGOT["Recuperar Contraseña\n/forgot-password"]:::pagina
+        RESET["Nueva Contraseña\n/reset-password"]:::pagina
+        AUTH --> LOGIN & FORGOT
+        FORGOT --> RESET
+    end
+
+    %% ── DASHBOARD
+    subgraph S_DASH["🏠 FLUJO 2 — Dashboard Principal"]
+        DASH["🏠 Dashboard\n/dashboard"]:::modulo
+        DASH_KPI["📊 KPIs y Métricas\nCotizaciones · Clientes · Ingresos"]:::pagina
+        DASH_ALERTS["🔔 Alertas Pendientes\nAprobaciones · Recogidas · Vencimientos"]:::alerta
+        DASH_ACT["📋 Actividad Reciente\nLog de acciones del sistema"]:::pagina
+        DASH --> DASH_KPI & DASH_ALERTS & DASH_ACT
+    end
+
+    ROOT --> S_AUTH
+    ROOT --> S_DASH

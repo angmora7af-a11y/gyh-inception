@@ -6,8 +6,10 @@
     'primaryBorderColor': '#1A365D',
     'lineColor': '#4A5568',
     'secondaryColor': '#EDF2F7',
-    'clusterBkg': '#EDF2F7',
-    'clusterBorder': '#CBD5E0',
+    'clusterBkg': '#2D3748',
+    'clusterBorder': '#1A202C',
+    'titleColor': '#FFFFFF',
+    'edgeLabelBackground': '#F7FAFC',
     'fontFamily': 'Montserrat, sans-serif'
   }
 }}%%
@@ -21,11 +23,14 @@ flowchart TD
 
     INICIO(["📝 Contrato firmado\n→ Operaciones Activas"]):::naranja
 
+    %% ── MOMENTO CERO: STOCK TOTAL
+    KARDEX_TOTAL["📊 Stock Total (Momento Cero)\nBodega + Equipos en Clientes\n+ Equipos en Producción"]:::azul
+
     %% ── SALIDA
     subgraph ALMACEN["🏭  JEFE DE ALMACÉN — DESPACHO"]
         direction TB
         REMSAL["📤 Generar Remisión de Salida\n― Productos por frente de obra\n― Cantidades e items del contrato"]:::azul
-        KARDEX_OUT["🗄️ Kardex actualizado\n(Stock disminuye)"]:::grisClaro
+        KARDEX_OUT["🗄️ Kardex actualizado\n(Stock disminuye — Bodega)"]:::grisClaro
         AGENDA["🗓️ Programar Agenda de Transporte\n― Seleccionar conductor\n― Asignar vehículo + placa\n― Hora de salida y llegada\n― Dirección de la obra"]:::azul
         NOTIF_COND["🔔 Notificar al Conductor\nDetalle del despacho"]:::grisClaro
         DESPACHO["🚛 Equipo en Tránsito\nhacia la Obra"]:::azul
@@ -58,7 +63,8 @@ flowchart TD
     FAC["💳 Pasar a Facturación\ncon días calculados\n+ reposiciones si aplica"]:::azul
 
     %% ── FLUJO
-    INICIO --> REMSAL
+    INICIO --> KARDEX_TOTAL
+    KARDEX_TOTAL --> REMSAL
     REMSAL --> KARDEX_OUT
     KARDEX_OUT --> AGENDA
     AGENDA --> NOTIF_COND

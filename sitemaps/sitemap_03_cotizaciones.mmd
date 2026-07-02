@@ -1,0 +1,50 @@
+%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'primaryColor': '#1A365D',
+    'primaryTextColor': '#FFFFFF',
+    'primaryBorderColor': '#1A365D',
+    'lineColor': '#4A5568',
+    'secondaryColor': '#EDF2F7',
+    'clusterBkg': '#2D3748',
+    'clusterBorder': '#1A365D',
+    'titleColor': '#FFFFFF',
+    'edgeLabelBackground': '#F7FAFC',
+    'fontFamily': 'Montserrat, sans-serif'
+  }
+}}%%
+
+flowchart TD
+    classDef modulo  fill:#1A365D,color:#FFFFFF,stroke:#2C5282,stroke-width:2px,font-weight:bold
+    classDef pagina  fill:#EDF2F7,color:#1A365D,stroke:#CBD5E0,stroke-width:1px
+    classDef cta     fill:#FF9F1C,color:#1A365D,stroke:#E8910A,stroke-width:2px,font-weight:bold
+    classDef gris    fill:#4A5568,color:#FFFFFF,stroke:#2D3748,stroke-width:1px
+
+    COT["📋 Cotizaciones\n/cotizaciones"]:::modulo
+
+    subgraph S_LISTA["LISTADO"]
+        COT_LIST["📋 Lista de Cotizaciones\n/cotizaciones"]:::pagina
+        COT_NEW["➕ Nueva Cotización\n/cotizaciones/nueva"]:::cta
+    end
+
+    subgraph S_CATALOGO["CATÁLOGO (por Unidad de Negocio)"]
+        COT_CAT["📚 Catálogo de Precios\n/catalogo"]:::pagina
+        CAT_FM["🔩 Formaleta Metálica"]:::pagina
+        CAT_MD["🏗️ Multidireccional"]:::pagina
+        CAT_TR["🚛 Transporte"]:::pagina
+        CAT_FP["🧱 Formaleta Plástica"]:::pagina
+        CAT_FT["🪵 Formaleta Tradicional"]:::pagina
+        COT_CAT --> CAT_FM & CAT_MD & CAT_TR & CAT_FP & CAT_FT
+    end
+
+    subgraph S_DETALLE["DETALLE COTIZACIÓN"]
+        COT_DET["📄 Detalle Cotización\n/cotizaciones/:id"]:::pagina
+        COT_PLAN["📐 Carga de Planos\n/cotizaciones/:id/planos\nDWG · DXF · PDF"]:::pagina
+        COT_MAT["📊 Desglose Materiales\n/cotizaciones/:id/materiales\nImport desde Excel AutoCAD"]:::pagina
+        COT_ITEMS["🛒 Ítems y Precios\n/cotizaciones/:id/items\nVenta · Alquiler · Transp. · Repos."]:::pagina
+        COT_PDF["📄 Generar PDF\n/cotizaciones/:id/pdf"]:::cta
+    end
+
+    COT --> S_LISTA & S_CATALOGO
+    COT_LIST --> COT_DET
+    COT_DET --> COT_PLAN & COT_MAT & COT_ITEMS & COT_PDF

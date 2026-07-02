@@ -1,0 +1,50 @@
+%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'primaryColor': '#1A365D',
+    'primaryTextColor': '#FFFFFF',
+    'primaryBorderColor': '#1A365D',
+    'lineColor': '#4A5568',
+    'secondaryColor': '#EDF2F7',
+    'clusterBkg': '#2D3748',
+    'clusterBorder': '#1A365D',
+    'titleColor': '#FFFFFF',
+    'edgeLabelBackground': '#F7FAFC',
+    'fontFamily': 'Montserrat, sans-serif'
+  }
+}}%%
+
+flowchart TD
+    classDef modulo  fill:#1A365D,color:#FFFFFF,stroke:#2C5282,stroke-width:2px,font-weight:bold
+    classDef pagina  fill:#EDF2F7,color:#1A365D,stroke:#CBD5E0,stroke-width:1px
+    classDef cta     fill:#FF9F1C,color:#1A365D,stroke:#E8910A,stroke-width:2px,font-weight:bold
+    classDef alerta  fill:#E53E3E,color:#FFFFFF,stroke:#C53030,stroke-width:1px
+    classDef exito   fill:#38A169,color:#FFFFFF,stroke:#2F855A,stroke-width:1px
+
+    CLI["👥 Clientes\n/clientes"]:::modulo
+
+    subgraph S_LISTA["LISTADO"]
+        CLI_LIST["📋 Lista de Clientes / Prospectos\n/clientes"]:::pagina
+        CLI_NEW["➕ Nuevo Cliente\n/clientes/nuevo"]:::cta
+    end
+
+    subgraph S_DETALLE["DETALLE DE CLIENTE"]
+        CLI_DET["👤 Detalle Cliente\n/clientes/:id"]:::pagina
+        CLI_FORM["📝 Formulario FT-AC-001\n/clientes/:id/registro\n9 secciones obligatorias"]:::pagina
+        CLI_DOCS["📂 Documentos Adjuntos\n/clientes/:id/documentos\nRUT · CC · Cámara · EEFF"]:::pagina
+        CLI_OBRAS["🏗️ Obras y Frentes\n/clientes/:id/obras"]:::pagina
+        CLI_HIST["🕐 Historial\n/clientes/:id/historial"]:::pagina
+    end
+
+    subgraph S_APROB["APROBACIÓN MULTI-ÁREA"]
+        CLI_APROB["✅ Aprobación Simultánea\n/clientes/:id/aprobacion\nComercial · Jurídica · Contabilidad"]:::cta
+        CLI_NOTA["💬 Notas por Especialidad\nCampo de texto obligatorio\npor cada área"]:::pagina
+        CLI_CEO["🏗️ Revisión CEO/Ingeniero\n/clientes/:id/revision-ceo\nAprobación final · Veto"]:::alerta
+        CLI_STATUS["📊 Estado del Cliente\nAprobado · Rechazado · Pendiente"]:::pagina
+    end
+
+    CLI --> S_LISTA
+    CLI_LIST --> CLI_DET
+    CLI_NEW --> CLI_DET
+    CLI_DET --> CLI_FORM & CLI_DOCS & CLI_OBRAS & CLI_HIST & S_APROB
+    CLI_APROB --> CLI_NOTA --> CLI_CEO --> CLI_STATUS

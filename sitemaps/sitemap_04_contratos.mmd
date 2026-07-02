@@ -1,0 +1,34 @@
+%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'primaryColor': '#1A365D',
+    'primaryTextColor': '#FFFFFF',
+    'primaryBorderColor': '#1A365D',
+    'lineColor': '#4A5568',
+    'secondaryColor': '#EDF2F7',
+    'clusterBkg': '#2D3748',
+    'clusterBorder': '#1A365D',
+    'titleColor': '#FFFFFF',
+    'edgeLabelBackground': '#F7FAFC',
+    'fontFamily': 'Montserrat, sans-serif'
+  }
+}}%%
+
+flowchart TD
+    classDef modulo  fill:#1A365D,color:#FFFFFF,stroke:#2C5282,stroke-width:2px,font-weight:bold
+    classDef pagina  fill:#EDF2F7,color:#1A365D,stroke:#CBD5E0,stroke-width:1px
+    classDef cta     fill:#FF9F1C,color:#1A365D,stroke:#E8910A,stroke-width:2px,font-weight:bold
+    classDef exito   fill:#38A169,color:#FFFFFF,stroke:#2F855A,stroke-width:1px
+
+    CONT["📝 Contratos\n/contratos"]:::modulo
+
+    subgraph S_CONT["GESTIÓN DE CONTRATOS"]
+        CONT_LIST["📋 Lista de Contratos\n/contratos"]:::pagina
+        CONT_OC["📝 Orden de Compra\n/contratos/:id/orden-compra\nGenerada desde cotización aprobada"]:::pagina
+        CONT_FIRMA["✍️ Firma Electrónica\n/contratos/:id/firma\nDocuSign / Okc"]:::cta
+        CONT_EST["📊 Estado del Contrato\n/contratos/:id/estado\nPendiente · Firmado · Activo"]:::pagina
+        CONT_ACT["🚀 Activar Operaciones\n/contratos/:id/activar"]:::exito
+    end
+
+    CONT --> CONT_LIST
+    CONT_LIST --> CONT_OC --> CONT_FIRMA --> CONT_EST --> CONT_ACT

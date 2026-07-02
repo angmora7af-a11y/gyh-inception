@@ -1,0 +1,47 @@
+%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'primaryColor': '#1A365D',
+    'primaryTextColor': '#FFFFFF',
+    'primaryBorderColor': '#1A365D',
+    'lineColor': '#4A5568',
+    'secondaryColor': '#EDF2F7',
+    'clusterBkg': '#2D3748',
+    'clusterBorder': '#1A365D',
+    'titleColor': '#FFFFFF',
+    'edgeLabelBackground': '#F7FAFC',
+    'fontFamily': 'Montserrat, sans-serif'
+  }
+}}%%
+
+flowchart TD
+    classDef modulo  fill:#1A365D,color:#FFFFFF,stroke:#2C5282,stroke-width:2px,font-weight:bold
+    classDef pagina  fill:#EDF2F7,color:#1A365D,stroke:#CBD5E0,stroke-width:1px
+    classDef cta     fill:#FF9F1C,color:#1A365D,stroke:#E8910A,stroke-width:2px,font-weight:bold
+    classDef alerta  fill:#E53E3E,color:#FFFFFF,stroke:#C53030,stroke-width:1px
+    classDef exito   fill:#38A169,color:#FFFFFF,stroke:#2F855A,stroke-width:1px
+
+    INV["📦 Inventarios\n/inventarios"]:::modulo
+
+    subgraph S_STOCK["STOCK Y KARDEX"]
+        INV_STOCK["🗄️ Stock Total (Momento Cero)\n/inventarios/stock\nBodega + En Clientes + En Producción"]:::pagina
+        INV_PROD["🏭 Equipos en Producción\n/inventarios/produccion"]:::pagina
+        INV_STOCK --> INV_PROD
+    end
+
+    subgraph S_REM["REMISIONES"]
+        INV_REM["📤 Remisiones\n/inventarios/remisiones"]:::pagina
+        INV_REM_NEW["➕ Nueva Remisión de Salida\n/inventarios/remisiones/nueva\nFecha · Hora · Conductor · Obra"]:::cta
+        INV_DEV["📥 Devoluciones / Entrada\n/inventarios/devoluciones\nInspección · Novedad · Reposición"]:::pagina
+        INV_REM --> INV_REM_NEW
+        INV_REM --> INV_DEV
+    end
+
+    subgraph S_LOGISTICA["LOGÍSTICA"]
+        INV_AGENDA["🗓️ Agenda de Transporte\n/inventarios/agenda\nFecha · Hora · Vehículo · Dirección"]:::cta
+        INV_COND["🚛 Conductores\n/inventarios/conductores\nAgenda asignada · Historial"]:::pagina
+        INV_ALERTA["🔔 Alertas de Recogidas Pendientes\n/inventarios/alertas\nOptimización de rutas"]:::alerta
+        INV_AGENDA --> INV_COND
+    end
+
+    INV --> S_STOCK & S_REM & S_LOGISTICA

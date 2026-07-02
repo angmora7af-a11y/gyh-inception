@@ -6,8 +6,10 @@
     'primaryBorderColor': '#1A365D',
     'lineColor': '#4A5568',
     'secondaryColor': '#EDF2F7',
-    'clusterBkg': '#EDF2F7',
+    'clusterBkg': '#2D3748',
     'clusterBorder': '#1A365D',
+    'titleColor': '#FFFFFF',
+    'edgeLabelBackground': '#F7FAFC',
     'fontFamily': 'Montserrat, sans-serif'
   }
 }}%%
@@ -20,6 +22,7 @@ graph LR
     classDef admin      fill:#38A169,color:#FFFFFF,stroke:#2F855A,stroke-width:3px
 
     %% ── ROLES
+    R_CEO["🏗️ INGENIERO/CEO\nAprobación final · Veto"]:::critico
     R_ADMIN["👑 ADMIN"]:::admin
     R_COM["💼 COMERCIAL"]:::rol
     R_DIB["✏️ DIBUJANTE"]:::rol
@@ -74,9 +77,14 @@ graph LR
         AU1["Ver log completo de auditoría"]:::critico
         AU2["Gestionar usuarios y roles"]:::critico
         AU3["Configurar catálogo de productos"]:::critico
+        AU4["Ver motivos de rechazo detallados"]:::critico
+        AU5["Forzar aprobación de cliente (bajo su responsabilidad)"]:::critico
     end
 
     %% ── PERMISOS POR ROL
+    R_CEO --- MC1 & MC5 & MC6
+    R_CEO --- AU1 & AU4 & AU5
+
     R_ADMIN --- MC1 & MC2 & MC4 & MC5 & MC6
     R_ADMIN --- CQ5 & CQ6
     R_ADMIN --- CT1 & CT2 & CT3
