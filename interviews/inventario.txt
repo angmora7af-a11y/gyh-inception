@@ -1,0 +1,210 @@
+TRANSCRIPCIÓN LITERAL COMPLETA - SECCIÓN INVENTARIOS
+===================================================
+
+[inventario1.ogg]
+Angie: ...Eso... eso es un cronograma que me lo envía Viviana.
+Ángela Forero: ¿Quién te pasa ese cronograma? ¿Viviana?
+Angie: Viviana.
+Ángela Forero: ¿De recep... de recepción?
+Angie: De recepción. Ella todos los días me envía a mí el cronograma. Entonces ahí ella me dice qué es el cliente... o sea, lo... o sea, me dice pues la obra, el cliente, ella le da un número al corte y la fecha de ese corte, y yo los voy organizando pues según la fecha.
+Ángela Forero: OK. ¿Pero todos los días te envía ese reporte, digamos, actualizado?
+Angie: Todos los días. Y yo todos los días le tengo que enviar a ella las recogidas que se hicieron. Entonces, por ejemplo, yo... bueno, las recogidas son las verdes, entonces ellos, los conductores, me dicen: «no, este corte quedó parcial», o sea, hay que seguir recogiendo, o dicen: «no, ya no hay nada más que recoger», entonces se cierra...
+Ángela Forero: O sea, puede que un pedido, digamos por el tamaño del carro, pues un pedido puede tener varios transportes, bueno, varios trayectos de... lle... hasta que se complete de que se entregó pues todo lo que se dijo en la orden.
+Angie: Sí.
+Ángela Forero: OK.
+Asistente: ...Sí, porque depende el lugar de la obra, ¿cierto?, porque hay carros que no se pueden enviar a todas las obras, sino algunos en especial.
+Angie: No, y pues también depende...
+Ángela Forero: ...depende de lo que transporten, puede aplicar un carro u otro.
+Angie: Sí, porque es que, digamos, por ejemplo, hay un conductor que no... no puede recoger alineadores de seis, por ejemplo, porque no le caben en el... en el carro.
+Ángela Forero: En el carro.
+Angie: Entonces, digamos, ahí no lo puedo mandar a... a recoger a esos sitios pues porque me va a quedar parcial la la recogida. Y pues lo ideal es que si van a recoger, pues solamente sea una recogida y ya. Digamos, hay obras que sí tienen mucho equipo, por ejemplo Marval, que sí, esa ha de llevar creo que cuatro o cinco carros para ir a recoger, o sea, fueron cinco días en los que ellos fueron y vinieron...
+Ángela Forero: Fueron y vinieron, fueron y vinieron, fueron y vinieron.
+Angie: ...fueron y vinieron, fueron y vinieron. Pero entonces claro, imagínate eso, la recogida, o sea, va a quedar ahí pues por más tiempo. Entonces se me van a retrasar más recogidas y así. Pero pues, digamos, también eso depende de la cantidad de equipo que... que ellos alquilaron.
+Ángela Forero: Claro. Sí, me llama mucho la atención de que Viviana te pase todos los días... que hay que... separemos un poco en esto y es: una cosa es como despachar, o digamos como esa orden de salida, y otra cosa es recoger, ¿no? De recoger es lo que tú estabas diciendo que programas. En lo de despachar me estaban diciendo que en la mañana no viniera contigo porque tú estás a full acá en la mañana, ¿cierto?, que estás sacando. ¿Cómo sabes o a partir de qué sabes qué sale y si tú... tú misma te pones a contar o se... o sea, revisar qué sale?
+Angie: Yo hice un archivo, o sea, yo tengo un archivo donde están los pedidos. Entonces, en los pedidos yo tengo todos los pedidos, entonces está este... el pedido, este pedido no ha salido, este pedido salió parcial, este pedido salió completo. Y al frente yo pongo la fecha en la que salió y con la remisión que salió. Si salió parcial, yo hago eso. Por ejemplo, digamos ahorita, eso es un pedido que salió parcial. Yo tengo ahí el pedido y lo que yo hago es que al frente voy anotando qué salió y luego pues le pongo una fórmula para que me diga qué es lo que queda pendiente, y ahí yo voy dejando el parcial. Y ya después pues yo les voy preguntando a los ingenieros eh... qué pedido puede salir, porque ellos me dicen: «no, espere que no porque este día no se puede mandar porque tienen... fundida». Entonces ese día no pueden entrar los carros. O dicen: «no, espere, ese pedido no se puede salir porque ellos no han firmado contrato». Entonces yo digo: «no, espere, este pedido no lo... no lo mando todavía», o...
+Ángela Forero: Claro, que es lo que decíamos que está aquí arribita. ¿Eh?, contrato. Sin contrato, bueno, no se presta nada, ¿no?
+Angie: Sí. Entonces, digamos, esos no los puedo sacar. O hay...
+Ángela Forero: Pero también entonces, según veo, hay como observaciones que las pone el ingeniero. Cuando dices «el ingeniero», ¿sería quién? De: «venga, es que por esta normativa o por esto hay que enviarlo tal día».
+Angie: Ah, pues es que ellos me envían los pedidos. Y entonces en los pedidos, eh... ahí está...
+Ángela Forero: ¿Te lo envían por correo casi siempre o cómo?
+Angie: Sí, ellos me los envían. Por ejemplo, es...
+Ángela Forero: Sí.
+Angie: Entonces, bueno...
+Ángela Forero: ...venga, toca despachar esto.
+Angie: ...envían este pedido. Entonces lo que yo hago es que yo tengo un Excel y ahí pongo el número del pedido, porque a veces, digamos, este... este es de, bueno, esta estación 15 y esto es andamio, pero pueden mandar eh... tableros.
+Ángela Forero: Claro.
+Angie: Entonces puede ser, en la misma obra, varios pedidos. Entonces para no confundirme, pues yo me... yo me guío es con el número. Entonces ya después ellos me dicen, por ejemplo: «no, es que este no ha firmado contrato», o por ejemplo: «este sí ha firmado con con contrato», y ellos acá me ponen la fecha de entrega. Entonces yo pues trato de esto. Pero entonces yo siempre les les pregunto: «¿saco este pedido o no lo saco?». Ellos me dicen: «eh, no, no lo saque porque no han firmado», o «no, el equipo no está listo», o «sí, hágale», o «no, mándelo al día siguiente», así. O sea, yo yo les pregunto...
+Ángela Forero: Vale. En ese se daría como un estatus intermedio de ver que todos esos checks aplican. Hay algo que dijiste muy importante y es: una obra puede tener varios pedidos. Entonces, no solamente tiene varias frentes, sino que adicional puede tener varios pedidos. Si, ¿no? Esto se parece mucho al formato que yo veo arriba con el que sacan los dibujantes, que tienen como las medidas, ¿sí?, y lo pues lo que se va... lo que se va a llevar.
+Angie: Ah, bueno, esto me lo envían son los dibujantes, y pues ahí, el ingeniero...
+Ángela Forero: ...y David, sí, sí, sí, él es como el de los empalmes y, bueno, dice que él es... apoya, que no solamente es como el alquiler de los equipos, sino que tiene una función que apoya de cómo instalar ciertas cosas.
+Angie: Sí, él es comercial también.
+Ángela Forero: ...servicio adicional que se de, ¿no?, que se brinda ahí. Mmm, listo. Varios pedidos. ¿Qué pasa entonces, por ejemplo? Este tiene una fecha clara, por ejemplo, aquí está el 25 de de junio. Si es un pedido muy largo, y digamos no sé, muy grande, y hoy se enviaron 250 y son 500 y mañana se envían 250, ¿el alquiler cómo corre? Porque se supone que es por día, ¿el alquiler correría a partir de que el pedido se envió completo?
+Angie: Es que ahí no sé, pero creo que sí. Apenas se complete el alquiler, creo que desde ahí empieza a correr...
+Ángela Forero: Ahí empieza a correr.
+Angie: ...a correr. OK, listo.
+Ángela Forero: Bien, bien, bien. Eh, listo, eso... ¿algún otro detalle que te parezca importante como en la salida, cuando vas a despachar?
+Angie: En cuanto a despachar... no, pues eso lo de lo que te digo, lo de los pedidos, lo de los parciales, que es, ah bueno, que ahí es donde yo hago eso.
+Ángela Forero: ¿Cómo manejan el el tema de que como es alquiler y pues puede estar ocupado el equipo en otro lado, y lo que te... lo que tú decías, es que tal persona me dice «no, es que está en otra obra, espere que lo traen en dos días»? ¿Cómo hacen si de pronto ya el comercial se había encar... había dicho que por ejemplo la entrega es el 5, pero resulta que lo tienen hasta el 7? Quiere decir que por ahí hasta el 8 o 9 le llega realmente al cliente. ¿Cómo manejan esa espera? ¿O esa como esa flexibilidad en la fecha que hayan pactado?
+Angie: No sé. Incumplimiento de fecha, digamos. Sí, porque eso sí lo hacen son los ingenieros, porque si hay pedidos o a veces las obras cancelan, cuando dicen: «no, es que ya lleva mucho tiempo en que no no se ha mandado el equipo...»
+Ángela Forero: Ah, eso también puede ocurrir, cancelación.
+Angie: Sí, las obras pueden decir: «no, ya lo conseguí por otro lado y así», entonces...
+Ángela Forero: ¿Y tienen alguna política con eso?, digamos como «usted me puede cancelar pero... 4 horas antes o un día antes o algo así».
+Angie: No, no sé. Es que eso es más como los ingenieros...
+Asistente: ...como con ellos, sí.
+Angie: Sí, es que, digamos, yo no tengo contacto con los clientes, a menos que sea un externo que venga acá...
+
+[inventario2.ogg]
+Angie: ...son los ingenieros ajá, quienes hablan directamente con los clientes. Yo no no tengo contacto.
+Ángela Forero: Directamente con los clientes, para... sí, ellos gestionan mucho qué se envíe, qué...
+Angie: Y cuándo se envía...
+Ángela Forero: ...y cuándo se envía, qué tanto se envía, ahí hacen como los acuerdos.
+Angie: Sí.
+Ángela Forero: Ah... bueno. ¿Qué otra cosa aquí? Esa política de cancelaciones es clave, porque en el sistema sí pues tienen que, sí o sí, cumplir la fecha, ¿no? O o saber una holgura también de la fecha. Mmm... Eh, listo, no, miremos entonces de pronto la entrada de equipos. Eh... entonces bueno, van, se prestan. Al volver, ¿cómo haces como ese ese cálculo de pues de que llegó completo, de que llega a tiempo?
+Angie: Pues, lo que me dan... pues eso sí yo lo programo lo que te digo, dependiendo de la... de la... de la media que tenemos. Ah, bueno, ahorita la la en el despacho también tengo una observación, ahora que me acuerdo: resulta que ahorita estamos manejando diferentes códigos de de producto...
+Ángela Forero: Claro, de esta... voy a tomar la sola para que todo se maneje en el público. Y allá se te devuelve porque este me ayuda como para los los el detalle de estos campos que tiene que tener.
+Angie: Ah, bueno.
+Ángela Forero: Listo.
+Angie: Entonces, ah bueno, entonces, digamos, esto ya es cuando ellos recogen. Entonces, digamos, yo lo programo dependiendo de la fecha de corte. ¿Sí?, pues porque la idea es que ya cuando termine el mes, por ejemplo junio, pues yo ya haya terminado todas las recogidas de junio.
+Ángela Forero: Mmm.
+Angie: Y pues yo lo hago es... eh, pues de la más antigua a la más nueva. Digamos, por ejemplo, ya los de los primeros días de junio pues esas recogidas ya se les realizaron. Por ejemplo, todavía tengo de junio, pero tengo... tengo tengo tres y ya son pues ya del 22 para acá.
+Ángela Forero: Mmm, OK.
+Angie: Entonces, digamos, bueno, lo que ellos hacen es que... es que, bueno, eso yo los programo dependiendo de la fecha de corte. Y ellos recogen, entonces acá es lo que yo te digo si me dicen si queda... ellos dicen acá «hasta nueva orden» o «parcial». «Esta es hasta nueva orden», o sea, ya no hay más equipos. Entonces ahí, ellos me entregan eso, lo de los conductores, y el despachador me entrega esto, que es el que cuenta los pues el equipo que llegó. Entonces yo lo que tengo que hacer es comparar si sí cuadra o no cuadra. Entonces, si no cuadra, entonces me toca pues hablar con el conductor, con el despachador, con con la con la chica de recursos humanos, mirar fotos porque a mí me envían fotos, portería me envía fotos de los...
+Ángela Forero: ¿Y tú te pones a mirar foto por foto?, pues...
+Angie: Sí.
+Ángela Forero: ...para tratar de contar.
+Angie: ¿Sí?, pues porque como aquí están todo de cantidades...
+Ángela Forero: ¿Sí?, pues porque como aquí están todo de cantidades, sí, me toca mirar a ver por... pero a veces no se puede ver, por ejemplo chapetas, que son vienen en en canecas, pues eso toman la foto y...
+Ángela Forero: ...a las canecas que no se sabe cuántas puede que vacía la caneca.
+Angie: Sí, entonces, digamos, ahí pues... pues, digamos, ahí yo no puedo verificar, pero, digamos, las cosas que son grandes uno sí lo y depende también de la foto, de cómo tomen la foto.
+Ángela Forero: Mmm.
+Angie: Porque si la toman pues en un ángulo en que no se ve todo pues...
+Ángela Forero: ...pues no se puede ver nada, la misma da, sí.
+Angie: Sí, entonces eso es lo que yo haczo. Con eso comparo si sí da o no da. Digamos, en este caso pues sí dio, entonces, digamos, que bien.
+Ángela Forero: Exacto. Hay una preguntica, entonces tú decías: «este lo llena... este lo llena el conductor».
+Angie: El conductor.
+Ángela Forero: El conductor, este verdecito, y este lo llena el...
+Angie: El despachador.
+Ángela Forero: El despachador es alguien que va con él en el carro o que allá...
+Angie: Es alguien que está acá.
+Ángela Forero: Ah, OK, o sea, que está aquí.
+Angie: Sí, es... esa persona siempre está acá...
+Ángela Forero: ...y no tienen allá alguien que dice: «bueno, de aquí salió fue esto», que sería como una tercera versión, porque el conductor es del lado de de acá, ¿no?, de G&H.
+Angie: Mmm.
+Ángela Forero: Él, la persona que está recibiendo acá, que es este formato blanco, también es de acá, ¿y de allá?
+Angie: El de las obras.
+Ángela Forero: ¿Hay algún cruce ahí? Porque pues aunque uno uno tiene verificación de tres personas, ¿no? Viendo que pues es alguien que dice: «bueno, yo le entregué esto», que no sea que luego se perdió, digamos. ¿Eso no se hace con ningún cliente? ¿No hay nadie que valide?
+Angie: Pues es que, digamos, sí hay clientes que dicen como que: «no, mire que yo le entregué, que yo no sé qué». Pues, digamos, el cliente tiene que verificar. Hay clientes que cuando sacan equipo envían memorando, pero la mayoría no lo hace. Y el memorando pues es un papelito, es que no tengo, pero... el memorando es un papelito que dice, por ejemplo, la obra dice, eh... eh... bueno, ah digamos, por ejemplo, acá mi car- mercado de la despensa, obra 24/7 Fontibón, entonces dicen: «ingresó el conductor Wilson Martínez, placa tal, y lleva el siguiente equipo» y de ahí, ti ti ti ti ti, lo nombran y ya. Y, digamos, que uno sí puede comparar pues lo que salió de la obra con lo que trajo el conductor.
+Ángela Forero: Claro.
+Angie: Pero eso lo hace es la obra.
+Ángela Forero: Y esa, claro, y depende de la obra, depende del cliente, todo esos memorandos son distintos, que es como «venga...». ¿Crees que en algún punto, eh... el cliente o los clientes estarían dispuestos a, por ejemplo, como es un tema de un sistema sería una firma digital? ¿Alguna vez han pedido algo por Farmatodo?
+Angie: Sí.
+Ángela Forero: ¿O por Rappi? En algún punto le dice: «venga, le tomo la foto» o «venga usted me firma acá que usted sí me recibió». Digamos que sería lo contrario de «fírmeme aquí que esto fue lo que... lo que está saliendo y esto fue lo que se entregó». Entonces ahí, la persona obligaría a que alguien de allá, como tú no puedes estar también allá viendo que sí, ejerza un mecanismo de control y de responsabilidad también de: «venga, lo que está saliendo es esto». ¿Sí? Y con eso su firma, ¿no? Firma digital.
+Angie: Ah, OK. No, pero sí, digamos, esto sí es de la obra, esto... esto es que ellos firman de que esto sí salió de allá.
+Ángela Forero: Esa firma está chévere, ¿pero quién será ese? (Risas)
+Angie: No sé.
+Ángela Forero: O sea, no, digo yo, porque en temas de responsabilidades, imagínense donde fuera un equipo de verdad bien caro, y uno pues... pues no, allá cóbrele acá al señor... o señora. Pero uno no sabe, ahí está como la cédula creo, pareciera, y la firma. Pero importante de pronto el nombre, bueno, como daticos que... que cercioren que efectivamente eso sí salió. Listo. Listo, listo. ¿Algún otro detalle acá? Es que este es el caso perfecto, este es cuando entregan...
+Asistente: ...Digamos ahí, me estás colocando que equipo...
+
+[inventario3.ogg]
+Asistente: ...¿Y qué me dices ahí? Remisión de entrada al kardex si está bien el equipo, pero reposición sí no lo entregan, ¿cierto?
+Angie: Ajá.
+Asistente: Pero, digamos, un ejemplo: este equipo llegó pero fue para mantenimiento, ahí se les cobra aparte.
+Angie: Ah, OK.
+Asistente: Porque acá hay una clasificación entre... hay un punto en el que se reconoce como mantenimiento y otra punto muy delgado que ya la reposición, que ese equipo ya no sirve.
+Angie: Reposición.
+Ángela Forero: Uy, esto sí es bien tremendo porque quiere decir que entonces ustedes alquilan... pero después de tanto tiempo hay un desgaste de maquinaria normal y bajo cierto tiempo pues toca traerlo antes de que se dañe, como un motor, por ejemplo. Y esos costos ustedes lo asumen y vuelven y lo lanzan para que lo sigo usando, digamos, pero vino a hacerse fue mantenimiento, no que lo hayan devuelto, ¿correcto?
+Asistente: Exacto, digamos, sí vienen, hay que entregaron así para reposición diagonales, horizontales...
+Angie: No, es que eso sirve solo... hay unos que sí dicen devueltos.
+Asistente: Es que uno mira que el equipo, sí o sí, qué es lo que sí se puede destorcer, como las verticales o algo así que... ...que uno dice: «listo, aquí esto llegó una m- vertical doblada, uno la puede enderezar y ya queda no para seguir continuado». Pero allá hay otros equipos que ya están muy dañados, entonces ya, o los recogen y los traen aquí, pero igual se va a cobrar la reposición; o simplemente no los recogen y los dejan allá.
+Ángela Forero: OK. ¿En la reposición cobran algo o qué?
+Asistente: No, como tal la reposición, ellos ellos ya en facturación tienen una lista de precios de reposición.
+Ángela Forero: Ah, OK, lista de precios para cobrar. Ah, OK.
+Asistente: Pero entonces también resulta clientes que... listo, les cobramos la reposición, les facturamos y después el cliente dijo: «no, no, no, es que aquí ya encontré ese equipo». Porque se les había perdido, algo así, entonces...
+Ángela Forero: ...no lo encontraban o algo, claro, se puede dar. Eh, ¿cómo es ese cronograma o quién plantea los mantenimientos para estar pendiente, o ellos lo solicitan o... para que algo pues, mantenimiento muy preventivo, ¿no?, o sea, es para que no se dañe.
+Asistente: No, no, mantenimiento es cuando llega el equipo y está en en malas condiciones. O sea, no es que el cliente diga: «no, es que necesito que le hagan mantenimiento a este equipo», no. O sea, el equipo vuelve como lo entregue el cliente y ahí se ve, y el conductor es el que está mirando si el equipo sí va para mantenimiento o definitivamente...
+Ángela Forero: O sea, ¿que quién define que esté para mantenimiento?, ¿el conductor?
+Asistente: Ahí sería el conductor.
+Ángela Forero: El conductor es el que dice: «venga, esto va para mantenimiento».
+Asistente: Exacto.
+Ángela Forero: Mmm, OK. ¿Y alguien lo tiene que aprobar? Porque el conductor puede decir muchas cosas. (Risas)
+Angie: Pues eso lo mira es el despachador o o a veces traen equipo que no es de acá, también pasa... (risas)
+Ángela Forero: (Risas) ...entonces toca devolverlo. Equipo que no es de acá, sí.
+Asistente: Sí.
+Ángela Forero: Ese es clave, y eso debería tener alguna ca- categoría, ¿no?
+Angie: Sí, pues ahí en ese caso toca devolver el equipo otra vez para la empresa.
+Ángela Forero: OK, listo.
+Asistente: Sí, porque, digamos, ahí en devoluciones entonces se presentan más problemas.
+Ángela Forero: Ese es el último proceso... ¿Qué tal, ingeniero? ¿Cómo está?
+Asistente: Listo, Jaime, ya ya llamé a ver qué pasó.
+Ángela Forero: Este era como el úl- último punto que quería revisar cómo sucede el tema pues de de obra.
+Asistente: Porque, digamos lo que te estaba hablando, existen obras y existen frentes, ¿cierto? Entonces allá en la misma obra se va prestando la el equipo pues obviamente lo tienen ahí a disposición, entonces pasa de un frente a otro y a otro a otro frente. Entonces cuando van a devolver, resulta que devuelve el del frente cuatro, pero lo que devuelven del frente cuatro, del frente cuatro, pero no pertenecía al frente uno, entonces ahí ya no nos va a cuadrar.
+Ángela Forero: Claro.
+Asistente: Porque una obra va a quedar que le llega y dice: «pero si nunca le enviamos, yo qué sé, verticales».
+Ángela Forero: Y eso es lo que arriba tienen que hacer, porque en facturación sí me decían como que una cosa a veces no cuadraba con la otra, entonces les toca a ellas llamar y empezar a buscar. ¿Lo hacen ellas o lo haces tú? ¿Lo haces tú?
+Angie: No, no, lo hago yo, porque es que yo tengo que hacer los cruces. Entonces, y ya lo subo a ellas y ellas me dicen si sí está bien o no está bien, y si no, pues me toca volverlo a cruzar a mí.
+Ángela Forero: Volverlo a cruzar, ¡uf!, sí, que eso es un desgaste.
+Angie: Qué detalle.
+Asistente: Porque, digamos aquí, aquí hace un ajuste, listo, y resulta que allá arriba dicen: «no, no, no, es que no toca así, toca de esta manera». Entonces, volver y ajustar lo de la otra manera.
+Ángela Forero: Sería como una acción de ajustes.
+Asistente: Mmm, exacto.
+Ángela Forero: Que siempre será necesaria, porque no es que sea el escenario tan perfecto como de que como entra, sale.
+Asistente: Mmm, y el problema es que entonces, digamos, hay sucursales como El Bronz, tienes 15 sucursales, entonces toca mirar el inventario de las 15 sucursales a ver dónde le puede...
+Angie: ...donde se le puede descontar el equipo.
+Asistente: ...pero eso también, imagínate, eso quita mucho tiempo.
+Ángela Forero: Pero, ¿a ver en dónde lo cuadran?
+Asistente: Exacto.
+Ángela Forero: En dónde lo logran cuadrar. Pero de seguro también si es más fácil o de pronto puede que te tome menos tiempo si tú tienes pues una herramienta donde está todo, de pronto de una manera de verlo más fácil, si tú ya tienes un todo de ese cliente, pues ya sabes de pronto dónde cruzarlo. O incluso algún tema de IA que te ayude a precruzarlo. «Oiga, necesito esto, esto no aparece. Listo, vea, aquí le encontré que esta tabla y esto se hizo tal día, tal...» y ya tú haces la acción, él te sugiere esa acción.
+Angie: Sí, pero es que ¿sabes qué pasa también? O sea, digamos ahí en módulo sí sale un inventario, pero ese inventario en Excel no me muestra qué equipo queda en negativo, sino que todo lo convierte en positivo. Y, digamos, si hay negativo, yo no puedo meter más equipo ahí porque me va quedando negativo el cliente. Entonces, yo tengo que mirar dónde lo puedo meter para que me quede en cero o me quede positivo, pero el inventario en módulo tiene esa falla, de que uno lo descarga y sale todo positivo.
+Ángela Forero: Ah, ah bueno, sí. El módulo actual que utilizan de la herramienta actual. Sí, sí, sí. Es que hay un cruce raro, no se sabe bien en positivos y negativos.
+Asistente: Sí.
+Ángela Forero: Exacto, sí.
+Asistente: Entonces, eso es lo que...
+Ángela Forero: ¿Cómo sabes tú con certeza un poco... en inventarios es entra y sale y cuánto hay?
+Asistente: Exacto, el saldo.
+Ángela Forero: Eso es lo que en este momento en el módulo no funciona. Actualmente, ¿cómo haces para decir, venga, por ejemplo, si el sistema te decía que habían 15 elementos de X referencia, resulta que tú vas a ver ahí no están? O sea, ¿físicamente sí? ¿Eso pasa? ¿Y cómo se resuelve?
+Angie: Es que no, porque ahorita no hay como un inventario...
+Ángela Forero: ...estandarizado...
+Angie: ...real, ¿no? O sea, ¿como actualizado?
+Ángela Forero: O sea, ¿se asume que eso está, pero en realidad...?
+Angie: O sea, se asume que eso está, pero en realidad...
+Ángela Forero: Se asume que siempre hay. (Risas)
+Angie: Sí, ¿no? Pues porque toca vender, ¿no?
+Asistente: Que en la de despachar...
+Angie: Sí, sí, sí.
+Asistente: Ah, bueno, sí, porque aquí cada año se estaba haciendo un un conteo de inventario y eso, pero al fin al fin y al cabo siempre se se desajustaba todo.
+Ángela Forero: Ajá.
+Asistente: Entonces, este último año no se volvió a implementar esto, o sea, se hizo un conteo así más o menos... se se hizo un conteo
+Ángela Forero: Como un sondeo, pues, como en la...
+Asistente: Sí, pero a la maldita sea, (risas) así como que entramos y ustedes cuéntenme esto y esto es lo otro. Resulta que a los que colocaron para contar no sabían ni siquiera qué equipo era.
+Ángela Forero: Claro.
+Asistente: Entonces tú dices: «hay un reguero de tubos, yo cuento todos los tubos», y resulta que hay tubos de una pulgada, pulgada y media, de dos pulgadas, entonces...
+Ángela Forero: ¡Uf!, claro.
+Asistente: ...claro, allá se genera todo ese enredo.
+Ángela Forero: No hay forma de estandarizar un inventario.
+Asistente: Exacto, ese inventario nunca se subió por lo mismo.
+Ángela Forero: Porque tomaría mucho tiempo.
+Asistente: Exacto.
+Angie: Sí, o sea, no hay uno real, no.
+Asistente: O sea, de ahí llegaban ahí lo que yo te decía, ahorita existen códigos, códigos de alquiler y códigos de venta. Resulta que cuando van a hacer una venta, venta nueva, entonces hay un código en específico.
+Ángela Forero: Mmm.
+Asistente: Pero muchas veces agarran es de equipo que ya estaba por ahí.
+Angie: Mmm.
+Asistente: Entonces ahí ya se me comienza a descuadrar ese ese código y eso.
+Ángela Forero: Claro.
+Asistente: Porque están agarrando equipo que hay en caja.
+Ángela Forero: Es por eso que ustedes lo llaman más como catálogos, que es como «vea, nosotros sabemos que tenemos todo esto», eso es un catálogo.
+Asistente: Exacto.
+Ángela Forero: No tienen un inventario. Yo no sabía si se estaba...
+Ángela Forero: ¿Andrés no te pasa eso mismos...?
+Asistente: Hola, ¿cómo estás?
+Angie: Hola, buenas tardes. ¿Cómo te ha ido?
+Asistente: Bien.
+Angie: ¿De qué...?
+
+[inventario 5.ogg]
+Angie: Capítulo 1000: conductores (risas).
+Ángela Forero: (Risas).
+Angie: O sea, digamos por ejemplo, ah bueno, ellos me entregan esto, ¿no? O sea, tanto con las devoluciones como con las remisiones, pues yo tengo una plantilla en Excel. Hola. Sea... un cargo. Ah, ¿ya le cargaste?
+Asistente: Sí.
+Angie: Ah, bueno.
+Ángela Forero: Dale, tranqui.

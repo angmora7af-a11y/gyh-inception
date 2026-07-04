@@ -1,0 +1,183 @@
+TRANSCRIPCIÓN LITERAL COMPLETA - SECCIÓN FACTURACIÓN
+===================================================
+
+[facturacion1.ogg]
+Lenix: ...y dado de que se debe registrar... enviar facturas, los contactos en obra, todo eso.
+Ángela Forero: Ajá.
+Lenix: Hay varias áreas que influyen en la vista de esos documentos.
+Ángela Forero: Ah, bueno, chévere. Chévere que también quiere decir que este proceso, estandarizar esta parte también les va a ayudar, ¿sí?, a dejar de estar escarvando, a pedirle de dónde... «¿el correo donde yo le envié el RUT de no sé qué?». No, va a quedar centralizado por clientes, como la idea de lo que tenemos hasta el momento. Notificar igual si hay un rechazo, si a alguien no se le vende pues... pues que se le diga de una vez la forma. Esto lo validaría casi que gerencia, que la idea es que creo que casi siempre pues se va a vender. Pero aquí tener los conceptos de cada uno: por qué se aprueba o no se aprueba un cliente, y lo que les decía, la recolección de los documentos y que pues todo cumpla. Aquí es donde está la parte de la firma electrónica, que era lo que decían del contrato, que efectivamente quede ahí. Y ahí sí se activa para operaciones. Abajo estuvimos revisando más o menos esto, muy por encima, el inventario de logística. Es o es de alquiler o es de venta. Si es de venta, pues sale, listo, se le envía, se le envió... y vuelve aquí al tema de pasar a facturación, pues como para que pague. Si es de alquiler, pues toca entonces esperar que la remisión, que traigan los equipos, que bueno... digamos como todo este proceso. Hacer reposición si de pronto algo se dañó, si algo no funcionó, este kardex de entrada... después el de salida, y aquí ya pasaríamos a facturación. Lo último que hablamos un poco entonces es pues generar la factura, que existan unos cálculos con unas fórmulas predeterminadas en metros cuadrados, parte de eso es como lo que a veces les toca a ustedes a mano ahí estar calculándolo, lo tenemos ahí... puntualizado, días de alquiler, y temas de impuestos, ¿no? Entonces es ReteFuente e ICA, es como lo que tenemos ahí trazado. Tiene que haber entonces una validación contable y luego una validación de se recibió el pago o no se recibió, para ver si entonces se le pasa a cartera, que cartera pues ya sería el área o... pues ustedes como el tema de cobro, ¿no? «Esto no lo ha pagado», llevan tantos días sin... con retraso, bueno. Y un cobro exitoso pues el cierre de ciclo, es decir, que paga. Lo de la validación y que hasta ahí lo tiene el sistema. Bien, esto es más como el detalle. No sé si en el proceso que les relato ven que de pronto necesitemos pues algo más de... de detalle, aparte de lo que está acá. Qué otras cosas de pronto ustedes en sí en el proceso, que aquí aparentemente se ve simple, pues pueden estar macron- manejando en facturación y en cartera.
+Lenix: Pues yo creo que ya entrar a verlo bien con detalle, porque pues... (risas)
+Ángela Forero: Iba pasando, sí.
+Lenix: Iba pasando, sí. Sí, sí, sí, este... generar factura, calcular el monto...
+Angie: Digamos ahí... ahí donde detallaría en el tema de impuesto, que es lo que digamos de pronto peleamos un poquito, porque cuando el cliente me envía... digamos nosotros, sí o sí, le enviamos por separado por el tema de impuesto. Digamos que transporte tiene un... un costo, retenciones diferentes a alquileres, o como...
+Lenix: Tienen como cuentas diferentes, entonces uno no puede hacer como «le cobro todo...»
+Angie: Entonces cuando el cliente, ve... si a veces se demoran tanto en... en enviarnos las actas, que nos la envían así todo en una sola... nos envían alquileres, transporte, reposiciones, todo... todo revuelto. Entonces nosotros lo que hacemos es no cobrarle, o sea, se hace la factura como general, eh... alquiler de junio, eh... transporte de junio, pero, o sea, va en el cuerpo cada cosa, pero digamos los impuestos sí nos toca es eliminarlos para que... porque no... no la deja enviar la factura.
+Ángela Forero: OK, OK.
+Lenix: Al mezclar varios... diferentes impuestos, no deja enviar la factura general, no lo hace.
+Ángela Forero: OK.
+Angie: Entonces, digamos, en... en ese caso, eh... nosotros facturamos, pero la pelota ya le llega a cartera.
+Ángela Forero: Claro.
+Angie: Porque allá pues ella...
+Lenix: Ya ella póngase a pelear con el cliente...
+Angie: ...qué tiene tal impuesto, cuál tiene este otro, cuál tiene este otro y en cuál le va a quedar la factura. Le toca a ella allá ya...
+Ángela Forero: Ah, OK, OK, que no es en el área de ustedes.
+Lenix: No, porque a nosotros no nos deja enviar la factura si se mezclan va... diferentes retenciones.
+Ángela Forero: Claro. Ahí hay varias cosas... sí, es bueno. Dijeron varias cosas claves: entonces se hacen como ciertos cortes, más que todo es mensual, como «venga a ver cuánto fue... cuánto le cobró este mes de la alquiler, los alquileres que tengan, de las obras que tengan, de las frentes que tengan», porque eso tiene pues bastante detalle, eh... ocurre cada mes. Y se hace la distinción de transporte y alquiler por el tipo de naturaleza de cuenta que tiene cada uno. Y los impuestos que aplican para cada uno, ¿no?
+Lenix: Y que los tome por default. Que si yo voy a escribir un transporte, él sepa que de una vez me debe cargar la retención del uno, porque todo eso nos toca hacerlo manual. Uno carga la... la factura y le toca luego devolverse y as... cambiar los impuestos de forma manual. El alquiler tanto, el transporte tanto, tanto.
+Ángela Forero: El sistema contable en algún punto no baja la información o de pronto la integran, que de pronto les... apoyen en eso o no? Hasta allá no va, ¿sí? En este momento.
+Lenix: Pues es que la factura nosotros la generamos por el módulo. En Siigo simplemente llamamos la pre-factura y la enviamos a la DIAN y al cliente. Todo eso lo hace es el módulo.
+Ángela Forero: Claro, sí, sí, sí.
+Lenix: No sé al pasarse a la... al Siigo Web si se permita hacerla directamente en el Siigo o toque aquí en este...
+Ángela Forero: En el aplicativo que tenga que hacer al menos la factura y de ahí ya procesen en el...
+Lenix: ...que monte la proforma al... todo la la la la la la... los marcos y todo lo demás y simplemente uno la llame en Siigo y se envíe.
+Ángela Forero: Sí, esa es la idea, que haya como una... una integración, pero tenemos que mirar como el detalle de que Siigo efectivamente tenga esa información, de que haga sentido con lo que ya vienen manejando acá. Como conecta con el proceso anterior, el proceso anterior finaliza en que pasa una facturación con la remisión, es decir, cuando el... el equipo ya llega y abajo ya chequean que efectivamente lo que se envió fue lo que regresó, ahí es donde ya súbalo porque pues ya para que facturen lo que es. Pero sí, ¿qué sucede un poco?, esto es más como preguntas de... de escenarios: el equipo todavía sigue en el alquiler, hablábamos que hay clientes que necesitan un mismo equipo por tres, cuatro meses; realmente lo traen cuando lo entregan o por mantenimiento, que dicen como «venga, para que no se dañe». ¿Cómo son los cortes ahí con ustedes o quiénes a ustedes les dicen qué hay que facturar? Porque a almacén le dicen los comerciales y los ingenieros le dicen qué es lo que toca que saque... o que reciba.
+
+[facturacion2.ogg]
+Lenix: Lo mismo de que... las mismas remisiones que nos sube almacén.
+Ángela Forero: Almacén les sube a ustedes las remisiones.
+Lenix: Sí.
+Ángela Forero: Mmm.
+Lenix: Entonces uno, ah OK, esto va hasta tal fecha, esto va hasta tal otra, esto va hasta tal otra.
+Ángela Forero: ¿Y eso se lo sube cada día? ¿O por semana?
+Lenix: Se supone que lo tiene que subir a diario. Se supone.
+Ángela Forero: OK. Sí, sí, sí. Es que son tres en uno, ¿no? (Risas) Sí, sí, sí, la chica tiene varias cosas ahí. Listo, se supone que debería ser diario, pero en la vida real ocurre por ahí cada dos, tres días pues... le sub... le sube lo que tenga.
+Lenix: Sí.
+Ángela Forero: Cuadre o no, muchas veces algunas cosas que era lo que me decían.
+Lenix: Mmm.
+Ángela Forero: Que les toca a ustedes estar validando con el cliente que esté de acuerdo en lo que se le está cobrando.
+Lenix: ...verificar y volver a modificar lo que ella ya nos cargó porque pues no cuadran medidas, unidades...
+Ángela Forero: Medidas, unidades, características. OK. ¿Ustedes aquí hacen algún versus, digamos, de esto... de esto incluso desde el inicio viene algo que es la orden de compra y... y comercial hace ese proceso basado en unos catálogos? Aquí no existe inventario realmente, parte de la conclusión de abajo, porque no se sabe cuánto hay realmente, es como que se asume que siempre hay porque uno siempre quiere vender, eh... y se asume que está y yo le res... y si no hay, lo fabrico, y si no hay lo resuelvo, y si no hay le pido a fulanito, lo que sea, pero vendo. Como no hay inventario, están es unos catálogos. ¿Ustedes en algún punto tienen que hacer algún cruce para saber, no sé... abajo decía por ejemplo que habían unos cobros por toneladas o que según si es formaleta metálica o... o FT, ¿no?
+Lenix: El cobro por tonelada, pero... el por tonelada se cobra el transporte.
+Ángela Forero: El transporte, sí, correcto.
+Lenix: Por peso y volumen.
+Ángela Forero: Ah, bueno, por peso y volumen, eso es clave. Abajo solo registraron tonelada por peso.
+Lenix: Sí, pues es que en el catálogo del cliente aparece es como si fuera por peso. Se dice: «camión de tres toneladas, tanto; camión de seis toneladas, tanto». Pero realmente es por peso y volumen, porque hay... hay elementos que ocupan mucho espacio y se le puede enviar un camión de tres toneladas y viene que no le cabe una aguja más, pero no alcanza a pesar las tres toneladas, pero se le cobra ese valor por el volumen ocupado.
+Ángela Forero: Claro, porque también tiene que ver el volumen, eso es un detalle muy importante en la... en la práctica. ¿Esos catálogos... este es el catálogo como tal o de dónde lo sacan?
+Lenix: Eh... recepción todos los años tiene que actualizar precios y pasarnos los listados de precios a... a la fecha a las áreas, pues a todas las áreas, porque ellos son los que cotizan y nosotros somos los que cobramos.
+Ángela Forero: Para que todos tengan los mismos costos anuales.
+Lenix: Sí.
+Ángela Forero: OK.
+Lenix: Adicional, los comerciales cuando hacen negocios fuera de estos precios tienen que pasarnos el... por escrito: «se negoció esto, esto, esto para tal cliente...»
+Ángela Forero: ...toma algún precio especial cuando dan alguna atención.
+Lenix: Este... este es el catálogo...
+
+[facturacion3.ogg]
+Lenix: ...pero este es el catálogo para clientes con precios especiales. Ah, donde a fulanito le dejamos a tantos precios, a este otro le dejamos a tantos precios, a este otro le dejamos a tantos precios...
+Ángela Forero: Ah, OK, tienen dos catálogos. Hay precios específicos incluso por cliente, no es un catálogo tan genérico.
+Lenix: Sí.
+Ángela Forero: OK. Ajá.
+Lenix: Pero son poquitos. Por ejemplo, está Marval, todo esto es Marval, pero pues es que Marval tiene como 30 obras. Sí, que es como el cliente más grande que tienen. Pero a todas las obras se le aplican los mismos precios.
+Ángela Forero: ¿Marval es el mismo del metro?
+Lenix: No, ese es Sacyr, Sacyr. Ah, OK.
+Ángela Forero: Ah, OK. Listo.
+Lenix: Sí.
+Ángela Forero: Bien, los del catálogo, los precios... precios especiales.
+Lenix: Y lo otro es que cuando se carguen los listados de equipo, eh... se carguen los diferentes precios. Sí, porque acá se supone que se manejan diferentes centros de costo para que le quede más fácil a la contabilidad. Si nosotros usamos el centro de costos 13, se supone que es alquileres y el 14 son ventas o reposiciones.
+Ángela Forero: 13 alquileres, 14 ventas y reposiciones.
+Lenix: Pero, ¿qué pasa? Si nosotros llamamos y registramos la proforma como alquiler por el centro de costos 13, listo, genial. Nos llama los precios que están cargados. Pero esos precios son los que están... bueno, hasta hace algún tiempo estaban cargados los precios por allá del 2023.
+Ángela Forero: Mmm.
+Lenix: En las últimas actualizaciones del sistema, eso se perdió. ¿Qué pasa?, que le toca a uno cada vez que un cliente pide algo por primera vez, toca ingresar al usuar... al cliente, registrarle el equipo que pidió con los precios que están actuales porque o si no yo llamo el inventario y nunca me va a aparecer ese ítem.
+Ángela Forero: Claro, claro.
+Lenix: Y mucho menos me van a aparecer esos precios.
+Ángela Forero: Porque está desactualizado el precio base del catálogo.
+Lenix: Ajá. ¿Y qué pasa? Que en la actualización que le hicieron el año pasado en julio al sistema, nos quitaron el listado de precios por reposición. Igual, uno cambiaba el centro de costos de 13 alquiler a 14 de venta o o reposición, pero él me seguía cargando los precios de alquiler. Ande de nada me servía a mí ponerme de forma manual cambiar precios y la guardaba porque al volverla a llamar él automáticamente me volvía a cambiar todos los precios. Y eso era una m... es, porque todavía estamos así, una mamera.
+Ángela Forero: Claro, la diferencia entre pues venta y alquiler los precios van diferentes.
+Lenix: Ah, que cual... dependiendo del centro del costos, él me llame los precios que... que está uno... que va a facturar, ya sea los de alquiler o los de reposición.
+Ángela Forero: OK, listo. Eh... bien. En el tema de la recepción del pago, que viene siendo como esta parte, entonces aquí listo, generamos facturas, si al cliente ya le pareció, que se hace como todo este proceso muy manual eh... del cobro, de que le cuadre, del registro de la cuenta, ¿cómo validan el tema de que ya pagó? ¿En alguna cuenta, como banco?, ¿con cartera también validan?
+Lenix: Eso es cartera la que hace eso.
+Ángela Forero: Ah, es la que ya hace seguimiento. ¿Ustedes solo se encargan de factura y no más?
+Lenix: Lo que nosotros tenemos que validar es que le llegue la factura al cliente.
+Ángela Forero: Ah, OK.
+Lenix: Que eso es lo que se hace con el... con en la DIAN. Uno pone el el... el CUFE y me genera el Radian, de que sí quedó radicada ante la DIAN. Pero una cosa es que quede radicada ante la DIAN y otra muy diferente es que le llegue al cliente.
+Ángela Forero: Sí.
+Lenix: Porque el Siigo es un mentiroso y siempre me dice: «¡Ay, a fulano nunca le llegó la factura!». Y resulta que fulano ya me... ya me le dio «aceptado, recibido» y no sé qué, los tres chulitos que tiene que...
+Ángela Forero: Los tres check que tiene que dar, OK.
+Lenix: ...que tiene que dar. Y según Siigo, jamás le llegó la factura.
+Ángela Forero: Que Siigo se supone viene siendo el intermediario, ¿no? O sea, el Siigo pues se encarga de: «bueno, con tu sistema contable, soy tu sistema contable, te tengo el orden de tus facturas y además me encargo de decirle a la DIAN por debajo con una integración que ya tiene», que es jodidísima igual, tiene que pasar un montón de cosas la verdad, eh... que la factura quede allá ya. La notificación al cliente entonces, ¿cómo le llega? Le envía un correo automático y...
+Lenix: Yo le doy enviar y él de una vez la carga a la DIAN, le llega al cliente y me genera una copia a mí.
+Ángela Forero: Te genera una copia a ti, OK.
+Lenix: Entonces yo tengo un correo exclusivo de facturación donde me llega la copia de todas las facturas que yo envío. ¿Pero qué pasa? Que Siigo sigue siendo mentiroso. Así como me muestra que algunas no salen, me muestra que otras sí salieron y sí llegaron a los correos y todo está chuleado, y el cliente dice: «jamás me llegó esa factura, no me aparece».
+Ángela Forero: Y... bueno, no sé, ¿y no les pasa que de pronto sea mentiras? Porque ustedes, ¿cómo validan?, telefónicamente como «venga, la recibió, ¿cierto?».
+Lenix: Sí, nosotros digamos... hay clientes de que a pesar de que a nosotros en Siigo nos aparezca «no radicada, no enviada», nada...
+Angie: ...sí, a ellos... el cliente me dice... nosotros llamamos, ¿sí?, llamamos y le decimos al cliente: «venga, recibieron la factura tal... tal factura se les... fue enviada» o qué sé yo.
+«Ah, sí, sí, señora».
+Lenix: Pero por lo mismo, porque ya nos ha pasado muchas veces que el Siigo nos miente.
+Ángela Forero: Claro. Mmm.
+Angie: Pero, ¿digamos es que...?
+Lenix: ...auditor... y si el cliente se quiere hacer el mariquita y decir: «¡oh, jamás!, ¡nunca!».
+Ángela Forero: Sí, claro, para no pagar. Como «yo no la recibí, yo no he visto eso...»
+Angie: ...no me ha pasado, o sea, se hace el...
+Ángela Forero: OK.
+Angie: ...A pesar de que a mí me... me llega la notificación de que sí se envió, tengo el Radian y tengo todo, el cliente me dice: «no la recibí, no la radicaron, no, no y no» y me toca cambiarla.
+Lenix: Y lo más importante es que... eh, el Siigo el... o sea, los clientes que tienen proveedor de... eh, página web... no, no, no, no, no, no. No, no, no, no, no. Eh... proveedores, eh... el sistema contable...
+Ángela Forero: Sistema contable, sí.
+Lenix: ...el mismo sistema automáticamente da el check list. Ah... pero la mayoría de clientes acá el correo de facturación es de dominio público: Gmail, Hotmail, Yahoo.
+Ángela Forero: Claro. No es corporativo ni...
+Lenix: No es un sistema contable, no hay sistema contable. Ello entonces nunca le van a dar «recibido» ahí arriba donde le aparece. Ellos pueden tener la factura hace 5 años y nunca se marcó y nunca nada y nunca pasó nada y si ellos dicen: «no me llegó, ¿cómo no me llegó?».
+Ángela Forero: Claro, porque nunca le voy a dar «aceptar».
+Lenix: Claro.
+Ángela Forero: Claro, entonces le toca ahí a cartera estar encima de... o ustedes validan que la fa... que hayan recibido la facturación por teléfono.
+Lenix: No. En algunos casos, pero muy raros. Por lo general, siempre se revisa que en el correo se haya enviado el correo y que haya cargado a la DIAN.
+Ángela Forero: OK.
+Lenix: Claro, ustedes validan es directamente la DIAN, que es donde más debe quedar como la fecha que es. Ya que los otros se hagan los locos con la facturación...
+Lenix: ...porque lo que pasa es que cartera es la que envía el el ese: «ah vea, se me debe tales y tales facturas». Y ahí es donde el cliente dice: «no, esta no me llegó, esta tampoco, esta tampoco» y yo... y ella viene acá y nos pregunta.
+Ángela Forero: Ah, OK. Sí.
+
+[facturacion4.ogg]
+Lenix: ...a ella que desde el envío donde está todo OK.
+Ángela Forero: Claro. Claro, con pruebas para que ya la acepten y demás.
+Lenix: Sí, pero entonces volvemos a lo mismo: si el dominio es un dominio público y si no tiene un sistema contable que... que automáticamente haga el check list...
+Ángela Forero: Sí, queda como si fuera casi una persona natural, queda muy suelto del sistema. Mmm, OK. ¿Hacen una factura, digamos, por cliente con todo, o depende cada cliente le gusta que le facturen diferente? Porque abajo veíamos que... que un cliente puede tener varios pedidos, que a veces cinco pedidos pueden salir en un día para un mismo cliente. Entonces, en la facturación, ¿cómo hacen un poco esa relación de factura-pedido? Depende del cliente.
+Lenix: Depende del cliente, porque, digamos, hay clientes que nos toca... eh, facturarles por remisión.
+Ángela Forero: Factura por remisión, ajá.
+Lenix: Porque esta remisión va para un contratista, esta otra remisión la tiene otro...
+Angie: ...o para una actividad... o para una actividad X.
+Lenix: Por remisión, ajá. Entonces,axí digamos, por lo general nosotros enviamos acá aparte lo de la andamio multi, lo de la formaleta...
+Ángela Forero: O por línea de producto, sí, sí, sí.
+Lenix: ...o por línea de producto y transporte todo lo enviamos como separado. Pero hay clientes que «ah no, envíenos una sola consolidada y así se va». O sea, es... una sola consolidada en alquiler, porque el transporte y otros conceptos siempre van separados por impuestos.
+Ángela Forero: Siempre van separados, ajá. OK, listo.
+Lenix: Digamos, el cliente X me dice: «tiene tanto formaleta como andamio», pero la tiene en una sola actividad, entonces le enviamos una sola... o que dice: «ay, es que solo tengo tanta plata de este lado, entonces hágame una factura por este valor. Meta ahí lo que quepa y que me dé ese valor». Claro.
+Ángela Forero: (Risas) ¿Los teléfonos a las personas a las que ustedes contactan ya casi siempre les contesta la misma persona? Ya sabes que ustedes hablan con esa persona o...
+Lenix: No, eso sí nos toca a veces llamar de los personales...
+Ángela Forero: Ah, OK.
+Lenix: ...o ir hasta la cartera de los de allá.
+Ángela Forero: Ah, OK, listo, sí. Porque ahí se podría mirar de pronto, a ver... en...
+Lenix: ...porque a veces nos ponemos intensas, entonces...
+Ángela Forero: Sí, yo trabajé en... bueno, para unas casas de cobranzas de Davivienda y de un montón de siste... en cobro conozco como unas 15 aquí en Bogotá. Pero yo trabajaba para el software que cobraba automáticamente, se llamaba AVI (Agente Virtual Inteligente), que es... o sea, es mejor pagar que deberle a AVI (risas) porque literal te buscan por correo, por llamada, por, ¿sí?... un hostigamiento fuerte que pues eventualmente ayuda a que o cuadren la forma de pago, porque también puede ser el caso de que no puede pagar, se quedó sin caja, lo que sea; como puede ser que... que de la presión pues... eh, digamos que es como un refuerzo digital hacia eso, porque es la parte más desgastante, el recuperar un poco ahí en cartera. Eh, listo. ¿Algo más que vean de pronto del... del proceso, de...? No sé si tengamos de pronto algunos ejemplos o con algún cliente de... de cómo se les envían las cosas, si todo es así como igual, dejan los soportes impresos...
+Lenix: Ah pues mire, justo este que estoy facturando...
+Ángela Forero: ¿Tienen carpetica por cliente?
+Lenix: Sí, carpetica... ¿Qué me pasa con este cliente? El cliente inicial fue...
+
+[facturacion5.ogg]
+Lenix: ...su contratista que se llama JB.
+Ángela Forero: Ajá.
+Lenix: Pero él siempre pide es ese señor. Pero al hacerle la factura le tengo que sacar aparte lo de él.
+Ángela Forero: Mmm.
+Lenix: Entonces, eh... y me me mezcla los inventarios. Por ejemplo acá, ¡ay!, mire, dice... las que estaba haciendo: «alquiler al 16 de marzo, se adjunt... se se se ajustan dos o tres días de más para cobrar por alquiler 42 corbatas en reposición». Yo tenía que cobrar eso como reposición, pero el señor no puede generarme actas ni aprobaciones por reposición porque se la descuentan a él. Entonces él me dice: «no, pásemelas como alquiler, yo le genero el IVA, yo se lo pago». Entonces tengo que ajustarle los alquileres así no los tenga, para poderle cuadrar esa plata por otro lado y poderle facturar. Ahora dice: «lo que le sobró a este señor después de que devolvió, que fue el 16, empiécemelo a cobrar a mí después del 17». Entonces es el inventario de este señor más el inventario de este señor, pero a nombre del otro.
+Ángela Forero: Mmm, entonces es un revuelto de muchas cosas.
+Lenix: Claro, una mezcla ahí de... para ajustarle una sola factura. Que es lo mismo que pasa con las remisiones, que a veces una misma remisión se tiene que descontar de diferentes obras o de diferentes frentes de obra. Porque justo está esta esta devolución...
+Ángela Forero: Sí.
+Lenix: ...entonces tiene que estar la posibilidad, porque, mira, esto es de un con... de Edificar, que es un cliente, y esto es del otro cliente que es JB.
+Ángela Forero: Que llegó en el mismo transporte, porque esa la hace el... el conductor.
+Lenix: ...porque los dos están en el mismo... en la misma obra y este señor es subcontratista de este. Entonces ellos dos tienen el equipo revuelto.
+Ángela Forero: Claro, sí, sí. Abajo comentaban un poco que pues ya tienen la máquina, se la prestan entre uno y otro.
+Lenix: Pero entonces que siempre esté la posibilidad de poder descontar de diferentes clientes y de diferentes frentes de obra una misma remisión.
+Ángela Forero: Una misma remisión descontada de un lado y de otro, bueno.
+Lenix: Sí, porque pasaba bastante.
+Ángela Forero: Esa tiene también ajustes, listo. Bueno, miremos acá entonces... eso es como la parte entonces del proceso. La idea es que con todos estos comentarios pues nutrimos más como... eh, el módulo en sí en la parte de facturación, porque pues hasta el momento está así. La verdad es que teníamos más información de lo primero que ven ahí, que es el detalle de registro de cliente, todo lo demás, de inventarios, que esto ya con la sesión de hoy incluso esto crece un poquito más, eh... y ya pues finalizaría con esta sesión que te... que estamos teniendo, la de facturación. Que si algo hace falta, pues la idea es... es poderlo escribir ahí. Luego viene algo importante que habíamos hablado la vez pasada y era... es una matriz de roles y permisos, tener claro quién puede hacer qué, dónde. Entonces tenemos aquí más o menos segmentado por módulos, estos serían todos los usuarios o todos los roles más bien, y estas son las acciones que yo pueda hacer dentro de cada módulo. ¿Cierto? Se supone que aquí autorizamos en qué, ¿en contabilidad? Probablemente sí, pero si ven que funciona aparte, pues lo podemos hacer aparte: contabilidad y financiero aparte. Es más que la agrupa un poco por la forma. ¿Pero cómo lo ven ustedes?
+Lenix: Pues ver lista de clientes o prospectos, sí, tenemos que verlos. Crear cliente... pues tanto como crear el cliente... (risas) perdón, eh... en el momento yo, que soy la coordinadora de facturación, sí tengo esta opción de crear cliente.
+Ángela Forero: Ajá. ¿Por qué?
+Lenix: ¿Por qué? Porque con, por ejemplo, eh... con el Bronz, el contrato está a nombre del Consorcio Estanzuela Bronz.
+Ángela Forero: Ajá.
+Lenix: Pero el que paga es la fiducia.
+Ángela Forero: Mmm, OK.
+Lenix: Entonces yo tengo que facturarle a la fiducia. Yo todos los inventarios los tiene cargados el S Bronz y yo le saco la proforma a nombre del Bronz, pero cuando voy a facturar tengo que cambiarle el nombre. ¿Y qué pasa?, yo debo tener acceso a la creación o editar los datos del cliente, porque yo a toda hora estoy cambiando. En esa obra tengo 16 frentes y por la fiducia al momento de facturar solo tengo creado dos... dos, dos, dos clientes, por decirlo así. Entonces yo entro, le cambio el nombre y lo llamo; entro, le cambio el nombre y lo llamo, para no crear otra vez 16 por la fiducia.
+Ángela Forero: Claro, que tengan los mismos documentos porque al final tiene que...
+Lenix: ...porque van a ser los mismos datos solo que le voy a cambiar el nombre del frente y ya. Ah, OK, OK, OK. Bueno, eso podría revisarse más como un dato...
+Lenix: Entonces, en ese sentido, yo siempre he tenido permisos para la creación y edición de clientes.
+Ángela Forero: OK, voy a dejarlo igual como separado... eh, la primera es como contabilidad y financiero aparte, y financiero de pronto como líder financiero y pues las demás personas, ¿no? Esto la idea es que lo miren a detalle, pues no de pronto en este momento porque se nos va a ir bastante tiempo, pero más o menos como que se entienda la dinámica, ¿no?, de lo que es el módulo, las funcionalidades y los roles: a qué debo tener y a qué no. Si de pronto a ti se te ocurre como: «oiga, es que esto debería tener esta funcionalidad que yo la necesito», eso también sería una observación que se registraría ahí, en este caso en el formulario que les voy a pasar vía correo.
+Lenix: Uy, sí, porque sí necesitamos varias funcionalidades...
+Ángela Forero: Sí, como «venga, esta funcionalidad no está mapeada y esto lo necesito yo ahí».
+Lenix: ...eh, se supone que aquí están, pero están inhabilitadas o...
+Ángela Forero: Claro.
+Lenix: Están bloqueados... no, no, están inhabilitadas, no sirven. Lo de los informes, lo del... informes por equipo...
