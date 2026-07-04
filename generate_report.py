@@ -179,67 +179,21 @@ def diagram_section(sec_id, title, subtitle, filepath):
   </div>
 </section>'''
 
-def multi_diagram_section(sec_id, title, subtitle, diagrams):
-    """Renderiza múltiples diagramas dentro de una sección (para sitemaps segmentados)."""
-    blocks = ''
-    for (sub_id, label, filepath) in diagrams:
-        raw  = rf(filepath)
-        fname = Path(filepath).name
-        stem  = Path(filepath).stem
-        blocks += f'''
-  <div class="diagram-block" style="margin-bottom:1.5rem">
-    <div class="diagram-label">
-      <span>📊 {label} &nbsp;·&nbsp; {fname}</span>
-      <button class="btn-dl-svg"
-              data-wrap="wrap-{sub_id}"
-              data-filename="{stem}.svg"
-              title="Descargar como SVG vectorial">
-        ⬇ Descargar SVG
-      </button>
-    </div>
-    <div class="mermaid-wrap" id="wrap-{sub_id}">
-      <pre class="mermaid">{raw}</pre>
-    </div>
-  </div>'''
-    return f'''
-<section id="{sec_id}">
-  <div class="section-header">
-    <h2>{title}</h2>
-    <p class="section-sub">{subtitle}</p>
-  </div>
-  {blocks}
-</section>'''
-
-def roles_section(tabla_md, mmd_path):
+def roles_section(tabla_md, mmd_path=None):
     tabla_html = md2html(tabla_md)
-    raw   = rf(mmd_path)
-    fname = Path(mmd_path).name
-    stem  = Path(mmd_path).stem
     return f'''
 <section id="roles">
   <div class="section-header">
     <h2>Roles y Permisos (RBAC)</h2>
-    <p class="section-sub">8 roles · CEO/Ingeniero · Admin · Comercial · Dibujante · Contabilidad · Jurídica · Almacén · Conductor</p>
+    <p class="section-sub">12 roles · SuperAdmin · Admin · CEO/Ingeniero · Comercial · Dibujante · Contabilidad · Facturación · Jurídica · Almacén · Despachador · Conductor · Recepción</p>
   </div>
   <div class="callout warn">
-    <strong>Nuevo (Feedback 24-jun):</strong> Se añadió el rol <strong>CEO/Ingeniero</strong> con perfil de consulta, acceso a motivos de rechazo y capacidad de forzar la aprobación de un cliente bajo su estricta responsabilidad.
+    <strong>SEM-27:</strong> Roles <strong>Despachador</strong> y <strong>Recepción</strong> agregados.
+    <strong>Facturación</strong> separada de Contabilidad como rol independiente.
+    <strong>SuperAdmin</strong> para configuración global del sistema.
+    El <strong>CEO/Ingeniero</strong> conserva perfil de consulta, acceso a motivos de rechazo y aprobación forzada.
   </div>
   <div class="md-content">{tabla_html}</div>
-  <h3 style="margin-top:2rem">Diagrama de Permisos por Rol</h3>
-  <div class="diagram-block">
-    <div class="diagram-label">
-      <span>📊 {fname}</span>
-      <button class="btn-dl-svg"
-              data-wrap="wrap-roles-mmd"
-              data-filename="{stem}.svg"
-              title="Descargar como SVG vectorial">
-        ⬇ Descargar SVG
-      </button>
-    </div>
-    <div class="mermaid-wrap" id="wrap-roles-mmd">
-      <pre class="mermaid">{raw}</pre>
-    </div>
-  </div>
 </section>'''
 
 def db_section(tables, enums, raw):
@@ -251,7 +205,7 @@ def db_section(tables, enums, raw):
         enum_html += f'<div class="enum-pill"><strong>{e["name"]}</strong><span class="enum-vals">{vals}{more}</span></div>\n'
 
     MODULE_COLORS = {
-        'usuarios': '#1A365D', 'auditoria': '#1A365D', 'notificaciones': '#1A365D',
+        'usuarios': '#0B3C5D', 'auditoria': '#0B3C5D', 'notificaciones': '#0B3C5D',
         'clientes': '#2C7A7B', 'contactos': '#2C7A7B', 'referencias': '#2C7A7B',
         'accionistas': '#2C7A7B', 'autorizacion': '#2C7A7B', 'aprobaciones': '#2C7A7B',
         'documentos': '#2C7A7B', 'obras': '#2C7A7B', 'frentes': '#2C7A7B',
@@ -266,7 +220,7 @@ def db_section(tables, enums, raw):
 
     cards_html = ''
     for t in tables:
-        color = '#1A365D'
+        color = '#0B3C5D'
         for prefix, c in MODULE_COLORS.items():
             if t['name'].startswith(prefix):
                 color = c; break
@@ -295,16 +249,16 @@ def db_section(tables, enums, raw):
     return f'''
 <section id="database">
   <div class="section-header">
-    <h2>Base de Datos — Schema PostgreSQL</h2>
-    <p class="section-sub">DBML v1.0 · {len(tables)} tablas · {len(enums)} enumeraciones</p>
+    <h2>Esquema de Base de Datos — PostgreSQL</h2>
+    <p class="section-sub">DBML v1.0 · {len(tables)} tablas · {len(enums)} enumeraciones · Escala: ~180 clientes · 50 obras · 3-4 frentes</p>
   </div>
   <div class="callout">
-    <strong>Motor:</strong> PostgreSQL &nbsp;·&nbsp; <strong>Escala inicial:</strong> ~180 clientes · 50 obras/cliente · 3-4 frentes/obra
-    &nbsp;·&nbsp; <strong>Basado en:</strong> FT-AC-001 v2.0 · Checklist Validación Clientes · Autorización Centrales de Riesgo
+    <strong>Motor:</strong> PostgreSQL &nbsp;·&nbsp;
+    <strong>Basado en:</strong> FT-AC-001 v2.0 · Checklist Validación Clientes · Autorización Centrales de Riesgo
   </div>
 
   <div class="db-legend">
-    <span style="border-color:#1A365D;color:#1A365D">⬛ Seguridad / Transversal</span>
+    <span style="border-color:#0B3C5D;color:#0B3C5D">⬛ Seguridad / Transversal</span>
     <span style="border-color:#2C7A7B;color:#2C7A7B">⬛ Clientes / Obras</span>
     <span style="border-color:#553C9A;color:#553C9A">⬛ Cotizaciones</span>
     <span style="border-color:#6B46C1;color:#6B46C1">⬛ Contratos</span>
@@ -330,8 +284,8 @@ def db_section(tables, enums, raw):
 OVERVIEW = '''
 <section id="overview">
   <div class="section-header">
-    <h2>Resumen del Proyecto</h2>
-    <p class="section-sub">G&H Obras y Estructuras Metálicas S.A.S · NIT: 901.218.896-8 · Bogotá · Sesión 2026-06-16 + Feedback 2026-06-24</p>
+    <h2>Resumen Ejecutivo del Proyecto</h2>
+    <p class="section-sub">G&H Obras y Estructuras Metálicas S.A.S · NIT: 901.218.896-8 · Bogotá · SEM-27 actualizado 2026-07-04</p>
   </div>
 
   <div class="metrics-grid">
@@ -345,14 +299,17 @@ OVERVIEW = '''
 
   <div class="two-col">
     <div class="info-card">
-      <h3>Módulos del Sistema</h3>
+      <h3>Módulos del Sistema (10)</h3>
       <ul class="module-list">
-        <li><span class="mod-badge">01</span> Cotizaciones — Dibujante + Comercial</li>
+        <li><span class="mod-badge">01</span> Cotizaciones — Catálogos duales · Líneas negocio</li>
         <li><span class="mod-badge">02</span> Registro y Aprobación de Clientes</li>
-        <li><span class="mod-badge">03</span> Contratos y Firma Electrónica</li>
-        <li><span class="mod-badge">04</span> Inventarios y Logística</li>
-        <li><span class="mod-badge">05</span> Facturación y Cartera</li>
-        <li><span class="mod-badge">06</span> Auditoría y Notificaciones</li>
+        <li><span class="mod-badge">03</span> Contratos y Firma Electrónica (Ooku)</li>
+        <li><span class="mod-badge">04</span> Almacén — Pedidos · Remisiones · Conductores</li>
+        <li><span class="mod-badge">05</span> Facturación — Proforma · Siigo/DIAN · Centros costo</li>
+        <li><span class="mod-badge">06</span> Cartera — Módulo independiente</li>
+        <li><span class="mod-badge">07</span> Auditoría — Log inmutable</li>
+        <li><span class="mod-badge">08</span> Notificaciones — Configuración de eventos</li>
+        <li><span class="mod-badge">09</span> Reportería — KPIs y exportaciones</li>
       </ul>
     </div>
     <div class="info-card">
@@ -361,35 +318,45 @@ OVERVIEW = '''
         <li><span class="stack-tag fe">Frontend</span> React + TypeScript</li>
         <li><span class="stack-tag be">Backend</span> FastAPI (Python)</li>
         <li><span class="stack-tag db">Base de Datos</span> PostgreSQL</li>
-        <li><span class="stack-tag ex">Firma</span> DocuSign / Okc</li>
+        <li><span class="stack-tag ex">Firma</span> Ooku (firma electrónica)</li>
+        <li><span class="stack-tag ex">Facturación</span> Siigo → DIAN</li>
         <li><span class="stack-tag ex">Storage</span> S3 Compatible</li>
         <li><span class="stack-tag ex">Notif.</span> Email + WhatsApp API</li>
+        <li><span class="stack-tag ex">Mapas</span> API Geocoding (trayectos km)</li>
       </ul>
     </div>
   </div>
 
   <div class="info-card" style="margin-top:1rem">
-    <h3>Roles del Sistema (8)</h3>
+    <h3>Roles del Sistema (12)</h3>
     <div class="roles-grid">
       <div class="role-chip">💼 Comercial</div>
       <div class="role-chip">✏️ Dibujante</div>
       <div class="role-chip">📊 Contabilidad</div>
+      <div class="role-chip">💳 Facturación</div>
       <div class="role-chip">⚖️ Jurídica</div>
       <div class="role-chip">🏭 Almacén</div>
       <div class="role-chip">🚛 Conductor</div>
+      <div class="role-chip">📦 Despachador</div>
+      <div class="role-chip">🗓️ Recepción</div>
       <div class="role-chip admin">👑 Admin</div>
+      <div class="role-chip admin">🛡️ SuperAdmin</div>
       <div class="role-chip ceo">🏗️ CEO/Ingeniero</div>
     </div>
   </div>
 
   <div class="callout" style="margin-top:1.25rem">
-    <strong>🆕 Ajustes Feedback 24-jun:</strong>
-    Subdivisión del catálogo por unidades de negocio (5) ·
-    Notas por especialidad en aprobación de clientes ·
-    Rol CEO/Ingeniero con aprobación final ·
-    Producción incluida en el Kardex de inventario ·
-    Alertas de recogidas logísticas ·
-    Campos de fecha y hora en transacciones
+    <strong>🆕 SEM-27 — Principales cambios:</strong>
+    Pedidos parciales (alquiler inicia al completarse) ·
+    Verificación 3 fuentes en devoluciones ·
+    6 estados de equipos (+ Baja) ·
+    Roles Despachador · Recepción · Facturación · SuperAdmin ·
+    Integración Siigo→DIAN (no directa) ·
+    Proforma antes de factura ·
+    Transporte: G&H o Cliente ·
+    Catálogos duales · Centros de costo 13/14 ·
+    Condiciones de pago por cliente ·
+    Módulo Reportería · Cartera independiente
   </div>
 
   <div class="callout warn" style="margin-top:.75rem">
@@ -399,151 +366,456 @@ OVERVIEW = '''
   </div>
 </section>'''
 
-# ─── CSS ──────────────────────────────────────────────────────────────────────
+# ─── CSS — Design System GYH Bogotá ──────────────────────────────────────────
 
 CSS = """
+/* ── Google Fonts se cargan en el <head> vía <link> ── */
+
 :root {
-  --bg:#F7FAFC; --surface:#FFFFFF; --surface2:#EDF2F7; --border:#CBD5E0;
-  --text:#1A202C; --muted:#718096;
-  --primary:#1A365D; --primary2:#2C5282;
-  --accent:#FF9F1C; --accent2:#E8910A;
-  --steel:#4A5568; --success:#38A169; --danger:#E53E3E;
-  --nav-w:270px;
+  /* Color tokens — GYH Bogotá Design System */
+  --bg:       #F9F9F9;   /* Grey/50  */
+  --surface:  #FFFFFF;
+  --surface2: #F2F2F2;   /* Grey/100 */
+  --border:   #E0E0E0;   /* Grey/200 */
+  --text:     #1A1A1A;   /* Main/Black */
+  --muted:    #777777;   /* Grey/500 */
+  --primary:  #0B3C5D;   /* Main/Corporate Blue */
+  --primary2: #328CC1;   /* Secondary/Light Blue */
+  --accent:   #F5A623;   /* Main/Construction Yellow */
+  --accent2:  #D4901F;   /* accent darkened */
+  --steel:      #333333;   /* Grey/800 */
+  --grey-300:   #CCCCCC;   /* Grey/300 — secondary icons tint */
+  --grey-900:   #1C1C1C;   /* Grey/900 — footer block bg */
+  --nav-dark:   #072B44;   /* sidebar header bg */
+  --success:    #38A169;
+  --danger:     #E53E3E;
+  --nav-w:      270px;
+  /* Shadow tokens */
+  --shadow-low: 0px 2px 4px rgba(0, 0, 0, 0.08);
+  --shadow-med: 0px 4px 10px rgba(0, 0, 0, 0.12);
+  /* Radius tokens */
+  --r-sm: 4px;
+  --r-md: 8px;
+  --r-lg: 12px;
+  /* Spacing tokens */
+  --sp-xs:   4px;
+  --sp-s:    8px;
+  --sp-m:   16px;
+  --sp-l:   24px;
+  --sp-xl:  32px;
+  --sp-xxl: 48px;
+  --sp-hug: 64px;
+  /* Motion tokens */
+  --transition-fast:   200ms ease-in-out;
+  --transition-normal: 350ms ease;
 }
-*{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{font-family:"Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.65;font-size:15px}
 
-/* Layout */
-.layout{display:grid;grid-template-columns:var(--nav-w) 1fr;min-height:100vh}
-@media(max-width:960px){.layout{grid-template-columns:1fr}nav{position:relative;height:auto;width:100%}}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Open Sans', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.65;
+  font-size: 15px;
+}
 
-/* Sidebar */
-nav{position:sticky;top:0;height:100vh;overflow-y:auto;background:var(--primary);color:#fff;padding:0 0 2rem;font-size:.84rem;box-shadow:2px 0 12px rgba(0,0,0,.18)}
-.nav-brand{display:flex;align-items:center;gap:.75rem;padding:1.25rem 1rem;background:#0F2440;border-bottom:1px solid rgba(255,255,255,.12);margin-bottom:.5rem}
-.nav-logo{background:var(--accent);color:var(--primary);font-weight:900;font-size:1.15rem;padding:.3rem .55rem;border-radius:6px;line-height:1;flex-shrink:0}
-.nav-brand strong{display:block;color:#fff;font-size:.88rem;line-height:1.3}
-.nav-brand small{color:rgba(255,255,255,.5);font-size:.7rem}
-.nav-group{font-size:.62rem;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.38);padding:.9rem 1rem .3rem}
-nav a{display:block;padding:.38rem 1rem;color:rgba(255,255,255,.72);text-decoration:none;border-left:3px solid transparent;transition:all .15s}
-nav a:hover{color:var(--accent);background:rgba(255,255,255,.07);border-left-color:var(--accent)}
+/* ── Layout ── */
+.layout { display: grid; grid-template-columns: var(--nav-w) 1fr; min-height: 100vh; }
+@media (max-width: 960px) {
+  .layout { grid-template-columns: 1fr; }
+  nav { position: relative; height: auto; width: 100%; }
+}
 
-/* Main */
-main{padding:2rem 2.5rem 4rem;background:var(--bg)}
-@media(max-width:720px){main{padding:1rem 1rem 3rem}}
+/* ── Sidebar ── */
+nav {
+  position: sticky; top: 0; height: 100vh; overflow-y: auto;
+  background: var(--primary);
+  color: #fff;
+  padding: 0 0 2rem;
+  font-size: .82rem;
+  box-shadow: var(--shadow-med);
+  font-family: 'Open Sans', system-ui, sans-serif;
+}
+.nav-brand {
+  display: flex; align-items: center; gap: .75rem;
+  padding: 1.25rem 1rem;
+  background: var(--nav-dark);
+  border-bottom: 1px solid rgba(255,255,255,.1);
+  margin-bottom: .5rem;
+}
+.nav-logo {
+  background: var(--accent);
+  color: var(--primary);
+  font-family: 'Montserrat', system-ui, sans-serif;
+  font-weight: 900;
+  font-size: 1.1rem;
+  padding: .3rem .55rem;
+  border-radius: var(--r-sm);
+  line-height: 1;
+  flex-shrink: 0;
+  letter-spacing: -.02em;
+}
+.nav-brand strong {
+  display: block;
+  color: #fff;
+  font-family: 'Montserrat', system-ui, sans-serif;
+  font-size: .85rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+.nav-brand small { color: rgba(255,255,255,.45); font-size: .68rem; }
+.nav-group {
+  font-size: .6rem;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  color: rgba(255,255,255,.35);
+  padding: 1rem 1rem .3rem;
+  font-family: 'Montserrat', system-ui, sans-serif;
+  font-weight: 600;
+}
+nav a {
+  display: block;
+  padding: .4rem 1rem;
+  color: rgba(255,255,255,.68);
+  text-decoration: none;
+  border-left: 3px solid transparent;
+  transition: all var(--transition-fast);
+}
+nav a:hover,
+nav a.active {
+  color: var(--accent);
+  background: rgba(255,255,255,.07);
+  border-left-color: var(--accent);
+}
 
-/* Hero */
-.hero{background:linear-gradient(135deg,var(--primary) 0%,var(--primary2) 100%);color:#fff;border-radius:14px;padding:2.5rem 2rem;margin-bottom:2.5rem;position:relative;overflow:hidden}
-.hero::before{content:'';position:absolute;right:-80px;top:-80px;width:260px;height:260px;border-radius:50%;background:rgba(255,159,28,.12);pointer-events:none}
-.hero::after{content:'';position:absolute;right:40px;bottom:-40px;width:140px;height:140px;border-radius:50%;background:rgba(255,255,255,.06);pointer-events:none}
-.hero-tag{font-size:.72rem;text-transform:uppercase;letter-spacing:.12em;color:var(--accent);font-weight:700;margin-bottom:.5rem}
-.hero h1{font-size:2rem;font-weight:900;margin-bottom:.4rem}
-.hero p{color:rgba(255,255,255,.65);font-size:.92rem}
-.hero-meta{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1.5rem}
-.hero-chip{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:999px;padding:.22rem .7rem;font-size:.75rem;color:rgba(255,255,255,.88)}
+/* ── Main ── */
+main {
+  padding: 2rem 2.5rem 4rem;
+  background: var(--bg);
+  max-width: 1200px;    /* Grid — Desktop Layout: max-width 1200px */
+}
+@media (max-width: 720px) { main { padding: 1rem 1rem 3rem; } }
 
-/* Sections */
-section{margin-bottom:3.5rem;scroll-margin-top:1rem}
-.section-header{margin-bottom:1.5rem;padding-bottom:.7rem;border-bottom:3px solid var(--accent)}
-.section-header h2{font-size:1.45rem;color:var(--primary);font-weight:800}
-.section-sub{color:var(--muted);font-size:.86rem;margin-top:.3rem}
-section h3{font-size:1.05rem;color:var(--primary);margin:1.75rem 0 .75rem;font-weight:700}
+/* ── Hero ── */
+.hero {
+  background: linear-gradient(135deg, var(--primary) 0%, #0E5080 100%);
+  color: #fff;
+  border-radius: var(--r-lg);
+  padding: 2.5rem 2rem;
+  margin-bottom: 2.5rem;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-med);
+}
+.hero::before {
+  content: '';
+  position: absolute; right: -80px; top: -80px;
+  width: 260px; height: 260px;
+  border-radius: 50%;
+  background: rgba(245,166,35,.12);
+  pointer-events: none;
+}
+.hero::after {
+  content: '';
+  position: absolute; right: 40px; bottom: -40px;
+  width: 140px; height: 140px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.06);
+  pointer-events: none;
+}
+.hero-tag {
+  font-size: .7rem;
+  text-transform: uppercase;
+  letter-spacing: .14em;
+  color: var(--accent);
+  font-weight: 700;
+  margin-bottom: .5rem;
+  font-family: 'Montserrat', system-ui, sans-serif;
+}
+.hero h1 {
+  font-family: 'Montserrat', system-ui, sans-serif;
+  font-size: 2rem;
+  font-weight: 900;
+  margin-bottom: .4rem;
+  letter-spacing: -.02em;
+}
+.hero p { color: rgba(255,255,255,.62); font-size: .92rem; }
+.hero-meta { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 1.5rem; }
+.hero-chip {
+  background: rgba(255,255,255,.1);
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 999px;
+  padding: .22rem .72rem;
+  font-size: .73rem;
+  color: rgba(255,255,255,.85);
+}
 
-/* Diagrams */
-.diagram-block{border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface);box-shadow:0 2px 10px rgba(0,0,0,.07);margin-bottom:1rem}
-.diagram-label{background:var(--primary);color:rgba(255,255,255,.75);padding:.4rem 1rem;font-size:.72rem;font-family:ui-monospace,monospace;letter-spacing:.04em;display:flex;align-items:center;justify-content:space-between;gap:.75rem}
-.btn-dl-svg{flex-shrink:0;background:var(--accent);color:var(--primary);border:none;border-radius:5px;padding:.28rem .75rem;font-size:.72rem;font-weight:700;cursor:pointer;letter-spacing:.02em;font-family:inherit;transition:background .15s,transform .1s}
-.btn-dl-svg:hover{background:var(--accent2);transform:translateY(-1px)}
-.btn-dl-svg:active{transform:translateY(0)}
-.btn-dl-svg.loading{opacity:.6;cursor:wait}
-.mermaid-wrap{padding:1.5rem;overflow-x:auto;background:#fff;min-height:80px}
-.mmd-svg-wrap svg{max-width:100%;height:auto}
+/* ── Sections ── */
+section { margin-bottom: 3.5rem; scroll-margin-top: 1rem; }
+.section-header { margin-bottom: 1.5rem; padding-bottom: .7rem; border-bottom: 3px solid var(--accent); }
+.section-header h2 {
+  font-family: 'Montserrat', system-ui, sans-serif;
+  font-size: 1.4rem;
+  color: var(--primary);
+  font-weight: 800;
+  letter-spacing: -.01em;
+}
+.section-sub { color: var(--muted); font-size: .84rem; margin-top: .3rem; }
+section h3 {
+  font-family: 'Montserrat', system-ui, sans-serif;
+  font-size: 1rem;
+  color: var(--primary);
+  margin: 1.75rem 0 .75rem;
+  font-weight: 700;
+}
 
-/* Metrics */
-.metrics-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.9rem;margin-bottom:1.5rem}
-.metric-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.2rem 1rem;text-align:center;border-top:4px solid var(--accent);box-shadow:0 1px 4px rgba(0,0,0,.05)}
-.metric-icon{display:block;font-size:1.7rem;margin-bottom:.45rem}
-.metric-value{display:block;font-size:1.7rem;font-weight:900;color:var(--primary)}
-.metric-label{display:block;font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-top:.2rem}
+/* ── Diagrams ── */
+.diagram-block {
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  background: var(--surface);
+  box-shadow: var(--shadow-low);
+  margin-bottom: 1rem;
+}
+.diagram-label {
+  background: var(--primary);
+  color: rgba(255,255,255,.72);
+  padding: .42rem 1rem;
+  font-size: .7rem;
+  font-family: ui-monospace, monospace;
+  letter-spacing: .04em;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+}
+.btn-dl-svg {
+  flex-shrink: 0;
+  background: var(--accent);
+  color: var(--primary);
+  border: none;
+  border-radius: var(--r-sm);
+  padding: .28rem .75rem;
+  font-size: .7rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: 'Montserrat', system-ui, sans-serif;
+  letter-spacing: .02em;
+  transition: background var(--transition-fast), transform var(--transition-fast);
+}
+.btn-dl-svg:hover { background: var(--accent2); transform: translateY(-1px); }
+.btn-dl-svg:active { transform: translateY(0); }
+.btn-dl-svg.loading { opacity: .6; cursor: wait; }
+.mermaid-wrap { padding: 1.5rem; overflow-x: auto; background: #fff; min-height: 80px; }
+.mmd-svg-wrap svg { max-width: 100%; height: auto; }
 
-/* Info cards */
-.two-col{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem}
-@media(max-width:680px){.two-col{grid-template-columns:1fr}}
-.info-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.25rem;box-shadow:0 1px 4px rgba(0,0,0,.05)}
-.info-card h3{color:var(--primary);font-size:1rem;margin-bottom:.75rem;border-bottom:1px solid var(--surface2);padding-bottom:.4rem}
-.module-list,.stack-list{list-style:none}
-.module-list li,.stack-list li{padding:.35rem 0;border-bottom:1px solid var(--surface2);font-size:.86rem;color:var(--steel);display:flex;align-items:center;gap:.5rem}
-.module-list li:last-child,.stack-list li:last-child{border-bottom:none}
-.mod-badge{background:var(--primary);color:#fff;border-radius:4px;padding:.1rem .4rem;font-size:.68rem;font-weight:700;flex-shrink:0}
-.stack-tag{padding:.12rem .45rem;border-radius:4px;font-size:.68rem;font-weight:700;flex-shrink:0}
-.stack-tag.fe{background:#EBF8FF;color:#2B6CB0}
-.stack-tag.be{background:#F0FFF4;color:#276749}
-.stack-tag.db{background:#FAF5FF;color:#6B46C1}
-.stack-tag.ex{background:#FFFBEB;color:#92400E}
-.roles-grid{display:flex;flex-wrap:wrap;gap:.5rem;padding-top:.25rem}
-.role-chip{background:var(--surface2);border:1px solid var(--border);border-radius:999px;padding:.28rem .82rem;font-size:.8rem;color:var(--primary);font-weight:600}
-.role-chip.admin{background:#FFFBEB;border-color:var(--accent);color:#92400E}
-.role-chip.ceo{background:#FFF5F5;border-color:#E53E3E;color:#C53030}
+/* ── Metrics ── */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
+  gap: .9rem;
+  margin-bottom: 1.5rem;
+}
+.metric-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 1.2rem 1rem;
+  text-align: center;
+  border-top: 4px solid var(--accent);
+  box-shadow: var(--shadow-low);
+  transition: box-shadow var(--transition-fast);
+}
+.metric-card:hover { box-shadow: var(--shadow-med); }
+.metric-icon { display: block; font-size: 1.65rem; margin-bottom: .45rem; }
+.metric-value {
+  display: block;
+  font-size: 1.65rem;
+  font-weight: 900;
+  color: var(--primary);
+  font-family: 'Montserrat', system-ui, sans-serif;
+  letter-spacing: -.02em;
+}
+.metric-label { display: block; font-size: .66rem; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-top: .2rem; }
 
-/* Callout */
-.callout{background:#EBF8FF;border-left:4px solid #3182CE;border-radius:0 8px 8px 0;padding:.85rem 1.1rem;margin:1rem 0;font-size:.86rem}
-.callout.warn{background:#FFFBEB;border-left-color:var(--accent)}
+/* ── Info cards ── */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+@media (max-width: 680px) { .two-col { grid-template-columns: 1fr; } }
+.info-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 1.25rem;
+  box-shadow: var(--shadow-low);
+}
+.info-card h3 {
+  color: var(--primary);
+  font-size: .95rem;
+  font-family: 'Montserrat', system-ui, sans-serif;
+  font-weight: 700;
+  margin-bottom: .75rem;
+  border-bottom: 1px solid var(--surface2);
+  padding-bottom: .4rem;
+}
+.module-list, .stack-list { list-style: none; }
+.module-list li, .stack-list li {
+  padding: .35rem 0;
+  border-bottom: 1px solid var(--surface2);
+  font-size: .84rem;
+  color: var(--steel);
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+.module-list li:last-child, .stack-list li:last-child { border-bottom: none; }
+.mod-badge {
+  background: var(--primary);
+  color: #fff;
+  border-radius: var(--r-sm);
+  padding: .1rem .4rem;
+  font-size: .66rem;
+  font-weight: 700;
+  font-family: 'Montserrat', system-ui, sans-serif;
+  flex-shrink: 0;
+}
+.stack-tag {
+  padding: .12rem .45rem;
+  border-radius: var(--r-sm);
+  font-size: .66rem;
+  font-weight: 700;
+  font-family: 'Montserrat', system-ui, sans-serif;
+  flex-shrink: 0;
+}
+.stack-tag.fe { background: #EBF8FF; color: #2B6CB0; }
+.stack-tag.be { background: #F0FFF4; color: #276749; }
+.stack-tag.db { background: #FAF5FF; color: #6B46C1; }
+.stack-tag.ex { background: #FFFBEB; color: #92400E; }
+.roles-grid { display: flex; flex-wrap: wrap; gap: .5rem; padding-top: .25rem; }
+.role-chip {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: .28rem .82rem;
+  font-size: .78rem;
+  color: var(--primary);
+  font-weight: 600;
+  font-family: 'Montserrat', system-ui, sans-serif;
+}
+.role-chip.admin { background: #FFFBEB; border-color: var(--accent); color: #92400E; }
+.role-chip.ceo   { background: #FFF5F5; border-color: #E53E3E;        color: #C53030; }
 
-/* DB tables */
-.db-legend{display:flex;flex-wrap:wrap;gap:.6rem;margin-bottom:1.25rem}
-.db-legend span{border:1px solid;border-radius:4px;padding:.2rem .55rem;font-size:.72rem;font-weight:600}
-.t-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:.9rem;margin-bottom:1.5rem}
-.t-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.06)}
-.t-head{background:var(--tcolor,var(--primary));color:#fff;padding:.55rem .9rem;display:flex;align-items:center;gap:.5rem}
-.t-name{font-weight:700;font-size:.86rem;flex:1;font-family:ui-monospace,monospace}
-.t-count{font-size:.65rem;color:rgba(255,255,255,.6);background:rgba(255,255,255,.12);padding:.1rem .4rem;border-radius:3px}
-.t-note{font-size:.73rem;color:var(--muted);padding:.45rem .8rem;background:var(--surface2);border-bottom:1px solid var(--border);line-height:1.4}
-.t-cols{width:100%;border-collapse:collapse;font-size:.76rem}
-.t-cols td{padding:.28rem .75rem;border-bottom:1px solid #f1f5f9}
-.t-cols tr:last-child td{border-bottom:none}
-.t-cols td:first-child code{font-size:.75rem;color:var(--primary);font-weight:600}
-.t-type{color:var(--muted);font-family:ui-monospace,monospace;font-size:.7rem}
-.t-more{font-size:.7rem;color:var(--muted);padding:.35rem .75rem;background:var(--surface2);text-align:center;font-style:italic}
-.badge{display:inline-block;padding:.05rem .3rem;border-radius:3px;font-size:.62rem;font-weight:700;margin-right:.15rem}
-.badge.pk{background:#FEF3C7;color:#92400E}
-.badge.fk{background:#E0E7FF;color:#3730A3}
-.badge.uniq{background:#D1FAE5;color:#065F46}
-.enum-grid{display:flex;flex-wrap:wrap;gap:.7rem;margin-bottom:1.5rem}
-.enum-pill{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.55rem .85rem;min-width:150px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
-.enum-pill strong{display:block;color:var(--primary);font-size:.8rem;margin-bottom:.2rem}
-.enum-vals{color:var(--muted);font-size:.7rem;font-family:ui-monospace,monospace;line-height:1.6}
-details{margin-top:1rem}
-details summary{cursor:pointer;color:var(--primary);font-size:.88rem;font-weight:600;padding:.5rem 0;user-select:none}
-.code-block{background:#1A202C;color:#E2E8F0;border-radius:10px;padding:1.25rem;font-size:.76rem;overflow-x:auto;line-height:1.75;max-height:500px;overflow-y:auto;font-family:ui-monospace,monospace;border:1px solid #2D3748;margin-top:.75rem}
+/* ── Callout ── */
+.callout {
+  background: #EBF8FF;
+  border-left: 4px solid var(--primary2);
+  border-radius: 0 var(--r-md) var(--r-md) 0;
+  padding: .88rem 1.1rem;
+  margin: 1rem 0;
+  font-size: .84rem;
+  line-height: 1.6;
+}
+.callout.warn { background: #FFFBEB; border-left-color: var(--accent); }
 
-/* Markdown content */
-.md-content h1{font-size:1.4rem;color:var(--primary);margin:1.5rem 0 .75rem;border-bottom:2px solid var(--accent);padding-bottom:.35rem}
-.md-content h2{font-size:1.2rem;color:var(--primary);margin:2rem 0 .75rem;border-bottom:1px solid var(--border);padding-bottom:.35rem}
-.md-content h3{font-size:1rem;color:var(--primary2);margin:1.4rem 0 .5rem}
-.md-content h4{font-size:.92rem;color:var(--steel);margin:1rem 0 .4rem;font-style:italic}
-.md-content p{margin:.5rem 0;color:var(--text);font-size:.88rem}
-.md-content code{background:#EDF2F7;padding:.1rem .38rem;border-radius:3px;font-size:.8em;color:#6B46C1}
-.md-content strong{color:var(--primary)}
-.md-content hr{border:none;border-top:2px solid var(--border);margin:2rem 0}
-.md-content ul.md-list{margin:.5rem 0 .5rem 1.4rem}
-.md-content ol{margin:.5rem 0 .5rem 1.4rem}
-.md-content li{margin:.28rem 0;font-size:.88rem}
-.check-item{list-style:none;display:flex;align-items:flex-start;gap:.5rem;margin-left:-1.4rem;padding:.2rem 0}
-.chk{flex-shrink:0;width:1.3rem;text-align:center;color:var(--muted);margin-top:.05rem;font-size:.9rem}
-.chk-ok{color:var(--success)}
-.check-item.done{color:#276749}
-.table-wrap{overflow-x:auto;margin:1rem 0}
-.md-content table{width:100%;border-collapse:collapse;font-size:.82rem;background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden}
-.md-content th{background:var(--primary);color:#fff;padding:.45rem .75rem;text-align:left;font-size:.8rem;font-weight:600}
-.md-content td{padding:.4rem .75rem;border-bottom:1px solid var(--border);vertical-align:top;text-align:center}
-.md-content td:first-child{text-align:left}
-.md-content tr:nth-child(even) td{background:var(--surface2)}
+/* ── DB tables ── */
+.db-legend { display: flex; flex-wrap: wrap; gap: .6rem; margin-bottom: 1.25rem; }
+.db-legend span {
+  border: 1px solid;
+  border-radius: var(--r-sm);
+  padding: .2rem .55rem;
+  font-size: .7rem;
+  font-weight: 600;
+  font-family: 'Montserrat', system-ui, sans-serif;
+}
+.t-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: .9rem; margin-bottom: 1.5rem; }
+.t-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-low);
+  transition: box-shadow var(--transition-fast);
+}
+.t-card:hover { box-shadow: var(--shadow-med); }
+.t-head {
+  background: var(--tcolor, var(--primary));
+  color: #fff;
+  padding: .55rem .9rem;
+  display: flex; align-items: center; gap: .5rem;
+}
+.t-name { font-weight: 700; font-size: .84rem; flex: 1; font-family: ui-monospace, monospace; }
+.t-count { font-size: .64rem; color: rgba(255,255,255,.6); background: rgba(255,255,255,.12); padding: .1rem .4rem; border-radius: 3px; }
+.t-note { font-size: .72rem; color: var(--muted); padding: .45rem .8rem; background: var(--surface2); border-bottom: 1px solid var(--border); line-height: 1.4; }
+.t-cols { width: 100%; border-collapse: collapse; font-size: .75rem; }
+.t-cols td { padding: .28rem .75rem; border-bottom: 1px solid #f1f5f9; }
+.t-cols tr:last-child td { border-bottom: none; }
+.t-cols td:first-child code { font-size: .74rem; color: var(--primary); font-weight: 600; }
+.t-type { color: var(--muted); font-family: ui-monospace, monospace; font-size: .7rem; }
+.t-more { font-size: .7rem; color: var(--muted); padding: .35rem .75rem; background: var(--surface2); text-align: center; font-style: italic; }
+.badge { display: inline-block; padding: .05rem .3rem; border-radius: 3px; font-size: .6rem; font-weight: 700; margin-right: .15rem; }
+.badge.pk   { background: #FEF3C7; color: #92400E; }
+.badge.fk   { background: #E0E7FF; color: #3730A3; }
+.badge.uniq { background: #D1FAE5; color: #065F46; }
+.enum-grid { display: flex; flex-wrap: wrap; gap: .7rem; margin-bottom: 1.5rem; }
+.enum-pill {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: .55rem .85rem;
+  min-width: 150px;
+  box-shadow: var(--shadow-low);
+}
+.enum-pill strong { display: block; color: var(--primary); font-size: .78rem; margin-bottom: .2rem; font-family: 'Montserrat', system-ui, sans-serif; }
+.enum-vals { color: var(--muted); font-size: .7rem; font-family: ui-monospace, monospace; line-height: 1.6; }
+details { margin-top: 1rem; }
+details summary { cursor: pointer; color: var(--primary); font-size: .86rem; font-weight: 700; padding: .5rem 0; user-select: none; font-family: 'Montserrat', system-ui, sans-serif; }
+.code-block {
+  background: #072B44;
+  color: #E2E8F0;
+  border-radius: var(--r-md);
+  padding: 1.25rem;
+  font-size: .75rem;
+  overflow-x: auto;
+  line-height: 1.75;
+  max-height: 500px;
+  overflow-y: auto;
+  font-family: ui-monospace, monospace;
+  border: 1px solid rgba(255,255,255,.08);
+  margin-top: .75rem;
+}
 
-/* Footer */
-footer{padding-top:2rem;border-top:2px solid var(--border);color:var(--muted);font-size:.8rem;margin-top:2rem}
-footer strong{color:var(--primary)}
+/* ── Markdown content ── */
+.md-content h1 { font-size: 1.35rem; color: var(--primary); margin: 1.5rem 0 .75rem; border-bottom: 2px solid var(--accent); padding-bottom: .35rem; font-family: 'Montserrat', system-ui, sans-serif; font-weight: 800; }
+.md-content h2 { font-size: 1.15rem; color: var(--primary); margin: 2rem 0 .75rem; border-bottom: 1px solid var(--border); padding-bottom: .35rem; font-family: 'Montserrat', system-ui, sans-serif; font-weight: 700; }
+.md-content h3 { font-size: .97rem; color: var(--primary2); margin: 1.4rem 0 .5rem; font-family: 'Montserrat', system-ui, sans-serif; font-weight: 700; }
+.md-content h4 { font-size: .9rem; color: var(--steel); margin: 1rem 0 .4rem; font-style: italic; }
+.md-content p  { margin: .5rem 0; color: var(--text); font-size: .86rem; }
+.md-content code { background: var(--surface2); padding: .1rem .38rem; border-radius: var(--r-sm); font-size: .8em; color: #6B46C1; }
+.md-content strong { color: var(--primary); }
+.md-content hr { border: none; border-top: 2px solid var(--border); margin: 2rem 0; }
+.md-content ul.md-list { margin: .5rem 0 .5rem 1.4rem; }
+.md-content ol { margin: .5rem 0 .5rem 1.4rem; }
+.md-content li { margin: .28rem 0; font-size: .86rem; }
+.check-item { list-style: none; display: flex; align-items: flex-start; gap: .5rem; margin-left: -1.4rem; padding: .2rem 0; }
+.chk { flex-shrink: 0; width: 1.3rem; text-align: center; color: var(--muted); margin-top: .05rem; font-size: .9rem; }
+.chk-ok { color: var(--success); }
+.check-item.done { color: #276749; }
+.table-wrap { overflow-x: auto; margin: 1rem 0; }
+.md-content table { width: 100%; border-collapse: collapse; font-size: .81rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-md); overflow: hidden; }
+.md-content th { background: var(--primary); color: #fff; padding: .45rem .75rem; text-align: left; font-size: .78rem; font-weight: 700; font-family: 'Montserrat', system-ui, sans-serif; }
+.md-content td { padding: .4rem .75rem; border-bottom: 1px solid var(--border); vertical-align: top; text-align: center; }
+.md-content td:first-child { text-align: left; }
+.md-content tr:nth-child(even) td { background: var(--surface2); }
 
-@media print{nav{display:none}.layout{grid-template-columns:1fr}body{font-size:11pt}}
+/* ── Footer ── */
+footer { padding-top: 2rem; border-top: 2px solid var(--border); color: var(--muted); font-size: .78rem; margin-top: 2rem; }
+footer strong { color: var(--primary); font-family: 'Montserrat', system-ui, sans-serif; }
+
+/* ── Breadcrumb nav-trail (section dividers in sidebar) ── */
+.nav-divider { height: 1px; background: rgba(255,255,255,.08); margin: .4rem .75rem; }
+
+@media print { nav { display: none; } .layout { grid-template-columns: 1fr; } body { font-size: 11pt; } }
 """
 
 # ─── Main ─────────────────────────────────────────────────────────────────────
@@ -560,17 +832,50 @@ def generate():
     today             = date.today().strftime("%d de %B de %Y")
 
     num_sitemaps = len(list((BASE / 'sitemaps').glob('sitemap_0*.mmd')))
-    num_diagrams = 6 + num_sitemaps  # 6 architecture + sitemaps
+    num_diagrams = 6 + num_sitemaps
 
-    SITEMAPS = [
-        ('sm-auth',     'Auth y Dashboard',       'sitemaps/sitemap_01_auth_dashboard.mmd'),
-        ('sm-clientes', 'Clientes y Aprobación',  'sitemaps/sitemap_02_clientes.mmd'),
-        ('sm-cot',      'Cotizaciones y Catálogo', 'sitemaps/sitemap_03_cotizaciones.mmd'),
-        ('sm-contratos','Contratos',               'sitemaps/sitemap_04_contratos.mmd'),
-        ('sm-inv',      'Inventarios y Logística', 'sitemaps/sitemap_05_inventarios.mmd'),
-        ('sm-fac',      'Facturación',             'sitemaps/sitemap_06_facturacion.mmd'),
-        ('sm-aud',      'Auditoría y Config',      'sitemaps/sitemap_07_auditoria_config.mmd'),
-    ]
+    # ── Sitemaps individuales (cada uno con su propio anchor) ──
+    sm_auth = diagram_section(
+        "sitemap-auth",
+        "Mapa de Pantallas — Autenticación y Dashboard",
+        "Acceso al sistema · KPIs · Alertas pendientes · Actividad reciente",
+        "sitemaps/sitemap_01_auth_dashboard.mmd")
+
+    sm_clientes = diagram_section(
+        "sitemap-clientes",
+        "Mapa de Pantallas — Clientes",
+        "Lista · Formulario FT-AC-001 · Documentos · Aprobación multi-área · Obras y Frentes · Historial",
+        "sitemaps/sitemap_02_clientes.mmd")
+
+    sm_cotizaciones = diagram_section(
+        "sitemap-cotizaciones",
+        "Mapa de Pantallas — Cotizaciones",
+        "Carga de planos · Materiales AutoCAD · Ítems y precios · PDF · Catálogo general y especial",
+        "sitemaps/sitemap_03_cotizaciones.mmd")
+
+    sm_contratos = diagram_section(
+        "sitemap-contratos",
+        "Mapa de Pantallas — Contratos",
+        "Orden de compra · Firma electrónica Ooku · Estado del contrato (Pendiente → Firmado → Activo)",
+        "sitemaps/sitemap_04_contratos.mmd")
+
+    sm_inventarios = diagram_section(
+        "sitemap-inventarios",
+        "Mapa de Pantallas — Inventarios y Logística",
+        "Kardex · Pedidos parciales · Remisiones · Devoluciones 3 fuentes · Agenda · Conductores · Cronograma",
+        "sitemaps/sitemap_05_inventarios.mmd")
+
+    sm_facturacion = diagram_section(
+        "sitemap-facturacion",
+        "Mapa de Pantallas — Facturación y Cartera",
+        "Proformas · Facturas · Modalidades · CUFE/DIAN · Centros costo · Cartera independiente",
+        "sitemaps/sitemap_06_facturacion.mmd")
+
+    sm_auditoria = diagram_section(
+        "sitemap-auditoria",
+        "Mapa de Pantallas — Auditoría, Reportería y Configuración",
+        "Log inmutable · Reportes KPI · Usuarios/Roles · Catálogo · Notificaciones · Parámetros SuperAdmin",
+        "sitemaps/sitemap_07_auditoria_config.mmd")
 
     html = f"""<!DOCTYPE html>
 <html lang="es">
@@ -578,6 +883,9 @@ def generate():
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>G&H Sistema — Inception Report 2026</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
   <script>
     mermaid.initialize({{
@@ -585,19 +893,20 @@ def generate():
       theme: 'base',
       securityLevel: 'loose',
       themeVariables: {{
-        primaryColor: '#1A365D',
+        primaryColor: '#0B3C5D',
         primaryTextColor: '#FFFFFF',
-        primaryBorderColor: '#1A365D',
-        lineColor: '#4A5568',
-        secondaryColor: '#EDF2F7',
-        clusterBkg: '#2D3748',
+        primaryBorderColor: '#0B3C5D',
+        lineColor: '#333333',
+        secondaryColor: '#F2F2F2',
+        clusterBkg: '#072B44',
+        clusterBorder: '#0B3C5D',
         titleColor: '#FFFFFF',
-        edgeLabelBackground: '#F7FAFC',
-        fontFamily: 'Segoe UI, system-ui, sans-serif'
+        edgeLabelBackground: '#F9F9F9',
+        fontFamily: 'Montserrat, sans-serif'
       }}
     }});
 
-    /* ── SVG download helper ─────────────────────────────────── */
+    /* ── SVG download helper ── */
     function downloadSVG(svgEl, filename) {{
       const clone = svgEl.cloneNode(true);
       clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
@@ -619,8 +928,10 @@ def generate():
       setTimeout(() => URL.revokeObjectURL(url), 1500);
     }}
 
-    /* ── Render Mermaid + wire download buttons ──────────────── */
+    /* ── Render Mermaid + wire download buttons + ScrollSpy ── */
     document.addEventListener('DOMContentLoaded', async () => {{
+
+      /* Render all mermaid blocks */
       const blocks = document.querySelectorAll('pre.mermaid');
       for (let i = 0; i < blocks.length; i++) {{
         const el   = blocks[i];
@@ -640,6 +951,7 @@ def generate():
         }}
       }}
 
+      /* Wire download buttons */
       document.querySelectorAll('.btn-dl-svg').forEach(btn => {{
         btn.addEventListener('click', () => {{
           const wrapEl = document.getElementById(btn.dataset.wrap);
@@ -667,6 +979,23 @@ def generate():
           }}, 80);
         }});
       }});
+
+      /* ScrollSpy — resalta el link activo en el sidebar */
+      const navLinks = document.querySelectorAll('nav a[href^="#"]');
+      const sections = document.querySelectorAll('section[id]');
+      const spy = new IntersectionObserver(entries => {{
+        entries.forEach(entry => {{
+          if (entry.isIntersecting) {{
+            navLinks.forEach(a => a.classList.remove('active'));
+            const hit = document.querySelector('nav a[href="#' + entry.target.id + '"]');
+            if (hit) {{
+              hit.classList.add('active');
+              hit.scrollIntoView({{ block: 'nearest', behavior: 'smooth' }});
+            }}
+          }}
+        }});
+      }}, {{ threshold: 0.18, rootMargin: '-5% 0px -65% 0px' }});
+      sections.forEach(s => spy.observe(s));
     }});
   </script>
   <style>{CSS}</style>
@@ -674,32 +1003,52 @@ def generate():
 <body>
 <div class="layout">
 
+<!-- ═══════════════ SIDEBAR ═══════════════ -->
 <nav>
   <div class="nav-brand">
     <span class="nav-logo">G&amp;H</span>
     <div><strong>G&amp;H Sistema</strong><small>Inception Report · 2026</small></div>
   </div>
-  <div class="nav-group">Visión General</div>
-  <a href="#overview">📊 Resumen del Proyecto</a>
-  <div class="nav-group">Diagramas de Arquitectura</div>
-  <a href="#arquitectura">🏗️ Arquitectura del Sistema</a>
+
+  <div class="nav-group">Visión y Contexto</div>
+  <a href="#overview">📊 Resumen Ejecutivo</a>
+
+  <div class="nav-divider"></div>
+  <div class="nav-group">Proceso de Negocio</div>
   <a href="#flujo-principal">🔄 Flujo Principal del Negocio</a>
-  <a href="#cotizacion">📋 Módulo Cotizaciones</a>
+
+  <div class="nav-divider"></div>
+  <div class="nav-group">Actores del Sistema</div>
+  <a href="#roles">🔐 Roles y Permisos</a>
+
+  <div class="nav-divider"></div>
+  <div class="nav-group">Flujos por Módulo</div>
+  <a href="#cotizacion">📋 Cotizaciones</a>
   <a href="#registro-cliente">👥 Registro y Aprobación</a>
   <a href="#inventarios">📦 Inventarios y Logística</a>
-  <a href="#roles">🔐 Roles y Permisos</a>
-  <div class="nav-group">Sitemaps por Flujo</div>
-  <a href="#sitemaps">🗺️ Auth · Dashboard</a>
-  <a href="#sitemaps">👥 Clientes · Cotizaciones</a>
-  <a href="#sitemaps">📦 Inventarios · Facturación</a>
-  <a href="#sitemaps">🔍 Auditoría · Config</a>
-  <div class="nav-group">Base de Datos</div>
-  <a href="#database">🗄️ Schema PostgreSQL</a>
-  <div class="nav-group">Requerimientos</div>
+
+  <div class="nav-divider"></div>
+  <div class="nav-group">Mapas de Pantallas</div>
+  <a href="#sitemap-auth">🔐 Auth · Dashboard</a>
+  <a href="#sitemap-clientes">👥 Clientes</a>
+  <a href="#sitemap-cotizaciones">📋 Cotizaciones</a>
+  <a href="#sitemap-contratos">📝 Contratos</a>
+  <a href="#sitemap-inventarios">📦 Inventarios</a>
+  <a href="#sitemap-facturacion">💳 Facturación · Cartera</a>
+  <a href="#sitemap-auditoria">🔍 Auditoría · Config</a>
+
+  <div class="nav-divider"></div>
+  <div class="nav-group">Requerimientos Funcionales</div>
   <a href="#historias">📖 Historias de Usuario</a>
   <a href="#checklist">✅ Checklist Validado</a>
+
+  <div class="nav-divider"></div>
+  <div class="nav-group">Arquitectura Técnica</div>
+  <a href="#arquitectura">🏗️ Arquitectura del Sistema</a>
+  <a href="#database">🗄️ Esquema de Base de Datos</a>
 </nav>
 
+<!-- ═══════════════ MAIN ═══════════════ -->
 <main>
 
   <header class="hero">
@@ -710,52 +1059,48 @@ def generate():
       <span class="hero-chip">📅 {today}</span>
       <span class="hero-chip">🗄️ {len(tables)} tablas PostgreSQL</span>
       <span class="hero-chip">📊 {num_diagrams} diagramas Mermaid</span>
-      <span class="hero-chip">👤 8 roles del sistema</span>
-      <span class="hero-chip">🗺️ 7 sitemaps por flujo</span>
-      <span class="hero-chip">🆕 Feedback 24-jun aplicado</span>
+      <span class="hero-chip">👤 12 roles del sistema</span>
+      <span class="hero-chip">🗺️ {num_sitemaps} sitemaps por módulo</span>
+      <span class="hero-chip">🆕 SEM-27 aplicado</span>
     </div>
   </header>
 
   {OVERVIEW}
 
-  {diagram_section("arquitectura",
-    "Arquitectura del Sistema",
-    "React + FastAPI + PostgreSQL · Módulos · Integraciones externas: DocuSign / Okc · Email · WhatsApp",
-    "architecture/02_arquitectura_sistema.mmd")}
-
   {diagram_section("flujo-principal",
     "Flujo Principal del Negocio",
-    "Ciclo completo: Cotización → Aprobación multi-área → Contrato → Inventarios → Facturación → Cartera",
+    "Ciclo completo: Cotización → Aprobación multi-área → Contrato → Almacén → Facturación → Cartera",
     "architecture/01_flujo_principal_gyh.mmd")}
+
+  {roles_section(roles_tabla_md, "architecture/06_roles_y_permisos.mmd")}
 
   {diagram_section("cotizacion",
     "Módulo de Cotizaciones",
-    "Dibujante (AutoCAD 4-6h) → Importar Excel → Catálogo por Unidad de Negocio → Comercial → PDF → Orden de Compra",
+    "Dibujante (AutoCAD 4-6h) → Importar Excel → Catálogo dual → Comercial → Precios especiales → PDF → Orden de Compra",
     "architecture/03_modulo_cotizacion.mmd")}
 
   {diagram_section("registro-cliente",
     "Registro y Aprobación de Clientes",
-    "Formulario FT-AC-001 v2.0 · 9 secciones · Checklist documental · Concepto + nota obligatoria por 3 áreas · Aprobación final CEO",
+    "Formulario FT-AC-001 v2.0 · 9 secciones · Checklist documental · Concepto + nota obligatoria por 3 áreas · Aprobación forzada CEO",
     "architecture/04_registro_aprobacion_cliente.mmd")}
 
   {diagram_section("inventarios",
     "Inventarios y Logística",
-    "Kardex (Bodega + Clientes + Producción) · Remisiones · Agenda de transporte · Alertas de recogidas · Devoluciones",
+    "Pedidos parciales · Autorización ingeniero · Remisiones · Devolución 3 fuentes · 6 estados · Préstamo entre frentes · Cronograma",
     "architecture/05_modulo_inventarios_logistica.mmd")}
 
-  {roles_section(roles_tabla_md, "architecture/06_roles_y_permisos.mmd")}
-
-  {multi_diagram_section("sitemaps",
-    "Sitemaps por Flujo Principal",
-    "Mapa de rutas segmentado por módulo — 7 flujos independientes",
-    SITEMAPS)}
-
-  {db_html}
+  {sm_auth}
+  {sm_clientes}
+  {sm_cotizaciones}
+  {sm_contratos}
+  {sm_inventarios}
+  {sm_facturacion}
+  {sm_auditoria}
 
   <section id="historias">
     <div class="section-header">
       <h2>Historias de Usuario</h2>
-      <p class="section-sub">Sesión 2026-06-16 · Criterios de aceptación verificables · Roles asignados</p>
+      <p class="section-sub">23 historias · SEM-27 (2026-07-04) · Criterios de aceptación verificables · Roles asignados</p>
     </div>
     <div class="md-content">{us_html}</div>
   </section>
@@ -763,14 +1108,21 @@ def generate():
   <section id="checklist">
     <div class="section-header">
       <h2>Checklist Validado</h2>
-      <p class="section-sub">Ítems de la sesión + ajustes del feedback 24-jun · Cubre todos los módulos del sistema</p>
+      <p class="section-sub">Sesión 2026-06-16 · Feedback 2026-06-24 · SEM-27 2026-07-04 · Cubre todos los módulos del sistema</p>
     </div>
     <div class="md-content">{ck_html}</div>
   </section>
 
+  {diagram_section("arquitectura",
+    "Arquitectura del Sistema",
+    "React + FastAPI + PostgreSQL · 12 módulos frontend · 12 servicios backend · 9 grupos BD · Ooku · Siigo/DIAN · Maps",
+    "architecture/02_arquitectura_sistema.mmd")}
+
+  {db_html}
+
   <footer>
     <p><strong>G&amp;H Obras y Estructuras Metálicas S.A.S</strong> &nbsp;·&nbsp; NIT: 901.218.896-8 &nbsp;·&nbsp; Calle 64 #112C-27, Engativá, Bogotá — Colombia</p>
-    <p style="margin-top:.4rem">Generado el {today} &nbsp;·&nbsp; Sesión: 2026-06-16 &nbsp;·&nbsp; Feedback: 2026-06-24 &nbsp;·&nbsp; Fase de Inception v2.0 &nbsp;·&nbsp; imagineapps.co</p>
+    <p style="margin-top:.4rem">Generado el {today} &nbsp;·&nbsp; Sesión: 2026-06-16 &nbsp;·&nbsp; Feedback: 2026-06-24 &nbsp;·&nbsp; SEM-27: 2026-07-04 &nbsp;·&nbsp; imagineapps.co</p>
   </footer>
 
 </main>
@@ -782,7 +1134,7 @@ def generate():
     size_kb = OUT.stat().st_size / 1024
     print(f"✅ Generado: {OUT.name}  ({size_kb:.0f} KB)")
     print(f"   Tablas: {len(tables)}  ·  Enums: {len(enums)}")
-    print(f"   Sitemaps: {num_sitemaps}")
+    print(f"   Sitemaps individuales: {num_sitemaps}")
     print(f"   Abre en el navegador:")
     print(f"   file://{OUT}")
 

@@ -134,13 +134,11 @@
   --primary2: #328CC1;   /* Secondary/Light Blue */
   --accent:   #F5A623;   /* Main/Construction Yellow */
   --accent2:  #D4901F;   /* accent darkened */
-  --steel:      #333333;   /* Grey/800 */
-  --grey-300:   #CCCCCC;   /* Grey/300 — secondary icons tint */
-  --grey-900:   #1C1C1C;   /* Grey/900 — footer block bg */
-  --nav-dark:   #072B44;   /* sidebar header bg */
-  --success:    #38A169;
-  --danger:     #E53E3E;
-  --nav-w:      270px;
+  --steel:    #333333;   /* Grey/800 */
+  --nav-dark: #072B44;   /* sidebar header bg */
+  --success:  #38A169;
+  --danger:   #E53E3E;
+  --nav-w:    270px;
   /* Shadow tokens */
   --shadow-low: 0px 2px 4px rgba(0, 0, 0, 0.08);
   --shadow-med: 0px 4px 10px rgba(0, 0, 0, 0.12);
@@ -148,17 +146,6 @@
   --r-sm: 4px;
   --r-md: 8px;
   --r-lg: 12px;
-  /* Spacing tokens */
-  --sp-xs:   4px;
-  --sp-s:    8px;
-  --sp-m:   16px;
-  --sp-l:   24px;
-  --sp-xl:  32px;
-  --sp-xxl: 48px;
-  --sp-hug: 64px;
-  /* Motion tokens */
-  --transition-fast:   200ms ease-in-out;
-  --transition-normal: 350ms ease;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -231,7 +218,7 @@ nav a {
   color: rgba(255,255,255,.68);
   text-decoration: none;
   border-left: 3px solid transparent;
-  transition: all var(--transition-fast);
+  transition: all 200ms ease-in-out;
 }
 nav a:hover,
 nav a.active {
@@ -241,11 +228,7 @@ nav a.active {
 }
 
 /* ── Main ── */
-main {
-  padding: 2rem 2.5rem 4rem;
-  background: var(--bg);
-  max-width: 1200px;    /* Grid — Desktop Layout: max-width 1200px */
-}
+main { padding: 2rem 2.5rem 4rem; background: var(--bg); }
 @media (max-width: 720px) { main { padding: 1rem 1rem 3rem; } }
 
 /* ── Hero ── */
@@ -354,7 +337,7 @@ section h3 {
   cursor: pointer;
   font-family: 'Montserrat', system-ui, sans-serif;
   letter-spacing: .02em;
-  transition: background var(--transition-fast), transform var(--transition-fast);
+  transition: background 200ms ease-in-out, transform 200ms ease-in-out;
 }
 .btn-dl-svg:hover { background: var(--accent2); transform: translateY(-1px); }
 .btn-dl-svg:active { transform: translateY(0); }
@@ -377,7 +360,7 @@ section h3 {
   text-align: center;
   border-top: 4px solid var(--accent);
   box-shadow: var(--shadow-low);
-  transition: box-shadow var(--transition-fast);
+  transition: box-shadow 200ms ease-in-out;
 }
 .metric-card:hover { box-shadow: var(--shadow-med); }
 .metric-icon { display: block; font-size: 1.65rem; margin-bottom: .45rem; }
@@ -486,7 +469,7 @@ section h3 {
   border-radius: var(--r-md);
   overflow: hidden;
   box-shadow: var(--shadow-low);
-  transition: box-shadow var(--transition-fast);
+  transition: box-shadow 200ms ease-in-out;
 }
 .t-card:hover { box-shadow: var(--shadow-med); }
 .t-head {

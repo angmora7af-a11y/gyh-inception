@@ -21,6 +21,9 @@ flowchart TD
     classDef grisClaro   fill:#EDF2F7,color:#1A365D,stroke:#CBD5E0,stroke-width:1px
     classDef exito       fill:#38A169,color:#FFFFFF,stroke:#2F855A,stroke-width:2px
     classDef peligro     fill:#E53E3E,color:#FFFFFF,stroke:#C53030,stroke-width:2px
+    classDef nuevo       fill:#BEE3F8,color:#1A365D,stroke:#3182CE,stroke-width:2px
+
+    linkStyle default color:#1A365D
 
     INICIO(["🏗️ Solicitud de Cotización"]):::naranja
 
@@ -28,8 +31,16 @@ flowchart TD
         direction TB
         PLANOS["📐 Recibir Planos del Cliente\n(DWG / DXF / PDF)"]:::azul
         AUTOCAD["🖥️ Modelamiento en AutoCAD\n― Análisis de planos\n― Definición de materiales\n― Medición de áreas (m²)"]:::azul
+        LINEAQ{"¿Línea de\nnegocio?"}:::naranja
+        LN_FM["🏗️ Formaleta Metálica\nExcel FM — catálogo propio"]:::nuevo
+        LN_FP["🏗️ Formaleta FP / FT\nExcel separado — catálogo propio"]:::nuevo
+        LN_MD["🔩 Multidireccional"]:::nuevo
+        LN_TR["🚛 Transporte\n(peso Y volumen)"]:::nuevo
+        LN_OT["🔧 Otros / Accesorios"]:::nuevo
         EXCEL["📊 Exportar a Excel\nDesglose de materiales\npor frente de obra"]:::grisClaro
-        CATALOG["📚 Consulta Catálogo Oficial\nAsignación de precios\npor producto"]:::grisClaro
+        CATQ{"¿Cliente con\nprecio especial?"}:::naranja
+        CAT_ESP["💲 Catálogo especial del cliente\n(acordado por Comercial — notif. escrita a Facturación)"]:::nuevo
+        CAT_GEN["📚 Catálogo general anual\n(actualizado por Recepción)"]:::grisClaro
         COTINI["📋 Cotización Inicial\nGenerada por el Dibujante"]:::azul
         HORAS["⏱️ Registro de horas\nde modelamiento"]:::grisClaro
     end
@@ -39,18 +50,20 @@ flowchart TD
         REVCOM["👀 Revisión de la Cotización\nTécnica del Dibujante"]:::azul
         TIPONEQ{"¿Tipos de negocio\nincluidos?"}:::naranja
         TV["✅ Venta"]:::grisClaro
-        TA["✅ Alquiler"]:::grisClaro
-        TT["✅ Transporte"]:::grisClaro
-        TR["✅ Reposición"]:::grisClaro
+        TA["✅ Alquiler\n(días desde pedido completo)"]:::grisClaro
+        TT["✅ Transporte\n⚠️ Precio: peso Y volumen\n(el que resulte mayor)"]:::nuevo
+        TR["✅ Reposición\nsegún catálogo"]:::grisClaro
         ACCESORIOS["➕ Agregar Accesorios\ny servicios adicionales"]:::grisClaro
         DESCUENTO["💲 Aplicar Descuentos\ny condiciones comerciales"]:::grisClaro
         VALCOM["💰 Agregar Valores\nComerciales + IVA"]:::azul
+        NOTIF_FAC["📧 Notificar a Facturación\nsi hay precios especiales\n(por escrito — obligatorio)"]:::nuevo
     end
 
-    subgraph CONTABILIDAD_REV["📊  ROL: CONTABILIDAD"]
+    subgraph CONTABILIDAD_REV["📊  ROL: CONTABILIDAD / FACTURACIÓN"]
         direction TB
-        RETENC["🧾 Validar Retenciones\nRte. Fuente · Rte. ICA · IVA"]:::grisClaro
+        RETENC["🧾 Validar Retenciones por tipo\nAlquiler ≠ Transporte ≠ Venta\n(no mezclar — Siigo rechaza)"]:::nuevo
         M2["📐 Validar Cálculo m²\npara productos aplicables"]:::grisClaro
+        CCOSTO["🏷️ Verificar Centros de Costo\n13 = Alquiler · 14 = Venta/Repos\n(Transporte siempre factura separada)"]:::nuevo
     end
 
     subgraph JURIDICA_REV["⚖️  ROL: JURÍDICA"]
@@ -71,9 +84,17 @@ flowchart TD
     %% ── FLUJO
     INICIO --> PLANOS
     PLANOS --> AUTOCAD
-    AUTOCAD --> EXCEL
-    EXCEL --> CATALOG
-    CATALOG --> COTINI
+    AUTOCAD --> LINEAQ
+    LINEAQ -->|"FM"| LN_FM
+    LINEAQ -->|"FP/FT"| LN_FP
+    LINEAQ -->|"Multi"| LN_MD
+    LINEAQ -->|"Trans"| LN_TR
+    LINEAQ -->|"Otros"| LN_OT
+    LN_FM & LN_FP & LN_MD & LN_TR & LN_OT --> EXCEL
+    EXCEL --> CATQ
+    CATQ -->|"Sí"| CAT_ESP
+    CATQ -->|"No"| CAT_GEN
+    CAT_ESP & CAT_GEN --> COTINI
     COTINI --> HORAS
     HORAS --> REVCOM
 
@@ -85,10 +106,12 @@ flowchart TD
     TV & TA & TT & TR --> ACCESORIOS
     ACCESORIOS --> DESCUENTO
     DESCUENTO --> VALCOM
+    VALCOM --> NOTIF_FAC
 
-    VALCOM --> RETENC
+    NOTIF_FAC --> RETENC
     RETENC --> M2
-    M2 --> COND
+    M2 --> CCOSTO
+    CCOSTO --> COND
     COND --> PDF
 
     PDF --> ENVIO

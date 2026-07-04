@@ -21,88 +21,117 @@ graph TB
     classDef external    fill:#FF9F1C,color:#1A365D,stroke:#E8910A,stroke-width:2px
     classDef infra       fill:#38A169,color:#FFFFFF,stroke:#2F855A,stroke-width:2px
     classDef user        fill:#EDF2F7,color:#1A365D,stroke:#CBD5E0,stroke-width:2px
+    classDef nuevo       fill:#BEE3F8,color:#1A365D,stroke:#3182CE,stroke-width:2px
 
-    %% ── USUARIOS
-    subgraph USERS["👤  USUARIOS DEL SISTEMA"]
+    linkStyle default color:#1A365D
+
+    %% ── USUARIOS (12 roles)
+    subgraph USERS["👤  USUARIOS DEL SISTEMA (12 roles)"]
+        U0["👑 CEO / Ingeniero\n(aprobación final · auditoría)"]:::user
         U1["💼 Comercial"]:::user
         U2["✏️ Dibujante"]:::user
-        U3["📊 Contabilidad"]:::user
-        U4["⚖️ Jurídica"]:::user
-        U5["🏭 Almacén"]:::user
-        U6["🔧 Admin"]:::user
+        U3["📊 Contabilidad\n(validación financiera)"]:::user
+        U4["💳 Facturación\n(facturas + DIAN)"]:::nuevo
+        U5["⚖️ Jurídica"]:::user
+        U6["🏭 Almacén"]:::user
+        U7["📦 Despachador\n(carga y verifica vehículos)"]:::nuevo
+        U8["🗓️ Recepción"]:::nuevo
+        U9["🚛 Conductor"]:::user
+        U10["🔧 Admin"]:::user
+        U11["🛡️ SuperAdmin\n(configuración global)"]:::nuevo
     end
 
-    %% ── FRONTEND
+    %% ── FRONTEND — Módulos separados
     subgraph FE["⬛  FRONTEND — React + TypeScript"]
         direction LR
         FE1["🏠 Dashboard\nMétricas y KPIs"]:::frontend
-        FE2["👥 Módulo Clientes\nRegistro + Aprobación"]:::frontend
-        FE3["📋 Módulo Cotizaciones\nDibujante + Catálogos"]:::frontend
-        FE4["✍️ Módulo Contratos\nFirma Electrónica"]:::frontend
-        FE5["📦 Módulo Inventarios\nRemisiones + Agenda"]:::frontend
-        FE6["💳 Módulo Facturación\nFacturas + Cartera"]:::frontend
-        FE7["🔔 Notificaciones\nAlertas en tiempo real"]:::frontend
-        FE8["🔍 Auditoría\nRastreo global"]:::frontend
+        FE2["👥 Clientes\nRegistro · Aprobación · FT-AC-001"]:::frontend
+        FE3["📋 Cotizaciones\nDibujante · Catálogos duales\nLíneas de negocio"]:::frontend
+        FE4["✍️ Contratos\nFirma electrónica · Ooku"]:::frontend
+        FE5["📦 Almacén / Conductores\nPedidos · Remisiones · Agenda\nCronograma · Devoluciones · Equipos ajenos\nGestión de conductores · Despacho"]:::frontend
+        FE6["💳 Facturación\nProforma · Cortes mensuales\nModalidad · Centros costo · CUFE"]:::frontend
+        FE7["⚠️ Cartera\nMora · Gestión cobro · Jurídico\nTriple check / Llamada por dominio"]:::nuevo
+        FE8["🔔 Notificaciones\nConfiguración de eventos"]:::frontend
+        FE9["📊 Reportería\nKardex · Facturación · Cartera\nRotación · Conductores · Trayectos"]:::nuevo
+        FE10["🔍 Auditoría\nLog inmutable · Rastreo global"]:::frontend
     end
 
     %% ── BACKEND
     subgraph BE["⬛  BACKEND — FastAPI (Python)"]
         direction LR
-        BE1["🔐 Auth Service\nJWT + RBAC"]:::backend
+        BE1["🔐 Auth Service\nJWT + RBAC (12 roles)"]:::backend
         BE2["👥 Clientes API\nChecklist + Docs"]:::backend
-        BE3["📋 Cotizaciones API\nCálculo + PDF gen."]:::backend
-        BE4["📦 Inventarios API\nKardex + Agenda"]:::backend
-        BE5["💳 Facturación API\nm² + Retenciones"]:::backend
-        BE6["📊 Auditoría Service\nLog inmutable"]:::backend
-        BE7["🔔 Notif. Service\nTriggers + Alertas"]:::backend
-        BE8["📄 PDF Generator\nCotizaciones + Facturas"]:::backend
+        BE3["📋 Cotizaciones API\nCálculo + PDF + Líneas negocio"]:::backend
+        BE4["📦 Almacén API\nKardex · Pedidos parciales\nCronograma · Equipo ajeno"]:::backend
+        BE5["💳 Facturación API\nProforma · m² · Retenciones por tipo\nCentros costo · CUFE / Radian"]:::backend
+        BE6["⚠️ Cartera API\nMora · Seguimiento · Cobro jurídico"]:::nuevo
+        BE7["📊 Auditoría Service\nLog inmutable"]:::backend
+        BE8["🔔 Notif. Service\nTriggers + Alertas"]:::backend
+        BE9["📄 PDF Generator\nCotizaciones + Facturas + Proformas"]:::backend
+        BE10["📚 Catálogo API\nGeneral anual + Especial cliente\nRetenciones config"]:::nuevo
+        BE11["📊 Reportería API\nAgregación de datos · Exports"]:::nuevo
+        BE12["🚛 Conductores API\nDisponibilidad · Trayectos · km\nRegla combustible + peso/volumen"]:::nuevo
     end
 
     %% ── BASE DE DATOS
     subgraph DB["⬛  BASE DE DATOS — PostgreSQL"]
-        DB1[("🗄️ clientes\nContactos · Aprobaciones\nDocumentos")]:::database
+        DB1[("🗄️ clientes\nContactos · Aprobaciones\nDocumentos · Dominio correo")]:::database
         DB2[("🗄️ cotizaciones\nItems · Planos · Archivos")]:::database
-        DB3[("🗄️ inventario\nKardex · Remisiones\nAgenda · Conductores")]:::database
-        DB4[("🗄️ facturacion\nFacturas · Pagos · Cartera")]:::database
-        DB5[("🗄️ auditoria\nLog inmutable")]:::database
-        DB6[("🗄️ catalogo\nProductos · Precios")]:::database
+        DB3[("🗄️ almacen\nKardex · Pedidos · Remisiones\nCronograma · Conductores\nEquipos ajenos\nIndisponibilidad conductor")]:::database
+        DB4[("🗄️ facturacion\nProformas · Facturas · CUFE\nCentros costo · Pagos")]:::database
+        DB5[("🗄️ cartera\nMora · Gestión · Acuerdos")]:::nuevo
+        DB6[("🗄️ auditoria\nLog inmutable")]:::database
+        DB7[("🗄️ catalogo\nProductos · Precios generales\nPrecios especiales cliente\nRetenciones por tipo")]:::database
+        DB8[("🗄️ pedidos\nPedido items · Estado parcial/completo\nFecha inicio alquiler")]:::nuevo
+        DB9[("🗄️ reporteria\nVistas materializadas\nAgregados para informes")]:::nuevo
     end
 
     %% ── ALMACENAMIENTO
-    STORAGE[("☁️ Object Storage\nS3 Compatible\nPDFs · Planos · Documentos")]:::infra
+    STORAGE[("☁️ Object Storage\nS3 Compatible\nPDFs · Planos · Documentos\nFotos portería · Evidencias")]:::infra
 
     %% ── INTEGRACIONES EXTERNAS
     subgraph EXT["⬛  INTEGRACIONES EXTERNAS"]
-        EXT1["✍️ DocuSign / Okc\nFirma Electrónica"]:::external
+        EXT1["✍️ Ooku\nFirma Electrónica"]:::external
         EXT2["📧 Email Service\nNotificaciones"]:::external
         EXT3["📱 WhatsApp API\nAlertas móviles"]:::external
+        EXT4["🏛️ DIAN / Radian\nFacturación Electrónica\nCUFE · Triple check"]:::nuevo
+        EXT5["🗺️ Maps / Geocoding API\nCálculo de trayectos y km\npara conductores"]:::nuevo
     end
 
     %% ── CONEXIONES USUARIO → FRONTEND
-    U1 & U2 & U3 & U4 & U5 & U6 -->|"HTTPS / Browser"| FE1
+    U0 & U1 & U2 & U3 & U4 & U5 & U6 & U7 & U8 & U9 & U10 & U11 -->|"HTTPS / Browser"| FE1
 
     %% ── CONEXIONES FRONTEND ↔ BACKEND
     FE --> BE1
     FE2 <-->|"REST API"| BE2
     FE3 <-->|"REST API"| BE3
+    FE3 <-->|"REST API"| BE10
     FE5 <-->|"REST API"| BE4
+    FE5 <-->|"REST API"| BE12
     FE6 <-->|"REST API"| BE5
-    FE7 <-->|"WebSocket"| BE7
-    FE8 <-->|"REST API"| BE6
+    FE7 <-->|"REST API"| BE6
+    FE8 <-->|"WebSocket"| BE8
+    FE9 <-->|"REST API"| BE11
+    FE10 <-->|"REST API"| BE7
 
     %% ── CONEXIONES BACKEND ↔ DB
     BE2 --> DB1
     BE3 --> DB2
-    BE4 --> DB3
+    BE4 --> DB3 & DB8
     BE5 --> DB4
     BE6 --> DB5
-    BE3 --> DB6
+    BE7 --> DB6
+    BE3 & BE10 --> DB7
+    BE12 --> DB3
+    BE11 --> DB9
 
     %% ── ARCHIVOS
-    BE3 & BE5 & BE2 -->|"Upload/Download"| STORAGE
+    BE3 & BE5 & BE2 & BE4 -->|"Upload/Download"| STORAGE
 
     %% ── INTEGRACIONES
-    BE3 -->|"PDF autogenerado"| BE8
+    BE3 & BE5 -->|"PDF autogenerado"| BE9
     BE4 -->|"Contrato firmado"| EXT1
-    BE7 -->|"Email trigger"| EXT2
-    BE7 -->|"Push móvil"| EXT3
+    BE8 -->|"Email trigger"| EXT2
+    BE8 -->|"Push móvil"| EXT3
+    BE5 -->|"Envío factura electrónica"| EXT4
+    BE12 -->|"Calcular distancia"| EXT5

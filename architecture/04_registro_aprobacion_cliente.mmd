@@ -21,6 +21,9 @@ flowchart TD
     classDef exito       fill:#38A169,color:#FFFFFF,stroke:#2F855A,stroke-width:2px
     classDef peligro     fill:#E53E3E,color:#FFFFFF,stroke:#C53030,stroke-width:2px
     classDef doc         fill:#2D3748,color:#FFFFFF,stroke:#1A202C,stroke-width:1px
+    classDef nuevo       fill:#BEE3F8,color:#1A365D,stroke:#3182CE,stroke-width:2px
+
+    linkStyle default color:#1A365D
 
     INICIO(["📋 Cliente interesado\nen comprar / alquilar"]):::naranja
 
@@ -32,7 +35,7 @@ flowchart TD
         F3["III. Referencias Bancarias\nBanco · Sucursal · Contacto (x2)"]:::doc
         F4["IV. Referencias Comerciales\nNombre · Tel · Cel (x2)"]:::doc
         F5["V. Información Tributaria\nCódigo ICA · CIIU · Rte. Fuente · IVA"]:::doc
-        F6["VI. Información Contable\nFechas y horarios de radicación facturas"]:::doc
+        F6["VI. Información Contable\nFechas y horarios de radicación facturas\n⚠️ Tipo dominio correo:\nCorporativo = triple check DIAN automático\nPúblico (Gmail/Hotmail) = llamada por Cartera"]:::nuevo
         F7["VII. Socios y Accionistas\nNombre · ID · PEP >5% capital"]:::doc
         F8["VIII. Información de Obra\nNombre · Dirección · Encargado"]:::doc
         F9["IX. Autorización\nCentrales de Riesgo (Ley 1581/2012)"]:::doc
@@ -77,6 +80,8 @@ flowchart TD
     APROBADO["✅ Cliente APROBADO\nEstado → Activo\nNotificación automática"]:::exito
     RECHAZADO["❌ Cliente RECHAZADO\nNotificación con motivos\nal equipo comercial"]:::peligro
 
+    CEO_OVER["🏗️ CEO / Ingeniero\nPuede forzar la aprobación\nbajo su responsabilidad\n(acceso a motivos de rechazo)"]:::nuevo
+
     CONTRATO["📝 Siguiente Paso:\nOrden de Compra\n+ Firma Contrato"]:::azul
 
     NOTIF["🔔 Notificación Automática\na todas las áreas\npara agilizar aprobación"]:::grisClaro
@@ -94,6 +99,8 @@ flowchart TD
     CA3 & JA3 & CO3 --> CONSOLIDAR
     CONSOLIDAR -->|"Sí — todos favorables"| APROBADO
     CONSOLIDAR -->|"No — al menos uno no favorable"| RECHAZADO
+    RECHAZADO -.->|"Revisión por CEO"| CEO_OVER
+    CEO_OVER -.->|"Forzar aprobación si aplica"| APROBADO
     APROBADO --> CONTRATO
     CONSOLIDAR -.->|"Pendientes sin resolver"| NOTIF
     NOTIF -.->|"Empujar a las áreas"| CA1 & JA1 & CO1

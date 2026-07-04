@@ -10,7 +10,7 @@
     'clusterBkg': '#EDF2F7',
     'clusterBorder': '#CBD5E0',
     'titleColor': '#1A365D',
-    'edgeLabelBackground': '#F7FAFC',
+    'edgeLabelBackground': '#FFFFFF',
     'fontFamily': 'Montserrat, sans-serif'
   }
 }}%%
@@ -24,102 +24,175 @@ flowchart TD
     classDef peligro     fill:#E53E3E,color:#FFFFFF,stroke:#C53030,stroke-width:2px
     classDef inicio      fill:#FF9F1C,color:#1A365D,stroke:#E8910A,stroke-width:3px,font-weight:bold
     classDef fin         fill:#38A169,color:#FFFFFF,stroke:#2F855A,stroke-width:3px
+    classDef nuevo       fill:#BEE3F8,color:#1A365D,stroke:#3182CE,stroke-width:2px
 
-    %% ── INICIO
-    INICIO(["🏗️ Cliente Prospecto"]):::inicio
+    linkStyle default color:#1A365D
+
+    %% ── INICIO — CLIENTE NUEVO O EXISTENTE
+    CLIENTEQ{"¿Cliente\nnuevo o existente?"}:::inicio
+    NUEVO(["👤 Cliente Nuevo\n→ Proceso de Registro"]):::naranja
+    EXISTENTE(["✅ Cliente Existente\n→ Nuevo Pedido"]):::exito
 
     %% ── MÓDULO 1: COTIZACIÓN
-    subgraph PREVENTA["⬛  ÁREA COMERCIAL — PREVENTA"]
+    subgraph PREVENTA["⬛  ÁREA COMERCIAL — PREVENTA Y COTIZACIÓN"]
         direction TB
-        COT["📋 Cotización\n― Catálogos de precios\n― Dibujante + AutoCAD"]:::azul
+        COT["📋 Cotización\n― Catálogo general anual\n― Catálogo especial por cliente"]:::azul
+        CATQ{"¿Cliente con\nprecio especial?"}:::naranja
+        CAT_ESP["💲 Precios especiales acordados\n(notificar por escrito a Facturación)"]:::nuevo
+        CAT_GEN["📚 Catálogo general vigente"]:::grisClaro
+        LINEA["📦 Línea de Negocio\n(FM · FP/FT · Multi · Transp · Otros)"]:::grisClaro
         TIPO{"¿Tipo de\nnegocio?"}:::naranja
-        VENTA["📦 Venta\nProductos catálogo"]:::grisClaro
-        ALQUILER["🏗️ Alquiler\nMaquinaria temporal"]:::grisClaro
-        TRANSP["🚛 Transporte\nFlete ida y vuelta"]:::grisClaro
+        VENTA["📦 Venta"]:::grisClaro
+        ALQUILER["🏗️ Alquiler\n(días desde pedido completo)"]:::grisClaro
+        TRANSP["🚛 Transporte"]:::naranja
+        TRANSP_PROV{"¿Quién provee\nel transporte?"}:::naranja
+        TRANSP_GYH["🚛 Transporte G&H\nSe cobra flete\npor peso Y volumen"]:::grisClaro
+        TRANSP_CLI["🤝 Transporte Cliente\nNo se cobra flete\n(el cliente gestiona)"]:::nuevo
         REPOS["🔄 Reposición\nCobro por pérdida"]:::grisClaro
         PDF["📄 PDF Cotización\nValores comerciales agregados"]:::azul
     end
 
-    %% ── MÓDULO 2: APROBACIÓN
-    subgraph APROBACION["⬛  APROBACIÓN MULTI-ÁREA (3 conceptos obligatorios)"]
+    %% ── MÓDULO 2: APROBACIÓN (solo clientes nuevos)
+    subgraph APROBACION["⬛  APROBACIÓN MULTI-ÁREA (3 conceptos — solo cliente nuevo)"]
         direction TB
         REVISION["👥 Revisión Simultánea"]:::gris
-        CONTA["📊 Contabilidad\nViabilidad financiera\ny de crédito"]:::grisClaro
-        JURI["⚖️ Jurídica\nValidación documental\nListas LAFT"]:::grisClaro
-        COMER["💼 Comercial\nOportunidad\nde negocio"]:::grisClaro
+        CONTA["📊 Contabilidad\nViabilidad financiera"]:::grisClaro
+        JURI["⚖️ Jurídica\nValidación documental · LAFT"]:::grisClaro
+        COMER["💼 Comercial\nOportunidad de negocio"]:::grisClaro
         APROBQ{"¿Todos\nFavorable?"}:::naranja
-        RECHAZA["❌ Notificar Rechazo\nal Prospecto"]:::peligro
-        REGISTRO["✅ Registro de Cliente\nChecklist FT-AC-001\n+ Documentos"]:::exito
+        RECHAZA["❌ Notificar Rechazo"]:::peligro
+        CEO_OVER["🏗️ CEO fuerza aprobación\nbajo su responsabilidad"]:::nuevo
+        REGISTRO["✅ Registro de Cliente\nFT-AC-001 + Documentos"]:::exito
     end
 
     %% ── MÓDULO 3: CONTRATOS
-    subgraph CONTRATO["⬛  ORDEN DE COMPRA & CONTRATO"]
+    subgraph CONTRATO["⬛  PEDIDO Y CONTRATO"]
         direction TB
-        ORDEN["📝 Orden de Compra\nGenerada"]:::azul
-        FIRMA["✍️ Firma Electrónica\nDocuSign / Okc"]:::azul
+        PEDIDO["📋 Pedido Generado"]:::azul
+        CONTRATO_TIPO{"¿Tipo de\ncontrato?"}:::naranja
+        CONT_INT["📁 Contrato Interno Existente\nCliente ya tiene contrato vigente\n→ Activa directamente"]:::nuevo
+        CONT_EXT["📝 Nuevo Contrato\n(cliente externo o primer contrato)\n→ Requiere firma"]:::grisClaro
+        ORDEN["📝 Orden de Compra"]:::azul
+        FIRMA["✍️ Firma Electrónica — Ooku"]:::azul
         FIRMAQ{"¿Firmado?"}:::naranja
-        NOTIFIRMA["⏰ Notificar\nPendiente de Firma"]:::grisClaro
+        NOTIFIRMA["⏰ Notificar Pendiente de Firma"]:::grisClaro
         ACTIVAR["🚀 Activar Operaciones"]:::exito
     end
 
-    %% ── MÓDULO 4: INVENTARIOS
-    subgraph INVENTARIOS["⬛  INVENTARIOS Y LOGÍSTICA"]
+    %% ── MÓDULO 4: ALMACÉN
+    subgraph ALMACEN_MOD["⬛  ALMACÉN / GESTIÓN DE CONDUCTORES"]
         direction TB
+        INGAPRUEBA["👷 Ingeniero / Comercial\nautoriza el despacho"]:::nuevo
         SALIDA["📤 Remisión de Salida\n(Kardex actualizado)"]:::azul
-        AGENDA["🗓️ Agenda Transporte\nProgramar conductor\n+ horario + dirección"]:::grisClaro
+        AGENDA["🗓️ Gestión Conductores\n― Programar conductor\n― Verificar disponibilidad\n― Calcular trayecto (km + cargo)"]:::nuevo
         ESALQUILER{"¿Es alquiler?"}:::naranja
-        FACDIR["➡️ Pasar a Facturación"]:::grisClaro
-        PERIODO["⏳ Periodo de Alquiler\nen Obra"]:::grisClaro
+        PEDIDOQ{"¿Pedido\ncompleto?"}:::naranja
+        PARCIAL_ACU["📋 Acumular envío parcial\n→ Nuevo viaje"]:::nuevo
+        ALQUILER_INI["📅 Pedido Completo\nInicia contador de días de alquiler"]:::exito
         DEVQ{"¿Equipos\ndevueltos?"}:::naranja
-        ENTRADA["📥 Remisión de Entrada\n(Kardex — días calculados)"]:::azul
-        REPOS2["🔄 Reposición\nCobro comercial\npor faltante"]:::peligro
+        ENTRADA["📥 Remisión de Entrada\n(3 fuentes: conductor · despachador · portería)"]:::azul
+        REPOS2["🔄 Reposición\nCobro por faltante"]:::peligro
+        INSPEC_PREV["🔍 Inspección Previa\na Facturación\n― Equipo OK → facturar\n― Mantenimiento → G&H asume\n― Baja → dar de baja (no facturar)"]:::nuevo
     end
 
     %% ── MÓDULO 5: FACTURACIÓN
-    subgraph FACTURACION["⬛  FACTURACIÓN Y CARTERA"]
+    subgraph FACTURACION["⬛  FACTURACIÓN"]
         direction TB
-        FACTURA["📃 Generar Factura\n― Cálculo m²\n― Días alquiler\n― Retenciones (Rte. Fuente / ICA)"]:::azul
-        VALIDA["✅ Validación Contable\ny Cruce"]:::grisClaro
-        PAGOQ{"¿Pago\nrecibido?"}:::naranja
-        EXITO(["🏆 Cobro Exitoso\nCierre del ciclo"]):::fin
-        CARTERA["📋 Gestión de Cartera\nSeguimiento y cobro\njurídico"]:::peligro
+        COND_PAGO["📅 Verificar Condiciones de Pago\n― Días de tramitación del cliente\n― Ciclo de cobro: mes vencido (default)"]:::nuevo
+        CORTE["📅 Corte mensual por cliente\nConsolidado o por remisión\n(configurable por cliente)"]:::grisClaro
+        PROFORMA["📋 Proforma\nEspecificación de cobros al cliente\nantes de emitir la factura"]:::nuevo
+        PROFORMAQ{"¿Cliente aprueba\nproforma?"}:::naranja
+        FACTURA["📃 Generar Factura\n― Centros de costo:\n   13=Alquiler · 14=Venta/Repos\n   Transp siempre separada\n― Impuestos por tipo de concepto:\n   IVA · Rte. Fuente · ReteICA · ReteTrans"]:::azul
+        SIIGO["🔗 Envío a Siigo\nSiigo transmite a DIAN\n(no conexión directa)"]:::nuevo
+        DIAN_VAL["🏛️ Facturación valida\nen portal DIAN\n(estado de Siigo no es confiable)"]:::nuevo
+        SEG_TEL["📞 Seguimiento telefónico\nConfirmar que el cliente\nrecibió y procesó la factura"]:::nuevo
     end
 
-    %% ── CONEXIONES PRINCIPALES
-    INICIO --> COT
-    COT --> TIPO
+    %% ── MÓDULO 6: CARTERA (completamente separado)
+    subgraph CARTERA_MOD["⬛  CARTERA (módulo independiente)"]
+        direction TB
+        CART_TIPO{"¿Dominio correo\ncliente?"}:::naranja
+        CARTERA_CORP["✅ Triple check automático\n(cliente con sistema contable)"]:::nuevo
+        CARTERA_PUB["📞 Llamada telefónica\n+ CUFE como evidencia\n(Gmail/Hotmail/Yahoo)"]:::peligro
+        PAGOQ{"¿Pago\nrecibido?"}:::naranja
+        EXITO(["🏆 Cobro Exitoso"]):::fin
+        COBRO_JUR["⚖️ Cobro Jurídico\nDemanda / Castigo"]:::peligro
+    end
+
+    %% ── CONEXIONES INICIO
+    CLIENTEQ -->|"Nuevo"| NUEVO
+    CLIENTEQ -->|"Existente"| EXISTENTE
+    NUEVO --> COT
+    EXISTENTE --> PEDIDO
+
+    %% ── COTIZACIÓN
+    COT --> CATQ
+    CATQ -->|"Sí"| CAT_ESP
+    CATQ -->|"No"| CAT_GEN
+    CAT_ESP & CAT_GEN --> LINEA
+    LINEA --> TIPO
     TIPO -->|"Venta"| VENTA
     TIPO -->|"Alquiler"| ALQUILER
     TIPO -->|"Transporte"| TRANSP
     TIPO -->|"Reposición"| REPOS
-    VENTA & ALQUILER & TRANSP & REPOS --> PDF
+    TRANSP --> TRANSP_PROV
+    TRANSP_PROV -->|"G&H lo pone"| TRANSP_GYH
+    TRANSP_PROV -->|"Cliente lo pone"| TRANSP_CLI
+    VENTA & ALQUILER & TRANSP_GYH & TRANSP_CLI & REPOS --> PDF
 
+    %% ── APROBACIÓN (solo nuevo)
     PDF --> REVISION
     REVISION --> CONTA & JURI & COMER
     CONTA & JURI & COMER --> APROBQ
     APROBQ -->|"No"| RECHAZA
+    RECHAZA -.->|"CEO revisa"| CEO_OVER
+    CEO_OVER -.->|"Forzar"| REGISTRO
     APROBQ -->|"Sí"| REGISTRO
+    REGISTRO --> PEDIDO
 
-    REGISTRO --> ORDEN
+    %% ── CONTRATOS
+    PEDIDO --> CONTRATO_TIPO
+    CONTRATO_TIPO -->|"Contrato interno\nya existe"| CONT_INT
+    CONTRATO_TIPO -->|"Nuevo contrato\nexterno"| CONT_EXT
+    CONT_INT --> ACTIVAR
+    CONT_EXT --> ORDEN
     ORDEN --> FIRMA
     FIRMA --> FIRMAQ
     FIRMAQ -->|"No"| NOTIFIRMA
     NOTIFIRMA --> FIRMA
     FIRMAQ -->|"Sí"| ACTIVAR
 
-    ACTIVAR --> SALIDA
+    %% ── ALMACÉN
+    ACTIVAR --> INGAPRUEBA
+    INGAPRUEBA --> SALIDA
     SALIDA --> AGENDA
     AGENDA --> ESALQUILER
-    ESALQUILER -->|"No — Venta"| FACDIR
-    ESALQUILER -->|"Sí"| PERIODO
-    PERIODO --> DEVQ
+    ESALQUILER -->|"No — Venta"| INSPEC_PREV
+    ESALQUILER -->|"Sí"| PEDIDOQ
+    PEDIDOQ -->|"No — Parcial"| PARCIAL_ACU
+    PARCIAL_ACU -->|"Sig. viaje"| AGENDA
+    PEDIDOQ -->|"Sí — Completo"| ALQUILER_INI
+    ALQUILER_INI --> DEVQ
     DEVQ -->|"Sí"| ENTRADA
     DEVQ -->|"No / Faltante"| REPOS2
-    ENTRADA --> FACDIR
-    REPOS2 --> FACDIR
+    ENTRADA --> INSPEC_PREV
+    REPOS2 --> INSPEC_PREV
+    INSPEC_PREV -->|"OK para facturar"| COND_PAGO
 
-    FACDIR --> FACTURA
-    FACTURA --> VALIDA
-    VALIDA --> PAGOQ
+    %% ── FACTURACIÓN
+    COND_PAGO --> CORTE
+    CORTE --> PROFORMA
+    PROFORMA --> PROFORMAQ
+    PROFORMAQ -->|"Aprueba"| FACTURA
+    PROFORMAQ -->|"Ajuste"| PROFORMA
+    FACTURA --> SIIGO
+    SIIGO --> DIAN_VAL
+    DIAN_VAL --> SEG_TEL
+
+    %% ── CARTERA
+    SEG_TEL --> CART_TIPO
+    CART_TIPO -->|"Corporativo"| CARTERA_CORP
+    CART_TIPO -->|"Público"| CARTERA_PUB
+    CARTERA_CORP & CARTERA_PUB --> PAGOQ
     PAGOQ -->|"Sí"| EXITO
-    PAGOQ -->|"No / Mora"| CARTERA
+    PAGOQ -->|"No / Mora"| COBRO_JUR
