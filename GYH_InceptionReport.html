@@ -277,7 +277,7 @@ footer strong{color:var(--primary)}
     <p>Cotizaciones · Clientes · Contratos · Inventarios · Facturación · Auditoría</p>
     <div class="hero-meta">
       <span class="hero-chip">📅 04 de July de 2026</span>
-      <span class="hero-chip">🗄️ 33 tablas PostgreSQL</span>
+      <span class="hero-chip">🗄️ 42 tablas PostgreSQL</span>
       <span class="hero-chip">📊 13 diagramas Mermaid</span>
       <span class="hero-chip">👤 11 roles del sistema</span>
       <span class="hero-chip">🗺️ 7 sitemaps por flujo</span>
@@ -1988,7 +1988,7 @@ flowchart TD
 <section id="database">
   <div class="section-header">
     <h2>Base de Datos — Schema PostgreSQL</h2>
-    <p class="section-sub">DBML v1.0 · 33 tablas · 34 enumeraciones</p>
+    <p class="section-sub">DBML v1.0 · 42 tablas · 35 enumeraciones</p>
   </div>
   <div class="callout">
     <strong>Motor:</strong> PostgreSQL &nbsp;·&nbsp; <strong>Escala inicial:</strong> ~180 clientes · 50 obras/cliente · 3-4 frentes/obra
@@ -2004,7 +2004,7 @@ flowchart TD
     <span style="border-color:#744210;color:#744210">⬛ Facturación</span>
   </div>
 
-  <h3>Enumeraciones (34)</h3>
+  <h3>Enumeraciones (35)</h3>
   <div class="enum-grid"><div class="enum-pill"><strong>rol_usuario</strong><span class="enum-vals">superadmin, admin, comercial, dibujante, contabilidad, facturacion +5</span></div>
 <div class="enum-pill"><strong>tipo_id</strong><span class="enum-vals">NIT, CC, CE, Pasaporte</span></div>
 <div class="enum-pill"><strong>ciudad_sucursal</strong><span class="enum-vals">bogota, ibague, armenia</span></div>
@@ -2024,7 +2024,8 @@ flowchart TD
 <div class="enum-pill"><strong>tipo_archivo_plano</strong><span class="enum-vals">plano_autocad, desglose_materiales, cotizacion_pdf, otro</span></div>
 <div class="enum-pill"><strong>estado_orden</strong><span class="enum-vals">pendiente, en_firma, activa, finalizada, cancelada</span></div>
 <div class="enum-pill"><strong>estado_contrato</strong><span class="enum-vals">borrador, enviado_firma, firmado, cancelado</span></div>
-<div class="enum-pill"><strong>tipo_remision</strong><span class="enum-vals">salida, entrada_devolucion, entrada_reposicion</span></div>
+<div class="enum-pill"><strong>tipo_remision</strong><span class="enum-vals">salida, entrada_devolucion, entrada_reposicion, cambio, entrada_mantenimiento</span></div>
+<div class="enum-pill"><strong>condicion_equipo_devolucion</strong><span class="enum-vals">bueno, regular, malo</span></div>
 <div class="enum-pill"><strong>estado_remision</strong><span class="enum-vals">programada, en_transito, entregada, recibida, con_novedad</span></div>
 <div class="enum-pill"><strong>estado_item_remision</strong><span class="enum-vals">pendiente, entregado_ok, entregado_parcial, danado, baja, mantenimiento +2</span></div>
 <div class="enum-pill"><strong>proveedor_transporte</strong><span class="enum-vals">gyh, cliente</span></div>
@@ -2041,14 +2042,14 @@ flowchart TD
 <div class="enum-pill"><strong>tipo_dominio_correo</strong><span class="enum-vals">corporativo, publico</span></div>
 </div>
 
-  <h3>Tablas (33)</h3>
+  <h3>Tablas (42)</h3>
   <div class="t-grid">
 <div class="t-card" style="--tcolor:#1A365D">
   <div class="t-head">
     <span class="t-name">usuarios</span>
     <span class="t-count">8 cols</span>
   </div>
-  <p class="t-note">Usuarios del sistema con control de acceso por rol (RBAC) — 11 roles</p>
+  <p class="t-note">Usuarios del sistema con control de acceso por rol (RBAC) — 12 roles</p>
   <table class="t-cols"><tbody><tr><td><code>id</code></td><td class="t-type">uuid</td><td></td></tr><tr><td><code>nombre</code></td><td class="t-type">varchar(200)</td><td></td></tr><tr><td><code>email</code></td><td class="t-type">varchar(200)</td><td><span class="badge uniq">UQ</span></td></tr><tr><td><code>password_hash</code></td><td class="t-type">varchar(500)</td><td></td></tr><tr><td><code>rol</code></td><td class="t-type">rol_usuario</td><td></td></tr><tr><td><code>activo</code></td><td class="t-type">boolean</td><td></td></tr><tr><td><code>created_at</code></td><td class="t-type">timestamp</td><td></td></tr></tbody></table>
   <p class="t-more">+ 1 columnas más</p>
 </div>
@@ -2127,11 +2128,11 @@ flowchart TD
 <div class="t-card" style="--tcolor:#2C7A7B">
   <div class="t-head">
     <span class="t-name">aprobaciones_cliente</span>
-    <span class="t-count">8 cols</span>
+    <span class="t-count">10 cols</span>
   </div>
   <p class="t-note">Checklist digital de aprobación: las 3 áreas deben dar concepto antes de proceder al contrato</p>
-  <table class="t-cols"><tbody><tr><td><code>id</code></td><td class="t-type">uuid</td><td></td></tr><tr><td><code>cliente_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>area</code></td><td class="t-type">area_aprobacion</td><td></td></tr><tr><td><code>estado</code></td><td class="t-type">estado_aprobacion</td><td></td></tr><tr><td><code>concepto</code></td><td class="t-type">text</td><td></td></tr><tr><td><code>es_favorable</code></td><td class="t-type">boolean</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>fecha_concepto</code></td><td class="t-type">timestamp</td><td></td></tr></tbody></table>
-  <p class="t-more">+ 1 columnas más</p>
+  <table class="t-cols"><tbody><tr><td><code>id</code></td><td class="t-type">uuid</td><td></td></tr><tr><td><code>cliente_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>area</code></td><td class="t-type">area_aprobacion</td><td></td></tr><tr><td><code>estado</code></td><td class="t-type">estado_aprobacion</td><td></td></tr><tr><td><code>concepto</code></td><td class="t-type">text</td><td></td></tr><tr><td><code>es_favorable</code></td><td class="t-type">boolean</td><td></td></tr><tr><td><code>evidencia_url</code></td><td class="t-type">varchar(500)</td><td></td></tr></tbody></table>
+  <p class="t-more">+ 3 columnas más</p>
 </div>
 <div class="t-card" style="--tcolor:#2C7A7B">
   <div class="t-head">
@@ -2235,11 +2236,11 @@ flowchart TD
 <div class="t-card" style="--tcolor:#1A365D">
   <div class="t-head">
     <span class="t-name">pedidos</span>
-    <span class="t-count">13 cols</span>
+    <span class="t-count">14 cols</span>
   </div>
   <p class="t-note">Un pedido puede enviarse en múltiples viajes parciales. El alquiler SOLO inicia cuando el pedido queda completo</p>
-  <table class="t-cols"><tbody><tr><td><code>id</code></td><td class="t-type">uuid</td><td></td></tr><tr><td><code>numero_pedido</code></td><td class="t-type">varchar(50)</td><td><span class="badge uniq">UQ</span></td></tr><tr><td><code>orden_compra_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>obra_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>frente_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>estado</code></td><td class="t-type">estado_pedido</td><td></td></tr><tr><td><code>fecha_pedido</code></td><td class="t-type">date</td><td></td></tr></tbody></table>
-  <p class="t-more">+ 6 columnas más</p>
+  <table class="t-cols"><tbody><tr><td><code>id</code></td><td class="t-type">uuid</td><td></td></tr><tr><td><code>numero_pedido</code></td><td class="t-type">varchar(50)</td><td><span class="badge uniq">UQ</span></td></tr><tr><td><code>orden_compra_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>cliente_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>obra_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>frente_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>estado</code></td><td class="t-type">estado_pedido</td><td></td></tr></tbody></table>
+  <p class="t-more">+ 7 columnas más</p>
 </div>
 <div class="t-card" style="--tcolor:#1A365D">
   <div class="t-head">
@@ -2250,41 +2251,59 @@ flowchart TD
   <table class="t-cols"><tbody><tr><td><code>id</code></td><td class="t-type">uuid</td><td></td></tr><tr><td><code>pedido_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>producto_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>cantidad_pedida</code></td><td class="t-type">integer</td><td></td></tr><tr><td><code>cantidad_enviada</code></td><td class="t-type">integer</td><td></td></tr><tr><td><code>created_at</code></td><td class="t-type">timestamp</td><td></td></tr></tbody></table>
   
 </div>
+<div class="t-card" style="--tcolor:#1A365D">
+  <div class="t-head">
+    <span class="t-name">vehiculos</span>
+    <span class="t-count">13 cols</span>
+  </div>
+  <p class="t-note">Vehículos de la flota G&amp;H — dimensiones y capacidades para cálculo de flete (peso Y volumen, el mayor)</p>
+  <table class="t-cols"><tbody><tr><td><code>id</code></td><td class="t-type">uuid</td><td></td></tr><tr><td><code>placa</code></td><td class="t-type">varchar(20)</td><td><span class="badge uniq">UQ</span></td></tr><tr><td><code>marca</code></td><td class="t-type">varchar(100)</td><td></td></tr><tr><td><code>tipo</code></td><td class="t-type">varchar(50)</td><td></td></tr><tr><td><code>largo_m</code></td><td class="t-type">decimal(6,2)</td><td></td></tr><tr><td><code>ancho_m</code></td><td class="t-type">decimal(6,2)</td><td></td></tr><tr><td><code>alto_m</code></td><td class="t-type">decimal(6,2)</td><td></td></tr></tbody></table>
+  <p class="t-more">+ 6 columnas más</p>
+</div>
 <div class="t-card" style="--tcolor:#276749">
   <div class="t-head">
     <span class="t-name">conductores</span>
-    <span class="t-count">7 cols</span>
+    <span class="t-count">10 cols</span>
   </div>
-  <p class="t-note">Conductores para transporte de equipos a obras — definen el estado inicial del equipo en devoluciones</p>
-  <table class="t-cols"><tbody><tr><td><code>id</code></td><td class="t-type">uuid</td><td></td></tr><tr><td><code>nombre</code></td><td class="t-type">varchar(200)</td><td></td></tr><tr><td><code>cedula</code></td><td class="t-type">varchar(50)</td><td><span class="badge uniq">UQ</span></td></tr><tr><td><code>telefono</code></td><td class="t-type">varchar(50)</td><td></td></tr><tr><td><code>tipo_vehiculo</code></td><td class="t-type">varchar(100)</td><td></td></tr><tr><td><code>activo</code></td><td class="t-type">boolean</td><td></td></tr><tr><td><code>created_at</code></td><td class="t-type">timestamp</td><td></td></tr></tbody></table>
+  <p class="t-note">Conductores para transporte de equipos a obras — Jose/WHA514, Mario/XGC078, Jiffer/PKG947, Oscar/FCF086, Fernando/BPU45H, Wilson/AFE575</p>
+  <table class="t-cols"><tbody><tr><td><code>id</code></td><td class="t-type">uuid</td><td></td></tr><tr><td><code>nombre</code></td><td class="t-type">varchar(200)</td><td></td></tr><tr><td><code>cedula</code></td><td class="t-type">varchar(50)</td><td><span class="badge uniq">UQ</span></td></tr><tr><td><code>telefono</code></td><td class="t-type">varchar(50)</td><td></td></tr><tr><td><code>vehiculo_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>placa</code></td><td class="t-type">varchar(20)</td><td></td></tr><tr><td><code>tipo_vehiculo</code></td><td class="t-type">varchar(100)</td><td></td></tr></tbody></table>
+  <p class="t-more">+ 3 columnas más</p>
+</div>
+<div class="t-card" style="--tcolor:#1A365D">
+  <div class="t-head">
+    <span class="t-name">conductor_vehiculos</span>
+    <span class="t-count">5 cols</span>
+  </div>
+  <p class="t-note">Historial de asignación conductor→vehículo — permite saber qué placa usó cada conductor en cada fecha</p>
+  <table class="t-cols"><tbody><tr><td><code>id</code></td><td class="t-type">uuid</td><td></td></tr><tr><td><code>conductor_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>vehiculo_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>fecha_desde</code></td><td class="t-type">date</td><td></td></tr><tr><td><code>fecha_hasta</code></td><td class="t-type">date</td><td></td></tr></tbody></table>
   
 </div>
 <div class="t-card" style="--tcolor:#276749">
   <div class="t-head">
     <span class="t-name">remisiones</span>
-    <span class="t-count">21 cols</span>
+    <span class="t-count">38 cols</span>
   </div>
-  <p class="t-note">Remisiones de salida y entrada al Kardex — incluye verificación de 3 fuentes en devoluciones</p>
-  <table class="t-cols"><tbody><tr><td><code>id</code></td><td class="t-type">uuid</td><td></td></tr><tr><td><code>numero_remision</code></td><td class="t-type">varchar(50)</td><td><span class="badge uniq">UQ</span></td></tr><tr><td><code>orden_compra_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>pedido_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>frente_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>frente_ajuste_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>tipo_remision</code></td><td class="t-type">tipo_remision</td><td></td></tr></tbody></table>
-  <p class="t-more">+ 14 columnas más</p>
+  <p class="t-note">Remisiones de salida y entrada al Kardex — incluye verificación de 3 fuentes en devoluciones. Formato físico tiene: No., Fecha, Constructora, Obra, Frente, Asesor, Contacto, LARGO/ANCHO/ALTO/CANTIDAD/ÁREA/PESO por ítem</p>
+  <table class="t-cols"><tbody><tr><td><code>id</code></td><td class="t-type">uuid</td><td></td></tr><tr><td><code>numero_remision</code></td><td class="t-type">varchar(50)</td><td><span class="badge uniq">UQ</span></td></tr><tr><td><code>orden_compra_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>pedido_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>cliente_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>obra_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>frente_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr></tbody></table>
+  <p class="t-more">+ 31 columnas más</p>
 </div>
 <div class="t-card" style="--tcolor:#276749">
   <div class="t-head">
     <span class="t-name">remision_items</span>
-    <span class="t-count">7 cols</span>
+    <span class="t-count">15 cols</span>
   </div>
-  <p class="t-note">Detalle de equipos por remisión — 5 estados: ok/dañado/mantenimiento/faltante/ajeno</p>
-  <table class="t-cols"><tbody><tr><td><code>id</code></td><td class="t-type">uuid</td><td></td></tr><tr><td><code>remision_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>producto_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>cantidad_programada</code></td><td class="t-type">integer</td><td></td></tr><tr><td><code>cantidad_real</code></td><td class="t-type">integer</td><td></td></tr><tr><td><code>novedad</code></td><td class="t-type">text</td><td></td></tr><tr><td><code>clasificado_por</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr></tbody></table>
-  
+  <p class="t-note">Detalle de equipos por remisión. Formato físico tiene: LARGO, ANCHO, ALTO, CANTIDAD, ÁREA, PESO KG. En devolución: BUENO/REGULAR/MALO</p>
+  <table class="t-cols"><tbody><tr><td><code>id</code></td><td class="t-type">uuid</td><td></td></tr><tr><td><code>remision_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>producto_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>cantidad_programada</code></td><td class="t-type">integer</td><td></td></tr><tr><td><code>cantidad_real</code></td><td class="t-type">integer</td><td></td></tr><tr><td><code>largo_m</code></td><td class="t-type">decimal(8,3)</td><td></td></tr><tr><td><code>ancho_m</code></td><td class="t-type">decimal(8,3)</td><td></td></tr></tbody></table>
+  <p class="t-more">+ 8 columnas más</p>
 </div>
 <div class="t-card" style="--tcolor:#1A365D">
   <div class="t-head">
     <span class="t-name">cronograma_recogidas</span>
-    <span class="t-count">9 cols</span>
+    <span class="t-count">10 cols</span>
   </div>
   <p class="t-note">Cronograma diario: Viviana (Recepción) lo crea; Almacén (Angie) actualiza con recogidas realizadas</p>
-  <table class="t-cols"><tbody><tr><td><code>id</code></td><td class="t-type">uuid</td><td></td></tr><tr><td><code>fecha</code></td><td class="t-type">date</td><td></td></tr><tr><td><code>obra_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>cliente_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>numero_corte</code></td><td class="t-type">varchar(50)</td><td></td></tr><tr><td><code>estado</code></td><td class="t-type">varchar(20)</td><td></td></tr><tr><td><code>registrado_por</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr></tbody></table>
-  <p class="t-more">+ 2 columnas más</p>
+  <table class="t-cols"><tbody><tr><td><code>id</code></td><td class="t-type">uuid</td><td></td></tr><tr><td><code>fecha</code></td><td class="t-type">date</td><td></td></tr><tr><td><code>cliente_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>obra_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>frente_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>numero_corte</code></td><td class="t-type">varchar(50)</td><td></td></tr><tr><td><code>fecha_corte</code></td><td class="t-type">date</td><td></td></tr></tbody></table>
+  <p class="t-more">+ 3 columnas más</p>
 </div>
 <div class="t-card" style="--tcolor:#1A365D">
   <div class="t-head">
@@ -2298,20 +2317,20 @@ flowchart TD
 <div class="t-card" style="--tcolor:#276749">
   <div class="t-head">
     <span class="t-name">agenda_transporte</span>
-    <span class="t-count">10 cols</span>
+    <span class="t-count">18 cols</span>
   </div>
-  <p class="t-note">Agenda del jefe de almacén: conductores, horarios y direcciones de recogida</p>
-  <table class="t-cols"><tbody><tr><td><code>id</code></td><td class="t-type">uuid</td><td></td></tr><tr><td><code>remision_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>conductor_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>fecha_programada</code></td><td class="t-type">date</td><td></td></tr><tr><td><code>hora_inicio</code></td><td class="t-type">time</td><td></td></tr><tr><td><code>direccion_recogida</code></td><td class="t-type">text</td><td></td></tr><tr><td><code>orden_compra_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr></tbody></table>
-  <p class="t-more">+ 3 columnas más</p>
+  <p class="t-note">Agenda del jefe de almacén: conductores, horarios, direcciones y cálculo de liquidación por trayecto</p>
+  <table class="t-cols"><tbody><tr><td><code>id</code></td><td class="t-type">uuid</td><td></td></tr><tr><td><code>remision_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>conductor_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>vehiculo_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>cliente_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>obra_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>frente_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr></tbody></table>
+  <p class="t-more">+ 11 columnas más</p>
 </div>
 <div class="t-card" style="--tcolor:#744210">
   <div class="t-head">
     <span class="t-name">facturas</span>
-    <span class="t-count">26 cols</span>
+    <span class="t-count">29 cols</span>
   </div>
-  <p class="t-note">Facturación electrónica — CUFE + Radian son la prueba oficial (no el estado en Siigo)</p>
+  <p class="t-note">Facturación electrónica — CUFE + Radian son la prueba oficial (no el estado en Siigo). Factura BTA muestra: elaboración, expedición, vencimiento, sucursal, dir. obra</p>
   <table class="t-cols"><tbody><tr><td><code>id</code></td><td class="t-type">uuid</td><td></td></tr><tr><td><code>numero_factura</code></td><td class="t-type">varchar(50)</td><td><span class="badge uniq">UQ</span></td></tr><tr><td><code>orden_compra_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>cliente_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>estado</code></td><td class="t-type">estado_factura</td><td></td></tr><tr><td><code>fecha_emision</code></td><td class="t-type">date</td><td></td></tr><tr><td><code>fecha_vencimiento</code></td><td class="t-type">date</td><td></td></tr></tbody></table>
-  <p class="t-more">+ 19 columnas más</p>
+  <p class="t-more">+ 22 columnas más</p>
 </div>
 <div class="t-card" style="--tcolor:#744210">
   <div class="t-head">
@@ -2339,6 +2358,69 @@ flowchart TD
   <p class="t-note">Gestión de cartera — Cartera es quien hace el seguimiento de pagos; Facturación solo valida envío a DIAN</p>
   <table class="t-cols"><tbody><tr><td><code>id</code></td><td class="t-type">uuid</td><td></td></tr><tr><td><code>factura_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span><span class="badge uniq">UQ</span></td></tr><tr><td><code>cliente_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>dias_mora</code></td><td class="t-type">integer</td><td></td></tr><tr><td><code>monto_mora</code></td><td class="t-type">decimal(18,2)</td><td></td></tr><tr><td><code>estado_gestion</code></td><td class="t-type">estado_cartera</td><td></td></tr><tr><td><code>fecha_ultimo_contacto</code></td><td class="t-type">date</td><td></td></tr></tbody></table>
   <p class="t-more">+ 4 columnas más</p>
+</div>
+<div class="t-card" style="--tcolor:#1A365D">
+  <div class="t-head">
+    <span class="t-name">kardex_movimientos</span>
+    <span class="t-count">18 cols</span>
+  </div>
+  <p class="t-note">Kardex transaccional de movimientos por producto — base para el reporte Listado de Kardex de Clientes (equivalente al informe Siigo: NIT+Producto, ENE→JUN, CAN.ENV/CAN.DEV/SALDO)</p>
+  <table class="t-cols"><tbody><tr><td><code>id</code></td><td class="t-type">bigserial</td><td><span class="badge pk">PK</span></td></tr><tr><td><code>producto_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>cliente_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>obra_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>frente_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>remision_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>pedido_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr></tbody></table>
+  <p class="t-more">+ 11 columnas más</p>
+</div>
+<div class="t-card" style="--tcolor:#1A365D">
+  <div class="t-head">
+    <span class="t-name">rpt_kardex_cliente</span>
+    <span class="t-count">13 cols</span>
+  </div>
+  <p class="t-note">Reporte Kardex de Clientes — equivalente al Listado de Kardex de Siigo agrupado por NIT+Producto en un período (ENE→JUN)</p>
+  <table class="t-cols"><tbody><tr><td><code>id</code></td><td class="t-type">bigserial</td><td><span class="badge pk">PK</span></td></tr><tr><td><code>cliente_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>producto_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>obra_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>periodo_inicio</code></td><td class="t-type">date</td><td></td></tr><tr><td><code>periodo_fin</code></td><td class="t-type">date</td><td></td></tr><tr><td><code>num_envios</code></td><td class="t-type">integer</td><td></td></tr></tbody></table>
+  <p class="t-more">+ 6 columnas más</p>
+</div>
+<div class="t-card" style="--tcolor:#1A365D">
+  <div class="t-head">
+    <span class="t-name">rpt_estado_pedidos</span>
+    <span class="t-count">13 cols</span>
+  </div>
+  <p class="t-note">Reporte de estado de pedidos — equivalente al Excel de seguimiento con colores COMPLETO (verde) / PARCIAL (rojo)</p>
+  <table class="t-cols"><tbody><tr><td><code>id</code></td><td class="t-type">uuid</td><td></td></tr><tr><td><code>pedido_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span><span class="badge uniq">UQ</span></td></tr><tr><td><code>cliente_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>obra_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>numero_pedido</code></td><td class="t-type">varchar(50)</td><td></td></tr><tr><td><code>numero_contrato</code></td><td class="t-type">varchar(50)</td><td></td></tr><tr><td><code>estado</code></td><td class="t-type">estado_pedido</td><td></td></tr></tbody></table>
+  <p class="t-more">+ 6 columnas más</p>
+</div>
+<div class="t-card" style="--tcolor:#1A365D">
+  <div class="t-head">
+    <span class="t-name">rpt_facturacion_periodo</span>
+    <span class="t-count">15 cols</span>
+  </div>
+  <p class="t-note">Reporte de facturación por período y cliente — incluye retenciones (RETEFUENTE/RteICA) y saldo pendiente</p>
+  <table class="t-cols"><tbody><tr><td><code>id</code></td><td class="t-type">uuid</td><td></td></tr><tr><td><code>periodo_inicio</code></td><td class="t-type">date</td><td></td></tr><tr><td><code>periodo_fin</code></td><td class="t-type">date</td><td></td></tr><tr><td><code>cliente_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>sucursal</code></td><td class="t-type">ciudad_sucursal</td><td></td></tr><tr><td><code>total_bruto</code></td><td class="t-type">decimal(18,2)</td><td></td></tr><tr><td><code>total_descuentos</code></td><td class="t-type">decimal(18,2)</td><td></td></tr></tbody></table>
+  <p class="t-more">+ 8 columnas más</p>
+</div>
+<div class="t-card" style="--tcolor:#1A365D">
+  <div class="t-head">
+    <span class="t-name">rpt_cartera_vencida</span>
+    <span class="t-count">13 cols</span>
+  </div>
+  <p class="t-note">Reporte de cartera vencida por tramos de días (aging) — base para gestión de cobro y escalada a jurídico</p>
+  <table class="t-cols"><tbody><tr><td><code>id</code></td><td class="t-type">uuid</td><td></td></tr><tr><td><code>fecha_corte</code></td><td class="t-type">date</td><td></td></tr><tr><td><code>cliente_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>sucursal</code></td><td class="t-type">ciudad_sucursal</td><td></td></tr><tr><td><code>saldo_0_30</code></td><td class="t-type">decimal(18,2)</td><td></td></tr><tr><td><code>saldo_31_60</code></td><td class="t-type">decimal(18,2)</td><td></td></tr><tr><td><code>saldo_61_90</code></td><td class="t-type">decimal(18,2)</td><td></td></tr></tbody></table>
+  <p class="t-more">+ 6 columnas más</p>
+</div>
+<div class="t-card" style="--tcolor:#1A365D">
+  <div class="t-head">
+    <span class="t-name">rpt_conductores_viajes</span>
+    <span class="t-count">13 cols</span>
+  </div>
+  <p class="t-note">Reporte de liquidación de conductores por período — calculado con reglas de km, peso/volumen y combustible configuradas por SuperAdmin</p>
+  <table class="t-cols"><tbody><tr><td><code>id</code></td><td class="t-type">uuid</td><td></td></tr><tr><td><code>periodo_inicio</code></td><td class="t-type">date</td><td></td></tr><tr><td><code>periodo_fin</code></td><td class="t-type">date</td><td></td></tr><tr><td><code>conductor_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>vehiculo_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>total_viajes</code></td><td class="t-type">integer</td><td></td></tr><tr><td><code>km_total</code></td><td class="t-type">decimal(12,2)</td><td></td></tr></tbody></table>
+  <p class="t-more">+ 6 columnas más</p>
+</div>
+<div class="t-card" style="--tcolor:#1A365D">
+  <div class="t-head">
+    <span class="t-name">rpt_inventario_rotacion</span>
+    <span class="t-count">13 cols</span>
+  </div>
+  <p class="t-note">Reporte de rotación de inventario por producto y línea de negocio — base para decisiones de compra y reposición</p>
+  <table class="t-cols"><tbody><tr><td><code>id</code></td><td class="t-type">uuid</td><td></td></tr><tr><td><code>periodo_inicio</code></td><td class="t-type">date</td><td></td></tr><tr><td><code>periodo_fin</code></td><td class="t-type">date</td><td></td></tr><tr><td><code>producto_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>unidad_negocio</code></td><td class="t-type">varchar(50)</td><td></td></tr><tr><td><code>stock_inicial</code></td><td class="t-type">integer</td><td></td></tr><tr><td><code>total_enviado</code></td><td class="t-type">integer</td><td></td></tr></tbody></table>
+  <p class="t-more">+ 6 columnas más</p>
 </div></div>
 
   <h3>Código DBML completo</h3>
@@ -2361,6 +2443,9 @@ Project gyh_sistema {
     6-12 cotizaciones/semana por dibujante, ~50 prospectos nuevos/mes.
     SEM-27: Pedidos parciales · Centros de costo · Retenciones por tipo · Catálogos duales
             Rol Despachador · Rol Recepción · CUFE/Radian · Equipo ajeno · Cronograma diario
+    Feedback fotos: Vehículos con dimensiones + placa · Kardex movimientos · 6 tablas reportería
+                    Relaciones cliente→obra→frente en tablas clave · URLs en documentos · 12 roles
+                    Dimensiones ítem remisión (LARGO/ANCHO/ALTO/PESO) · Condición BUENO/REGULAR/MALO
   &#x27;&#x27;&#x27;
 }
 
@@ -2525,6 +2610,14 @@ Enum tipo_remision {
   salida             [note: &#x27;Despacho de equipos a obra&#x27;]
   entrada_devolucion [note: &#x27;Retorno de alquiler&#x27;]
   entrada_reposicion [note: &#x27;Cobro por faltante&#x27;]
+  cambio             [note: &#x27;Intercambio o sustitución de equipo en obra&#x27;]
+  entrada_mantenimiento [note: &#x27;Retorno de equipo para mantenimiento en G&amp;H&#x27;]
+}
+
+Enum condicion_equipo_devolucion {
+  bueno   [note: &#x27;Equipo en buen estado — apto para despacho inmediato&#x27;]
+  regular [note: &#x27;Equipo con desgaste normal — funcional pero requiere revisión&#x27;]
+  malo    [note: &#x27;Equipo muy deteriorado — requiere mantenimiento o baja&#x27;]
 }
 
 Enum estado_remision {
@@ -2650,7 +2743,7 @@ Table usuarios {
   created_at  timestamp    [default: `now()`]
   updated_at  timestamp    [default: `now()`]
 
-  Note: &#x27;Usuarios del sistema con control de acceso por rol (RBAC) — 11 roles&#x27;
+  Note: &#x27;Usuarios del sistema con control de acceso por rol (RBAC) — 12 roles&#x27;
 }
 
 // ============================================================
@@ -2842,7 +2935,8 @@ Table aprobaciones_cliente {
   area           area_aprobacion [not null]
   estado         estado_aprobacion [default: &#x27;pendiente&#x27;]
   concepto       text         [note: &#x27;Comentario obligatorio que justifica la decisión — no se puede guardar sin él&#x27;]
-  es_favorable   boolean
+  es_favorable   boolean      [note: &#x27;true=favorable · false=no_favorable · null=aún sin concepto&#x27;]
+  evidencia_url  varchar(500) [note: &#x27;URL del documento adjunto como evidencia del concepto (S3)&#x27;]
   aprobado_por   uuid         [ref: &gt; usuarios.id]
   fecha_concepto timestamp
   created_at     timestamp    [default: `now()`]
@@ -3124,6 +3218,7 @@ Table pedidos {
   id                     uuid    [pk, default: `gen_random_uuid()`]
   numero_pedido          varchar(50) [unique, not null]
   orden_compra_id        uuid    [not null, ref: &gt; ordenes_compra.id]
+  cliente_id             uuid    [not null, ref: &gt; clientes.id, note: &#x27;Desnormalizado de orden_compra — permite consulta directa cliente→obra→frente&#x27;]
   obra_id                uuid    [not null, ref: &gt; obras.id]
   frente_id              uuid    [ref: &gt; frentes_obra.id]
   estado                 estado_pedido [default: &#x27;pendiente&#x27;]
@@ -3140,6 +3235,8 @@ Table pedidos {
 
   indexes {
     orden_compra_id
+    cliente_id
+    obra_id
     estado
     fecha_pedido
   }
@@ -3158,25 +3255,77 @@ Table pedido_items {
   Note: &#x27;Ítems de un pedido — cantidad_enviada se actualiza con cada remisión parcial hasta igualar cantidad_pedida&#x27;
 }
 
+Table vehiculos {
+  id                   uuid    [pk, default: `gen_random_uuid()`]
+  placa                varchar(20)  [unique, not null, note: &#x27;Placa del vehículo — ej: WHA 514, XGC 078&#x27;]
+  marca                varchar(100)
+  modelo               varchar(100)
+  tipo                 varchar(50)  [note: &#x27;camion|furgon|camioneta|volqueta|otro&#x27;]
+
+  // Dimensiones del compartimento de carga (requeridas para cálculo de flete por volumen)
+  largo_m              decimal(6,2) [note: &#x27;Largo interior de carga en metros&#x27;]
+  ancho_m              decimal(6,2) [note: &#x27;Ancho interior de carga en metros&#x27;]
+  alto_m               decimal(6,2) [note: &#x27;Alto interior de carga en metros&#x27;]
+
+  // Capacidades de carga (usadas en reglas de liquidación del conductor)
+  capacidad_peso_ton   decimal(6,3) [not null, note: &#x27;Capacidad máxima en toneladas — para regla de combustible&#x27;]
+  capacidad_volumen_m3 decimal(8,3) [note: &#x27;Capacidad volumétrica en m³ — si llena el camión se cobra tarifa completa&#x27;]
+
+  activo               boolean  [default: true]
+  en_mantenimiento     boolean  [default: false]
+  notas                text
+  created_at           timestamp [default: `now()`]
+  updated_at           timestamp [default: `now()`]
+
+  indexes {
+    placa
+  }
+
+  Note: &#x27;Vehículos de la flota G&amp;H — dimensiones y capacidades para cálculo de flete (peso Y volumen, el mayor)&#x27;
+}
+
 Table conductores {
   id           uuid    [pk, default: `gen_random_uuid()`]
   nombre       varchar(200) [not null]
   cedula       varchar(50)  [unique, not null]
   telefono     varchar(50)
   celular      varchar(50)
-  tipo_vehiculo varchar(100)
-  placa        varchar(20)
+  vehiculo_id  uuid    [ref: &gt; vehiculos.id, note: &#x27;Vehículo principal asignado — puede cambiar&#x27;]
+  // Campos rápidos de placa y tipo para formularios de despacho (confirmados en fotos)
+  placa        varchar(20)  [note: &#x27;Copia de vehiculos.placa para acceso rápido en remisiones&#x27;]
+  tipo_vehiculo varchar(100) [note: &#x27;Descripción corta del vehículo&#x27;]
   activo       boolean  [default: true]
   created_at   timestamp [default: `now()`]
+  updated_at   timestamp [default: `now()`]
 
-  Note: &#x27;Conductores para transporte de equipos a obras — definen el estado inicial del equipo en devoluciones&#x27;
+  Note: &#x27;Conductores para transporte de equipos a obras — Jose/WHA514, Mario/XGC078, Jiffer/PKG947, Oscar/FCF086, Fernando/BPU45H, Wilson/AFE575&#x27;
+}
+
+Table conductor_vehiculos {
+  id           uuid    [pk, default: `gen_random_uuid()`]
+  conductor_id uuid    [not null, ref: &gt; conductores.id]
+  vehiculo_id  uuid    [not null, ref: &gt; vehiculos.id]
+  fecha_desde  date    [not null]
+  fecha_hasta  date
+  es_principal boolean [default: true, note: &#x27;Vehículo principal asignado al conductor en este período&#x27;]
+
+  indexes {
+    (conductor_id, vehiculo_id, fecha_desde) [unique]
+    conductor_id
+    vehiculo_id
+  }
+
+  Note: &#x27;Historial de asignación conductor→vehículo — permite saber qué placa usó cada conductor en cada fecha&#x27;
 }
 
 Table remisiones {
   id               uuid    [pk, default: `gen_random_uuid()`]
-  numero_remision  varchar(50) [unique, not null]
+  numero_remision  varchar(50) [unique, not null, note: &#x27;Ej: FM REMISION #01064 — prefijo por línea de negocio&#x27;]
   orden_compra_id  uuid    [not null, ref: &gt; ordenes_compra.id]
   pedido_id        uuid    [ref: &gt; pedidos.id, note: &#x27;Pedido al que pertenece esta remisión (puede ser parcial)&#x27;]
+  // Relación directa cliente→obra→frente (desnormalizada para consulta eficiente)
+  cliente_id       uuid    [not null, ref: &gt; clientes.id]
+  obra_id          uuid    [not null, ref: &gt; obras.id]
   frente_id        uuid    [ref: &gt; frentes_obra.id]
   frente_ajuste_id uuid    [ref: &gt; frentes_obra.id, note: &#x27;Frente al que se reasignó cuando hay préstamo entre frentes&#x27;]
   tipo_remision    tipo_remision [not null]
@@ -3185,27 +3334,49 @@ Table remisiones {
   hora_remision    time    [note: &#x27;Hora exacta del despacho o recepción&#x27;]
   responsable_id   uuid    [ref: &gt; usuarios.id]
   conductor_id     uuid    [ref: &gt; conductores.id]
-  vehiculo         varchar(100)
-  placa            varchar(20)
-  direccion_destino text
-  observaciones    text
-  estado           estado_remision [default: &#x27;programada&#x27;]
+  vehiculo_id      uuid    [ref: &gt; vehiculos.id, note: &#x27;Vehículo usado en este viaje — con dimensiones y capacidad&#x27;]
+  placa            varchar(20) [note: &#x27;Placa del vehículo en el momento del despacho (confirmada en fotos)&#x27;]
+  direccion_recogida text
+  direccion_destino  text
+  // Transporte
+  cobra_transporte   boolean [default: false, note: &#x27;Se Cobra Transporte de Llevada S/N — campo Siigo ELABORACIÓN DE REMISIÓN&#x27;]
+  valor_transporte   decimal(15,2) [note: &#x27;Valor cobrado al arrendatario por transporte&#x27;]
+  // Datos de obra y contacto (del formulario físico de despacho)
+  contacto_obra      varchar(200) [note: &#x27;Persona de contacto en la obra — campo CONTACTO del formato&#x27;]
+  asesor_id          uuid    [ref: &gt; usuarios.id, note: &#x27;Asesor comercial del despacho — campo ASESOR&#x27;]
+  fecha_entrega_obra date    [note: &#x27;Fecha pactada de entrega en obra — campo FECHA DE ENTREGA&#x27;]
+  // Autorización de entrega y recibo (firma electrónica / nombre en el formato)
+  autorizacion_entregar varchar(200) [note: &#x27;Nombre/CC quien autoriza la entrega desde G&amp;H&#x27;]
+  autorizacion_recibir  varchar(200) [note: &#x27;Nombre/CC quien autoriza recibir en obra&#x27;]
+  firma_entrega_nombre  varchar(200) [note: &#x27;QUIEN ENTREGA DESPACHO — nombre claro en el formato físico&#x27;]
+  firma_recibe_nombre   varchar(200) [note: &#x27;QUIEN RECIBE CONDUCTOR — nombre claro en la obra&#x27;]
+  firma_recibe_cc       varchar(50)  [note: &#x27;CC de quien recibe en la obra&#x27;]
+  // Descargue en bodega (FT-DE-002)
+  hora_llegada_bodega   time  [note: &#x27;Hora de llegada del conductor a bodega en devolución&#x27;]
+  hora_salida_bodega    time  [note: &#x27;Hora de salida de bodega&#x27;]
+  ayudante_nombre       varchar(200) [note: &#x27;Nombre del ayudante en el descargue — firma en formato FT-DE-002&#x27;]
   // Verificación 3 fuentes en devolución (SEM-27)
   formato_conductor    text   [note: &#x27;Registro del conductor: lo que dice haber traído&#x27;]
   formato_despachador  text   [note: &#x27;Conteo físico del despachador en bodega&#x27;]
-  fotos_porteria_urls  text[] [note: &#x27;URLs de fotos de portería de la obra — evidencia salida&#x27;]
+  fotos_porteria_urls  text[] [note: &#x27;URLs de fotos de portería de la obra — evidencia salida (S3)&#x27;]
   cruce_ajuste         text   [note: &#x27;Justificación cuando se reasigna a otro frente por equipo prestado entre frentes&#x27;]
-  created_at       timestamp [default: `now()`]
-  updated_at       timestamp [default: `now()`]
+  pdf_remision_url     varchar(500) [note: &#x27;URL del PDF de la remisión generada (S3)&#x27;]
+  observaciones        text
+  estado               estado_remision [default: &#x27;programada&#x27;]
+  created_at           timestamp [default: `now()`]
+  updated_at           timestamp [default: `now()`]
 
   indexes {
     orden_compra_id
     pedido_id
+    cliente_id
+    obra_id
     tipo_remision
     fecha_remision
+    conductor_id
   }
 
-  Note: &#x27;Remisiones de salida y entrada al Kardex — incluye verificación de 3 fuentes en devoluciones&#x27;
+  Note: &#x27;Remisiones de salida y entrada al Kardex — incluye verificación de 3 fuentes en devoluciones. Formato físico tiene: No., Fecha, Constructora, Obra, Frente, Asesor, Contacto, LARGO/ANCHO/ALTO/CANTIDAD/ÁREA/PESO por ítem&#x27;
 }
 
 Table remision_items {
@@ -3214,20 +3385,31 @@ Table remision_items {
   producto_id         uuid    [not null, ref: &gt; catalogo_productos.id]
   cantidad_programada integer [not null]
   cantidad_real       integer
+  // Dimensiones físicas del ítem (columnas LARGO, ANCHO, ALTO del formato de despacho)
+  largo_m             decimal(8,3) [note: &#x27;Dimensión LARGO en metros — del formato físico de despacho&#x27;]
+  ancho_m             decimal(8,3) [note: &#x27;Dimensión ANCHO en metros&#x27;]
+  alto_m              decimal(8,3) [note: &#x27;Dimensión ALTO en metros&#x27;]
+  area_m2             decimal(10,3) [note: &#x27;ÁREA calculada = largo × ancho — para formaletas&#x27;]
+  // Peso (columna PESO KG del formato de despacho)
+  peso_kg_unitario    decimal(10,3) [note: &#x27;Peso unitario del elemento en kg — columna PESO KG del despacho&#x27;]
+  peso_total_kg       decimal(12,3) [note: &#x27;Peso total del ítem = cantidad × peso_kg_unitario&#x27;]
+  // Estado en devolución (BUENO/REGULAR/MALO del formato de devolución)
+  condicion_devolucion condicion_equipo_devolucion [note: &#x27;Estado físico al retornar a bodega: BUENO/REGULAR/MALO&#x27;]
   estado_item         estado_item_remision [default: &#x27;pendiente&#x27;]
   novedad             text    [note: &#x27;Descripción de daño, faltante, mantenimiento o equipo ajeno&#x27;]
   clasificado_por     uuid    [ref: &gt; usuarios.id, note: &#x27;Conductor o Despachador que clasificó el estado&#x27;]
 
-  Note: &#x27;Detalle de equipos por remisión — 5 estados: ok/dañado/mantenimiento/faltante/ajeno&#x27;
+  Note: &#x27;Detalle de equipos por remisión. Formato físico tiene: LARGO, ANCHO, ALTO, CANTIDAD, ÁREA, PESO KG. En devolución: BUENO/REGULAR/MALO&#x27;
 }
 
 // Cronograma diario Recepción → Almacén (SEM-27)
 Table cronograma_recogidas {
   id                  uuid    [pk, default: `gen_random_uuid()`]
   fecha               date    [not null]
-  obra_id             uuid    [not null, ref: &gt; obras.id]
   cliente_id          uuid    [not null, ref: &gt; clientes.id]
-  numero_corte        varchar(50)
+  obra_id             uuid    [not null, ref: &gt; obras.id]
+  frente_id           uuid    [ref: &gt; frentes_obra.id, note: &#x27;Frente específico de la recogida si aplica&#x27;]
+  numero_corte        varchar(50) [note: &#x27;CT=XXXXX — número de contrato del cliente&#x27;]
   fecha_corte         date
   estado              varchar(20) [default: &#x27;programada&#x27;, note: &#x27;programada|parcial|completada|sin_recoger&#x27;]
   registrado_por      uuid    [ref: &gt; usuarios.id, note: &#x27;Viviana — Recepción&#x27;]
@@ -3265,12 +3447,22 @@ Table agenda_transporte {
   id                 uuid    [pk, default: `gen_random_uuid()`]
   remision_id        uuid    [not null, ref: &gt; remisiones.id]
   conductor_id       uuid    [not null, ref: &gt; conductores.id]
+  vehiculo_id        uuid    [ref: &gt; vehiculos.id]
+  // Relación directa cliente→obra→frente
+  cliente_id         uuid    [ref: &gt; clientes.id]
+  obra_id            uuid    [ref: &gt; obras.id]
+  frente_id          uuid    [ref: &gt; frentes_obra.id]
   fecha_programada   date    [not null]
   hora_inicio        time
   hora_fin           time
   direccion_recogida text
   direccion_destino  text    [not null]
   orden_compra_id    uuid    [ref: &gt; ordenes_compra.id]
+  // Datos de trayecto para liquidación del conductor
+  km_trayecto        decimal(8,2) [note: &#x27;Distancia calculada entre recogida y entrega en km (Maps API)&#x27;]
+  peso_cargado_ton   decimal(8,3) [note: &#x27;Peso real cargado en toneladas — para regla de combustible&#x27;]
+  volumen_cargado_m3 decimal(8,3) [note: &#x27;Volumen real ocupado en m³ — para cálculo de flete&#x27;]
+  valor_liquidacion  decimal(15,2) [note: &#x27;Valor a pagar al conductor = f(km, toneladas, volumen, combustible)&#x27;]
   estado_agenda      estado_agenda [default: &#x27;programado&#x27;]
   notas              text
   created_at         timestamp [default: `now()`]
@@ -3279,9 +3471,11 @@ Table agenda_transporte {
   indexes {
     conductor_id
     fecha_programada
+    cliente_id
+    obra_id
   }
 
-  Note: &#x27;Agenda del jefe de almacén: conductores, horarios y direcciones de recogida&#x27;
+  Note: &#x27;Agenda del jefe de almacén: conductores, horarios, direcciones y cálculo de liquidación por trayecto&#x27;
 }
 
 // ============================================================
@@ -3320,18 +3514,23 @@ Table facturas {
   fecha_validacion_dian timestamp [note: &#x27;Fecha en que Facturación confirmó el estado en portal DIAN&#x27;]
   seguimiento_telefónico text    [note: &#x27;Notas del seguimiento telefónico al cliente para confirmar recepción y procesamiento&#x27;]
 
-  pdf_url          varchar(500)
-  notas            text
-  created_at       timestamp [default: `now()`]
-  updated_at       timestamp [default: `now()`]
+  // Fechas diferenciadas (visibles en la factura electrónica impresa)
+  fecha_elaboracion    timestamp [note: &#x27;Fecha de elaboración de la factura — campo visible en PDF&#x27;]
+  fecha_expedicion     timestamp [note: &#x27;Fecha de expedición oficial — puede diferir de elaboración&#x27;]
+  elaborado_por        uuid    [ref: &gt; usuarios.id, note: &#x27;Usuario que generó la factura&#x27;]
+  pdf_url              varchar(500) [note: &#x27;URL del PDF de la factura electrónica (S3)&#x27;]
+  notas                text
+  created_at           timestamp [default: `now()`]
+  updated_at           timestamp [default: `now()`]
 
   indexes {
     cliente_id
     estado
     fecha_vencimiento
+    numero_factura
   }
 
-  Note: &#x27;Facturación electrónica — CUFE + Radian son la prueba oficial (no el estado en Siigo)&#x27;
+  Note: &#x27;Facturación electrónica — CUFE + Radian son la prueba oficial (no el estado en Siigo). Factura BTA muestra: elaboración, expedición, vencimiento, sucursal, dir. obra&#x27;
 }
 
 Table factura_items {
@@ -3384,6 +3583,212 @@ Table cartera {
   updated_at           timestamp [default: `now()`]
 
   Note: &#x27;Gestión de cartera — Cartera es quien hace el seguimiento de pagos; Facturación solo valida envío a DIAN&#x27;
+}
+
+// ============================================================
+// MÓDULO: KARDEX DE MOVIMIENTOS (Inventario transaccional)
+// ============================================================
+
+Table kardex_movimientos {
+  id                  bigserial    [pk]
+  producto_id         uuid    [not null, ref: &gt; catalogo_productos.id]
+  // Relación completa cliente→obra→frente (permite Listado de Kardex de Clientes por NIT)
+  cliente_id          uuid    [ref: &gt; clientes.id, note: &#x27;NULL = movimiento interno (ajuste, baja, inicio de sistema)&#x27;]
+  obra_id             uuid    [ref: &gt; obras.id]
+  frente_id           uuid    [ref: &gt; frentes_obra.id]
+  remision_id         uuid    [ref: &gt; remisiones.id, note: &#x27;Remisión que originó el movimiento&#x27;]
+  pedido_id           uuid    [ref: &gt; pedidos.id]
+
+  tipo_movimiento     varchar(30) [not null, note: &#x27;salida|entrada_devolucion|entrada_reposicion|ajuste|baja|mantenimiento|inicio_sistema&#x27;]
+
+  // Cantidades (replica columnas del Listado Kardex Clientes de Siigo: CAN.ENV, CAN.DEV)
+  cantidad_enviada    integer  [default: 0, note: &#x27;Unidades despachadas a obra — columna CAN.ENV&#x27;]
+  cantidad_devuelta   integer  [default: 0, note: &#x27;Unidades retornadas a bodega — columna CAN.DEV&#x27;]
+  cantidad_ajuste     integer  [default: 0, note: &#x27;Ajuste manual de inventario (positivo o negativo)&#x27;]
+  saldo               integer  [not null, note: &#x27;Saldo en bodega después del movimiento — puede ser negativo al inicio&#x27;]
+
+  // Referencia al documento fuente (columnas No.ENVIO, No.DEVOL. del Kardex Siigo)
+  numero_envio        varchar(50) [note: &#x27;Número de remisión de salida — No.ENVIO en Siigo&#x27;]
+  numero_devolucion   varchar(50) [note: &#x27;Número de remisión de entrada — No.DEVOL. en Siigo&#x27;]
+  numero_documento    varchar(50) [note: &#x27;Número genérico del documento fuente&#x27;]
+
+  fecha               date    [not null]
+  registrado_por      uuid    [ref: &gt; usuarios.id]
+  observaciones       text
+  created_at          timestamp [default: `now()`]
+
+  indexes {
+    producto_id
+    (cliente_id, producto_id)
+    cliente_id
+    obra_id
+    fecha
+    (producto_id, fecha)
+    remision_id
+  }
+
+  Note: &#x27;Kardex transaccional de movimientos por producto — base para el reporte Listado de Kardex de Clientes (equivalente al informe Siigo: NIT+Producto, ENE→JUN, CAN.ENV/CAN.DEV/SALDO)&#x27;
+}
+
+// ============================================================
+// MÓDULO: REPORTERÍA
+// (Tablas de agregados pre-calculados para informes del sistema)
+// ============================================================
+
+// 1. Kardex de clientes por período (equivalente al Listado de Kardex de Clientes de Siigo)
+Table rpt_kardex_cliente {
+  id                  bigserial    [pk]
+  cliente_id          uuid    [not null, ref: &gt; clientes.id]
+  producto_id         uuid    [not null, ref: &gt; catalogo_productos.id]
+  obra_id             uuid    [ref: &gt; obras.id]
+  periodo_inicio      date    [not null]
+  periodo_fin         date    [not null]
+  num_envios          integer  [default: 0, note: &#x27;Número de remisiones de salida en el período&#x27;]
+  num_devoluciones    integer  [default: 0, note: &#x27;Número de remisiones de entrada en el período&#x27;]
+  cant_enviada_total  integer  [default: 0, note: &#x27;CAN.ENV — total unidades enviadas&#x27;]
+  cant_devuelta_total integer  [default: 0, note: &#x27;CAN.DEV — total unidades devueltas&#x27;]
+  saldo_pendiente     integer  [default: 0, note: &#x27;Unidades aún en obra (enviadas - devueltas)&#x27;]
+  generado_at         timestamp [default: `now()`]
+  generado_por        uuid    [ref: &gt; usuarios.id]
+
+  indexes {
+    (cliente_id, producto_id, periodo_inicio, periodo_fin) [unique]
+    cliente_id
+    periodo_inicio
+  }
+
+  Note: &#x27;Reporte Kardex de Clientes — equivalente al Listado de Kardex de Siigo agrupado por NIT+Producto en un período (ENE→JUN)&#x27;
+}
+
+// 2. Estado de pedidos (equivalente al Excel de seguimiento con COMPLETO/PARCIAL)
+Table rpt_estado_pedidos {
+  id                  uuid    [pk, default: `gen_random_uuid()`]
+  pedido_id           uuid    [unique, not null, ref: &gt; pedidos.id]
+  cliente_id          uuid    [not null, ref: &gt; clientes.id]
+  obra_id             uuid    [not null, ref: &gt; obras.id]
+  numero_pedido       varchar(50) [not null]
+  numero_contrato     varchar(50) [note: &#x27;CT=XXXXX — número visible en pizarrón y Excel de seguimiento&#x27;]
+  estado              estado_pedido [not null]
+  porcentaje_enviado  decimal(5,2) [default: 0, note: &#x27;% del pedido ya despachado&#x27;]
+  total_items         integer  [default: 0]
+  items_enviados      integer  [default: 0]
+  fecha_pedido        date
+  fecha_estimada_fin  date
+  fecha_completado    date
+  observaciones       text
+  actualizado_at      timestamp [default: `now()`]
+
+  indexes {
+    cliente_id
+    estado
+    fecha_pedido
+    numero_contrato
+  }
+
+  Note: &#x27;Reporte de estado de pedidos — equivalente al Excel de seguimiento con colores COMPLETO (verde) / PARCIAL (rojo)&#x27;
+}
+
+// 3. Facturación por período y cliente
+Table rpt_facturacion_periodo {
+  id                  uuid    [pk, default: `gen_random_uuid()`]
+  periodo_inicio      date    [not null]
+  periodo_fin         date    [not null]
+  cliente_id          uuid    [not null, ref: &gt; clientes.id]
+  sucursal            ciudad_sucursal
+  total_facturas      integer  [default: 0]
+  total_bruto         decimal(18,2) [default: 0]
+  total_descuentos    decimal(18,2) [default: 0]
+  total_iva           decimal(18,2) [default: 0]
+  total_rte_fuente    decimal(18,2) [default: 0, note: &#x27;RETEFUENTE — visible en factura electrónica&#x27;]
+  total_rte_ica       decimal(18,2) [default: 0]
+  total_neto          decimal(18,2) [default: 0, note: &#x27;Total a Pagar = bruto - retenciones&#x27;]
+  total_pagado        decimal(18,2) [default: 0]
+  saldo_pendiente     decimal(18,2) [default: 0]
+  generado_at         timestamp [default: `now()`]
+  generado_por        uuid    [ref: &gt; usuarios.id]
+
+  indexes {
+    (cliente_id, periodo_inicio, periodo_fin) [unique]
+    periodo_inicio
+    sucursal
+  }
+
+  Note: &#x27;Reporte de facturación por período y cliente — incluye retenciones (RETEFUENTE/RteICA) y saldo pendiente&#x27;
+}
+
+// 4. Cartera vencida por tramos (aging report)
+Table rpt_cartera_vencida {
+  id                  uuid    [pk, default: `gen_random_uuid()`]
+  fecha_corte         date    [not null]
+  cliente_id          uuid    [not null, ref: &gt; clientes.id]
+  sucursal            ciudad_sucursal
+  // Tramos de mora (días de vencimiento)
+  saldo_0_30          decimal(18,2) [default: 0, note: &#x27;Facturas vencidas hace 0-30 días&#x27;]
+  saldo_31_60         decimal(18,2) [default: 0, note: &#x27;31-60 días de mora&#x27;]
+  saldo_61_90         decimal(18,2) [default: 0, note: &#x27;61-90 días de mora&#x27;]
+  saldo_91_180        decimal(18,2) [default: 0, note: &#x27;91-180 días de mora&#x27;]
+  saldo_mas_180       decimal(18,2) [default: 0, note: &#x27;Más de 180 días — candidato a demanda jurídica&#x27;]
+  total_cartera       decimal(18,2) [default: 0]
+  en_acuerdo_pago     boolean  [default: false]
+  en_demanda          boolean  [default: false]
+  generado_at         timestamp [default: `now()`]
+
+  indexes {
+    (cliente_id, fecha_corte) [unique]
+    fecha_corte
+  }
+
+  Note: &#x27;Reporte de cartera vencida por tramos de días (aging) — base para gestión de cobro y escalada a jurídico&#x27;
+}
+
+// 5. Liquidación de conductores por período
+Table rpt_conductores_viajes {
+  id                  uuid    [pk, default: `gen_random_uuid()`]
+  periodo_inicio      date    [not null]
+  periodo_fin         date    [not null]
+  conductor_id        uuid    [not null, ref: &gt; conductores.id]
+  vehiculo_id         uuid    [ref: &gt; vehiculos.id]
+  total_viajes        integer  [default: 0]
+  km_total            decimal(12,2) [default: 0, note: &#x27;km totales recorridos en el período&#x27;]
+  peso_total_ton      decimal(12,3) [default: 0, note: &#x27;Toneladas transportadas en el período&#x27;]
+  volumen_total_m3    decimal(12,3) [default: 0, note: &#x27;m³ ocupados en el período&#x27;]
+  valor_combustible   decimal(18,2) [default: 0, note: &#x27;Costo estimado de combustible calculado por regla&#x27;]
+  valor_liquidacion   decimal(18,2) [default: 0, note: &#x27;Total a pagar = f(km, toneladas, volumen, combustible) — regla configurable por SuperAdmin&#x27;]
+  generado_at         timestamp [default: `now()`]
+  generado_por        uuid    [ref: &gt; usuarios.id]
+
+  indexes {
+    (conductor_id, periodo_inicio, periodo_fin) [unique]
+    periodo_inicio
+    conductor_id
+  }
+
+  Note: &#x27;Reporte de liquidación de conductores por período — calculado con reglas de km, peso/volumen y combustible configuradas por SuperAdmin&#x27;
+}
+
+// 6. Rotación de inventario por producto
+Table rpt_inventario_rotacion {
+  id                  uuid    [pk, default: `gen_random_uuid()`]
+  periodo_inicio      date    [not null]
+  periodo_fin         date    [not null]
+  producto_id         uuid    [not null, ref: &gt; catalogo_productos.id]
+  unidad_negocio      varchar(50) [note: &#x27;formaleta_metalica|multidireccional|transporte|etc.&#x27;]
+  stock_inicial       integer  [default: 0]
+  total_enviado       integer  [default: 0]
+  total_devuelto      integer  [default: 0]
+  stock_final         integer  [default: 0]
+  stock_en_obra       integer  [default: 0, note: &#x27;Unidades actualmente en clientes = enviadas - devueltas&#x27;]
+  dias_promedio_obra  decimal(6,1) [note: &#x27;Promedio de días en obra por ciclo de alquiler&#x27;]
+  tasa_rotacion       decimal(6,2) [note: &#x27;Veces que rotó el inventario en el período&#x27;]
+  generado_at         timestamp [default: `now()`]
+
+  indexes {
+    (producto_id, periodo_inicio, periodo_fin) [unique]
+    unidad_negocio
+    periodo_inicio
+  }
+
+  Note: &#x27;Reporte de rotación de inventario por producto y línea de negocio — base para decisiones de compra y reposición&#x27;
 }
 </pre>
   </details>
