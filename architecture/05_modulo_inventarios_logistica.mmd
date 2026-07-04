@@ -20,72 +20,147 @@ flowchart TD
     classDef grisClaro   fill:#EDF2F7,color:#1A365D,stroke:#CBD5E0,stroke-width:1px
     classDef exito       fill:#38A169,color:#FFFFFF,stroke:#2F855A,stroke-width:2px
     classDef peligro     fill:#E53E3E,color:#FFFFFF,stroke:#C53030,stroke-width:2px
+    classDef nuevo       fill:#BEE3F8,color:#1A365D,stroke:#3182CE,stroke-width:2px
+
+    linkStyle default color:#1A365D
 
     INICIO(["📝 Contrato firmado\n→ Operaciones Activas"]):::naranja
 
-    %% ── MOMENTO CERO: STOCK TOTAL
-    KARDEX_TOTAL["📊 Stock Total (Momento Cero)\nBodega + Equipos en Clientes\n+ Equipos en Producción"]:::azul
+    %% STOCK TOTAL
+    KARDEX_TOTAL["📊 Stock Total (Momento Cero)\nBodega + Equipos en Clientes + En Producción\n⚠️ Sin inventario físico estandarizado — se trabaja con catálogos\nSaldos negativos serán visibles en el nuevo sistema"]:::azul
 
-    %% ── SALIDA
+    %% CRONOGRAMA DIARIO RECEPCIÓN
+    subgraph CRONOGRAMA["🗓️  RECEPCIÓN — FLUJO DIARIO"]
+        direction LR
+        VIVIANA["📅 Viviana (Recepción)\nEnvía cronograma diario:\nObra · Cliente · N° corte · Fecha"]:::nuevo
+        RECOG_REPORT["📤 Almacén reporta a Recepción\nrecogidas realizadas\nvs. programadas"]:::nuevo
+    end
+
+    %% AUTORIZACIÓN Y DESPACHO
     subgraph ALMACEN["🏭  JEFE DE ALMACÉN — DESPACHO"]
         direction TB
-        REMSAL["📤 Generar Remisión de Salida\n― Productos por frente de obra\n― Cantidades e items del contrato"]:::azul
+        INGENIERO["👷 Ingeniero / Comercial\nautoriza el despacho:\n✓ Contrato firmado\n✓ Fecha libre en obra (no hay fundida)\n✓ Pedido listo para salir"]:::nuevo
+        CANCELQ{"¿Obra cancela\nel pedido?"}:::naranja
+        CANCELACION["❌ Cancelación de Pedido\nRegistrar motivo · Notificar Ingeniería\n(política gestionada por Ingeniero)"]:::peligro
+        REMSAL["📤 Generar Remisión de Salida\n― Pedido · Frente de obra\n― Cantidades e ítems\n― Conductor · Vehículo · Placa"]:::azul
         KARDEX_OUT["🗄️ Kardex actualizado\n(Stock disminuye — Bodega)"]:::grisClaro
         AGENDA["🗓️ Programar Agenda de Transporte\n― Seleccionar conductor\n― Asignar vehículo + placa\n― Hora de salida y llegada\n― Dirección de la obra"]:::azul
         NOTIF_COND["🔔 Notificar al Conductor\nDetalle del despacho"]:::grisClaro
+        INDISP_Q{"¿Conductor\ndisponible?"}:::naranja
+        INDISP["⚠️ Registrar Indisponibilidad\nMantenimiento · Reposición\nReasignar conductor"]:::peligro
+        DESP_CARGA["📦 Despachador\nVerifica y carga los camiones\nConteo físico previo al despacho"]:::nuevo
         DESPACHO["🚛 Equipo en Tránsito\nhacia la Obra"]:::azul
         ENTREGA["📦 Confirmación de Entrega\nen el Frente de Obra"]:::exito
     end
 
-    %% ── PERÍODO EN OBRA
+    %% CONTROL DE PEDIDOS PARCIALES
+    subgraph PARCIALES["📦  CONTROL DE PEDIDO — PARCIALES"]
+        direction LR
+        PEDIDOQ{"¿Pedido\ncompleto?"}:::naranja
+        PARCIAL_ACU["📋 Acumular envío parcial\nAngie registra: qué salió\nqué queda pendiente\n(fórmula de saldo en planilla)"]:::nuevo
+        ALQUILER_INI["📅 Pedido Completo\nInicia contador de días\nde alquiler desde esta fecha"]:::exito
+    end
+
+    %% PERÍODO EN OBRA
     subgraph OBRA["🏗️  PERIODO EN OBRA (solo alquiler)"]
         direction TB
-        ALQUILER_VIGENTE["⏳ Alquiler Vigente\nContador de días iniciado\ndesde fecha de remisión salida"]:::grisClaro
+        ALQUILER_VIGENTE["⏳ Alquiler Vigente\nContador de días iniciado\ndesde fecha de pedido completo"]:::grisClaro
         DEVQ{"¿Se programa\ndevolución?"}:::naranja
-        NOTIF_DEV["🔔 Alerta Próxima Recogida\nNotificación automática\nal jefe de almacén"]:::grisClaro
+        NOTIF_DEV["🔔 Alerta Próxima Recogida\nNotificación automática al\njefe de almacén y Recepción"]:::grisClaro
         AGENDA_REC["🗓️ Programar Recogida\n― Conductor\n― Horario\n― Dirección del frente"]:::azul
     end
 
-    %% ── DEVOLUCIÓN / REPOSICIÓN
-    subgraph RETORNO["📥  RETORNO DE EQUIPOS"]
-        direction TB
-        RECOGIDA["🚛 Recogida en Obra\nTransporte de vuelta"]:::azul
-        INSPECCION["🔍 Inspección de Equipos\nen Bodega"]:::grisClaro
-        ITEMQ{"Estado de\ncada equipo"}:::naranja
-        ITEM_OK["✅ Buen Estado\nKardex restaurado"]:::exito
-        ITEM_DAÑ["🔧 Dañado\nRegistrar novedad\n+ presupuesto reparación"]:::peligro
-        ITEM_FALT["❌ Faltante\nGenerar Reposición\n(cobro al cliente)"]:::peligro
-        KARDEX_IN["🗄️ Kardex actualizado\n(Stock aumenta)"]:::grisClaro
-        DIAS["📅 Calcular días de alquiler\nfecha salida → fecha entrada"]:::azul
+    %% VERIFICACIÓN 3 FUENTES
+    subgraph VERIFICACION["🔍  VERIFICACIÓN 3 FUENTES EN DEVOLUCIÓN"]
+        direction LR
+        VF1["📋 Formato Conductor\n(lo que dice haber traído)"]:::grisClaro
+        VF2["📋 Formato Despachador\n(conteo físico en bodega)"]:::nuevo
+        VF3["📸 Fotos Portería Obra\n(evidencia salida desde la obra)"]:::nuevo
+        CUADRAQ{"¿Cantidades\ncuadran?"}:::naranja
+        AJUSTE["⚖️ Acción de Ajuste\nCruzar frentes / sucursales\ndel mismo cliente hasta cuadrar\n(equipos prestados entre frentes)"]:::nuevo
     end
 
-    %% ── FACTURACIÓN
-    FAC["💳 Pasar a Facturación\ncon días calculados\n+ reposiciones si aplica"]:::azul
+    %% RETORNO DE EQUIPOS
+    subgraph RETORNO["📥  RETORNO DE EQUIPOS — INSPECCIÓN"]
+        direction TB
+        RECOGIDA["🚛 Recogida en Obra\nTransporte de vuelta"]:::azul
+        ITEMQ{"Estado de\ncada equipo"}:::naranja
+        ITEM_OK["✅ Buen Estado\nKardex restaurado"]:::exito
+        ITEM_DAÑ["⚠️ Dañado\nRegistrar novedad\n+ presupuesto reparación"]:::peligro
+        ITEM_MANT["🔧 Mantenimiento\nEquipo reparable\nG&H asume el costo\n(no se factura al cliente)"]:::nuevo
+        ITEM_FALT["❌ Faltante\nGenerar Reposición\n(cobro al cliente según catálogo)"]:::peligro
+        ITEM_AJENO["↩️ Equipo Ajeno\nNo pertenece a G&H\nDevolver a empresa\ncorrespondiente"]:::nuevo
+        KARDEX_IN["🗄️ Kardex actualizado\n(Stock aumenta)\nSaldo negativo visible si hay descuadre"]:::grisClaro
+        DIAS["📅 Calcular días de alquiler\nfecha pedido completo → fecha entrada"]:::azul
+    end
 
-    %% ── FLUJO
+    %% LIQUIDACIÓN CONDUCTORES
+    subgraph CONDUCTORES["🚛  CONDUCTORES — LIQUIDACIÓN POR VIAJE"]
+        direction LR
+        CALC_KM["🗺️ Distancia del Trayecto\nRecogida → Entrega en km\n(regla configurable por SuperAdmin)"]:::nuevo
+        CALC_CARGA["⚖️ Capacidad Efectiva\nPeso (toneladas) + Volumen\nPor tipo de camión"]:::nuevo
+        CALC_COMB["⛽ Regla de Combustible\nValor km × factor de carga\nConfigurable por tipo de camión"]:::nuevo
+        CALC_LIQ["💰 Liquidación por Viaje\nValor = f(km, toneladas, volumen)\nRegistro por conductor · por viaje"]:::azul
+    end
+
+    %% FACTURACIÓN
+    FAC["💳 Pasar a Facturación\ncon días calculados\n+ reposiciones si aplica\n(Centro Costo 13 o 14)"]:::azul
+
+    %% ── FLUJO PRINCIPAL
     INICIO --> KARDEX_TOTAL
-    KARDEX_TOTAL --> REMSAL
+    KARDEX_TOTAL --> VIVIANA
+    KARDEX_TOTAL --> INGENIERO
+    VIVIANA -.->|"Cronograma diario\nde cortes y recogidas"| INGENIERO
+
+    INGENIERO --> CANCELQ
+    CANCELQ -->|"Sí"| CANCELACION
+    CANCELQ -->|"No"| REMSAL
+
     REMSAL --> KARDEX_OUT
     KARDEX_OUT --> AGENDA
-    AGENDA --> NOTIF_COND
+    AGENDA --> INDISP_Q
+    INDISP_Q -->|"Disponible"| DESP_CARGA
+    INDISP_Q -->|"No disponible"| INDISP
+    INDISP -->|"Reasignar"| AGENDA
+    DESP_CARGA --> NOTIF_COND
     NOTIF_COND --> DESPACHO
     DESPACHO --> ENTREGA
 
-    ENTREGA --> ALQUILER_VIGENTE
+    ENTREGA -.->|"Liquidar viaje"| CALC_KM
+    CALC_KM --> CALC_CARGA
+    CALC_CARGA --> CALC_COMB
+    CALC_COMB --> CALC_LIQ
+
+    ENTREGA --> PEDIDOQ
+    PEDIDOQ -->|"No — Parcial"| PARCIAL_ACU
+    PARCIAL_ACU -->|"Programar siguiente viaje"| AGENDA
+    PEDIDOQ -->|"Sí — Completo"| ALQUILER_INI
+
+    ALQUILER_INI --> ALQUILER_VIGENTE
     ALQUILER_VIGENTE --> DEVQ
     DEVQ -->|"Sí — programar retorno"| NOTIF_DEV
     DEVQ -->|"Sí — ya en fecha"| AGENDA_REC
     NOTIF_DEV --> AGENDA_REC
     AGENDA_REC --> RECOGIDA
+    AGENDA_REC -.->|"Actualiza cronograma"| RECOG_REPORT
 
-    RECOGIDA --> INSPECCION
-    INSPECCION --> ITEMQ
+    RECOGIDA --> VF1 & VF2 & VF3
+    VF1 & VF2 & VF3 --> CUADRAQ
+    CUADRAQ -->|"Sí"| ITEMQ
+    CUADRAQ -->|"No — hay discrepancia"| AJUSTE
+    AJUSTE --> ITEMQ
+
     ITEMQ -->|"OK"| ITEM_OK
     ITEMQ -->|"Daño"| ITEM_DAÑ
+    ITEMQ -->|"Mantenimiento"| ITEM_MANT
     ITEMQ -->|"No retornó"| ITEM_FALT
+    ITEMQ -->|"Ajeno"| ITEM_AJENO
+
     ITEM_OK --> KARDEX_IN
     ITEM_DAÑ --> KARDEX_IN
+    ITEM_MANT --> KARDEX_IN
     ITEM_FALT --> FAC
+    ITEM_AJENO -.->|"Registrar y devolver"| KARDEX_IN
     KARDEX_IN --> DIAS
     DIAS --> FAC
 

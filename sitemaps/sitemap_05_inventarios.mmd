@@ -20,28 +20,65 @@ flowchart TD
     classDef cta     fill:#FF9F1C,color:#1A365D,stroke:#E8910A,stroke-width:2px,font-weight:bold
     classDef alerta  fill:#E53E3E,color:#FFFFFF,stroke:#C53030,stroke-width:1px
     classDef exito   fill:#38A169,color:#FFFFFF,stroke:#2F855A,stroke-width:1px
+    classDef nuevo   fill:#BEE3F8,color:#1A365D,stroke:#3182CE,stroke-width:1px
 
-    INV["📦 Inventarios\n/inventarios"]:::modulo
+    INV["📦 Almacén / Gestión de Conductores\n/almacen"]:::modulo
 
     subgraph S_STOCK["STOCK Y KARDEX"]
-        INV_STOCK["🗄️ Stock Total (Momento Cero)\n/inventarios/stock\nBodega + En Clientes + En Producción"]:::pagina
-        INV_PROD["🏭 Equipos en Producción\n/inventarios/produccion"]:::pagina
+        INV_STOCK["🗄️ Stock Total (Momento Cero)\n/almacen/stock\nBodega + En Clientes + En Producción\n⚠️ Sin inventario físico estandarizado\n(catálogos — saldos negativos visibles)"]:::pagina
+        INV_PROD["🏭 Equipos en Producción\n/almacen/produccion"]:::pagina
         INV_STOCK --> INV_PROD
     end
 
+    subgraph S_PEDIDOS["PEDIDOS"]
+        INV_PED["📋 Pedidos\n/almacen/pedidos"]:::nuevo
+        INV_PED_NEW["➕ Nuevo Pedido\n/almacen/pedidos/nuevo\nObra · Frente · Ítems · Cantidades"]:::cta
+        INV_PED_DET["🔍 Detalle Pedido\n/almacen/pedidos/:id\nEstado: Pendiente · Parcial · Completo"]:::nuevo
+        INV_CANCEL["❌ Cancelación de Pedido\n/almacen/pedidos/:id/cancelar\nMotivo · Notificación Ingeniería"]:::alerta
+        INV_PED --> INV_PED_NEW & INV_PED_DET
+        INV_PED_DET --> INV_CANCEL
+    end
+
     subgraph S_REM["REMISIONES"]
-        INV_REM["📤 Remisiones\n/inventarios/remisiones"]:::pagina
-        INV_REM_NEW["➕ Nueva Remisión de Salida\n/inventarios/remisiones/nueva\nFecha · Hora · Conductor · Obra"]:::cta
-        INV_DEV["📥 Devoluciones / Entrada\n/inventarios/devoluciones\nInspección · Novedad · Reposición"]:::pagina
+        INV_REM["📤 Remisiones\n/almacen/remisiones"]:::pagina
+        INV_REM_NEW["➕ Nueva Remisión de Salida\n/almacen/remisiones/nueva\nPedido · Fecha · Hora · Conductor · Obra\n(¿Es parcial? — acumula hasta completar)"]:::cta
+        INV_DEV["📥 Devoluciones / Entrada\n/almacen/devoluciones"]:::pagina
+        INV_INSP["🔍 Inspección de Equipos\n/almacen/devoluciones/:id/inspeccion\n5 estados por ítem:"]:::nuevo
+        INV_OK["✅ Buen Estado"]:::exito
+        INV_DAN["⚠️ Dañado"]:::alerta
+        INV_MANT["🔧 Mantenimiento\n(G&H asume costo)"]:::nuevo
+        INV_FALT["❌ Faltante\n→ genera Reposición"]:::alerta
+        INV_AJENO["↩️ Equipo Ajeno\n→ registrar y devolver"]:::nuevo
         INV_REM --> INV_REM_NEW
         INV_REM --> INV_DEV
+        INV_DEV --> INV_INSP
+        INV_INSP --> INV_OK & INV_DAN & INV_MANT & INV_FALT & INV_AJENO
     end
 
-    subgraph S_LOGISTICA["LOGÍSTICA"]
-        INV_AGENDA["🗓️ Agenda de Transporte\n/inventarios/agenda\nFecha · Hora · Vehículo · Dirección"]:::cta
-        INV_COND["🚛 Conductores\n/inventarios/conductores\nAgenda asignada · Historial"]:::pagina
-        INV_ALERTA["🔔 Alertas de Recogidas Pendientes\n/inventarios/alertas\nOptimización de rutas"]:::alerta
+    subgraph S_VER["VERIFICACIÓN 3 FUENTES"]
+        INV_VF["🔍 Verificación Cruzada\n/almacen/devoluciones/:id/verificar\nFormato Conductor\nFormato Despachador\nFotos Portería Obra"]:::nuevo
+        INV_AJUSTE["⚖️ Ajuste de Inventario\n/almacen/ajustes\nCruzar frentes / sucursales\n(equipo prestado entre frentes)"]:::nuevo
+        INV_VF --> INV_AJUSTE
+    end
+
+    subgraph S_LOGISTICA["LOGÍSTICA Y CONDUCTORES"]
+        INV_AGENDA["🗓️ Agenda de Transporte\n/almacen/agenda\nFecha · Hora · Vehículo · Dirección"]:::cta
+        INV_COND["🚛 Gestión de Conductores\n/almacen/conductores\nAgenda · Historial · Disponibilidad"]:::pagina
+        INV_COND_INDISP["⚠️ Indisponibilidad Conductor\n/almacen/conductores/:id/indisponibilidad\nMotivo: mantenimiento · reposición · otro\nFechas desde/hasta"]:::nuevo
+        INV_TRAY["🗺️ Cálculo de Trayecto\n/almacen/conductores/:id/trayecto\nPunto recogida → destino\n― Distancia km (configurable)\n― Regla combustible\n― Peso y volumen del camión"]:::nuevo
+        INV_ALERTA["🔔 Alertas de Recogidas Pendientes\n/almacen/alertas\nOptimización de rutas"]:::alerta
         INV_AGENDA --> INV_COND
+        INV_COND --> INV_COND_INDISP & INV_TRAY
     end
 
-    INV --> S_STOCK & S_REM & S_LOGISTICA
+    subgraph S_CRONOGRAMA["CRONOGRAMA DIARIO — RECEPCIÓN"]
+        INV_CRONO["🗓️ Cronograma Diario\n/almacen/cronograma\nViviana: Obra · Cliente · N° corte · Fecha"]:::nuevo
+        INV_CRONO_REP["📤 Reporte de Recogidas\n/almacen/cronograma/reporte\nAlmacén reporta realizadas vs. programadas"]:::nuevo
+        INV_CRONO --> INV_CRONO_REP
+    end
+
+    subgraph S_AJENOS["EQUIPOS AJENOS"]
+        INV_AJENOS_LIST["↩️ Equipos Ajenos en Bodega\n/almacen/equipos-ajenos\nEmpresa propietaria · Estado · Devolución"]:::nuevo
+    end
+
+    INV --> S_STOCK & S_PEDIDOS & S_REM & S_VER & S_LOGISTICA & S_CRONOGRAMA & S_AJENOS

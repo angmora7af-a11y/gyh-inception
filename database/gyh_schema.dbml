@@ -1,8 +1,8 @@
 // ============================================================
 // G&H OBRAS Y ESTRUCTURAS METALICAS S.A.S
 // Sistema de Gestión Comercial, Cotizaciones, Inventarios y Facturación
-// Base de Datos: PostgreSQL — Versión 1.0
-// Fecha: 2026-06-24
+// Base de Datos: PostgreSQL — Versión 1.1
+// Fecha: 2026-07-04 (actualizado SEM-27 con entrevistas de feedback)
 // ============================================================
 
 Project gyh_sistema {
@@ -13,6 +13,8 @@ Project gyh_sistema {
     Módulos: Clientes · Cotizaciones · Contratos · Inventarios · Facturación · Auditoría
     Métricas de escala: ~180 clientes, hasta 50 obras/cliente, 3-4 frentes/obra,
     6-12 cotizaciones/semana por dibujante, ~50 prospectos nuevos/mes.
+    SEM-27: Pedidos parciales · Centros de costo · Retenciones por tipo · Catálogos duales
+            Rol Despachador · Rol Recepción · CUFE/Radian · Equipo ajeno · Cronograma diario
   '''
 }
 
@@ -21,13 +23,17 @@ Project gyh_sistema {
 // ============================================================
 
 Enum rol_usuario {
+  superadmin    [note: 'Configuración global del sistema — parámetros de trayecto, reglas de negocio, tarifas']
   admin         [note: 'Administrador del sistema']
-  comercial     [note: 'Equipo de ventas y cotizaciones']
+  comercial     [note: 'Equipo de ventas y cotizaciones; incluye ingenieros de campo; autoriza despachos']
   dibujante     [note: 'Modelamiento técnico en AutoCAD']
-  contabilidad  [note: 'Validación financiera y facturación']
+  contabilidad  [note: 'Validación financiera y supervisión de cartera']
+  facturacion   [note: 'Genera facturas y proformas, envía a Siigo/DIAN, gestiona centros de costo y retenciones']
   juridica      [note: 'Validación documental y contratos']
-  almacen       [note: 'Jefe de almacén e inventarios']
+  almacen       [note: 'Jefe de almacén, inventarios y agenda de transporte']
   conductor     [note: 'Transporte de equipos']
+  despachador   [note: 'Conteo físico de equipos en bodega (entrada y salida); clasifica estado en devoluciones']
+  recepcion     [note: 'Cronograma diario de recogidas y cortes — Viviana']
 }
 
 Enum tipo_id {
@@ -130,7 +136,7 @@ Enum estado_cotizacion {
 
 Enum tipo_item_cotizacion {
   venta         [note: 'Productos existentes en catálogo']
-  alquiler      [note: 'Maquinaria temporal — se calcula por días']
+  alquiler      [note: 'Maquinaria temporal — se calcula por días desde pedido completo']
   transporte_ida
   transporte_vuelta
   reposicion    [note: 'Cobro por pérdida o no devolución']
@@ -170,7 +176,7 @@ Enum estado_contrato {
 }
 
 Enum tipo_remision {
-  salida            [note: 'Despacho de equipos a obra']
+  salida             [note: 'Despacho de equipos a obra']
   entrada_devolucion [note: 'Retorno de alquiler']
   entrada_reposicion [note: 'Cobro por faltante']
 }
@@ -187,8 +193,28 @@ Enum estado_item_remision {
   pendiente
   entregado_ok
   entregado_parcial
-  dañado
-  faltante
+  danado         [note: 'Daño que genera novedad y posible cobro al cliente']
+  baja           [note: 'Equipo dado de baja — destrucción irreparable o pérdida definitiva; se registra internamente, no genera reposición']
+  mantenimiento  [note: 'Equipo reparable — G&H asume el costo, no se factura al cliente']
+  faltante       [note: 'No retornó — genera ítem de reposición (cobro al cliente según catálogo)']
+  ajeno          [note: 'Equipo que no pertenece a G&H — devolver a empresa externa']
+}
+
+Enum proveedor_transporte {
+  gyh     [note: 'G&H provee y factura el transporte — cobro por peso Y volumen (el que resulte mayor)']
+  cliente [note: 'El cliente gestiona su propio transporte — no se cobra flete por G&H']
+}
+
+Enum tipo_origen_contrato {
+  interno  [note: 'Contrato ya existente con el cliente — activa operaciones directamente sin firma']
+  externo  [note: 'Nuevo contrato para cliente externo o primer contrato — requiere firma Ooku']
+}
+
+Enum ciclo_cobro {
+  mes_vencido  [note: 'Cobro el mes siguiente al período del servicio (default)']
+  quincenal
+  semanal
+  al_cierre    [note: 'Facturación al cierre de la obra']
 }
 
 Enum estado_agenda {
@@ -236,6 +262,34 @@ Enum tipo_notificacion {
   sistema
 }
 
+// Nuevos enums SEM-27 ────────────────────────────────────────
+
+Enum estado_pedido {
+  pendiente   [note: 'Sin remisiones de salida generadas aún']
+  parcial     [note: 'Con al menos una remisión, pedido incompleto — el alquiler NO ha iniciado']
+  completo    [note: 'Todo el pedido fue despachado — inicia contador de días de alquiler']
+  cancelado   [note: 'Cancelado por la obra; motivo registrado']
+}
+
+Enum modalidad_factura {
+  por_remision  [note: 'Una factura por cada remisión o contratista']
+  consolidada   [note: 'Una sola factura con todos los ítems del período (transporte siempre va separado)']
+  por_valor     [note: 'El usuario define el monto; el sistema agrega ítems hasta alcanzarlo']
+}
+
+Enum estado_radian {
+  sin_enviar
+  enviada_dian    [note: 'Enviada a la DIAN — CUFE generado']
+  aceptada_dian   [note: 'Aceptada y marcada por el cliente con sistema contable (triple check)']
+  rechazada_dian  [note: 'Rechazada por la DIAN — revisar errores']
+  sin_confirmar   [note: 'Cliente con dominio público (Gmail/Hotmail) — no dará check automático; Cartera llama']
+}
+
+Enum tipo_dominio_correo {
+  corporativo  [note: 'Sistema contable propio — da triple check automático en DIAN']
+  publico      [note: 'Gmail, Hotmail, Yahoo — nunca dará el check; seguimiento telefónico por Cartera']
+}
+
 // ============================================================
 // MÓDULO: USUARIOS Y SEGURIDAD
 // ============================================================
@@ -250,7 +304,7 @@ Table usuarios {
   created_at  timestamp    [default: `now()`]
   updated_at  timestamp    [default: `now()`]
 
-  Note: 'Usuarios del sistema con control de acceso por rol (RBAC)'
+  Note: 'Usuarios del sistema con control de acceso por rol (RBAC) — 11 roles'
 }
 
 // ============================================================
@@ -332,6 +386,16 @@ Table clientes {
   regimen_iva             regimen_iva_tipo
   gran_contribuyente      boolean      [default: false]
   autorretenedor          boolean      [default: false]
+
+  // Facturación especial (SEM-27)
+  nombre_facturacion      varchar(300) [note: 'Nombre para la factura cuando el pagador difiere del contratante (ej: fiducia vs. consorcio Bronz)']
+  tipo_dominio_correo     tipo_dominio_correo [note: 'Corporativo = triple check DIAN automático; Público = seguimiento telefónico por Cartera']
+  tiene_sistema_contable  boolean      [default: false, note: 'Define si el cliente puede dar el triple check en DIAN o requiere llamada']
+
+  // Condiciones de pago (SEM-27)
+  dias_tramitacion_facturas integer     [note: 'Días específicos del cliente para tramitar facturas (ej: paga solo los martes)']
+  ciclo_cobro               ciclo_cobro [default: 'mes_vencido', note: 'Ciclo de cobro: mes vencido es el default']
+  notas_condiciones_pago    text        [note: 'Instrucciones especiales de facturación (horarios, contacto, portal específico)']
 
   // Control del sistema
   estado_cliente          estado_cliente [default: 'prospecto']
@@ -424,7 +488,6 @@ Table autorizacion_centrales_riesgo {
 
 // ============================================================
 // FLUJO DE APROBACIÓN DE CLIENTES
-// (Reemplaza el Excel CHECKLIST VALIDACION CLIENTES BOGOTA)
 // ============================================================
 
 Table aprobaciones_cliente {
@@ -432,7 +495,7 @@ Table aprobaciones_cliente {
   cliente_id     uuid         [not null, ref: > clientes.id]
   area           area_aprobacion [not null]
   estado         estado_aprobacion [default: 'pendiente']
-  concepto       text         [note: 'Comentario obligatorio que justifica la decisión']
+  concepto       text         [note: 'Comentario obligatorio que justifica la decisión — no se puede guardar sin él']
   es_favorable   boolean
   aprobado_por   uuid         [ref: > usuarios.id]
   fecha_concepto timestamp
@@ -497,7 +560,7 @@ Table frentes_obra {
   estado      estado_obra  [default: 'activa']
   created_at  timestamp    [default: `now()`]
 
-  Note: 'Frentes dentro de una obra — entre 3 y 4 frentes por obra según métricas'
+  Note: 'Frentes dentro de una obra — entre 3 y 4 frentes por obra; el equipo se puede prestar entre frentes'
 }
 
 // ============================================================
@@ -513,14 +576,20 @@ Table catalogo_productos {
   tipo_producto        tipo_producto [not null]
   unidad_medida        unidad_medida [default: 'unidad']
 
-  // Precios por modalidad
+  // Precios por modalidad (catálogo general anual — actualizado por Recepción)
   precio_venta         decimal(15,2)
-  precio_alquiler_dia  decimal(15,2) [note: 'Tarifa diaria — inicia desde remisión hasta devolución']
-  precio_reposicion    decimal(15,2) [note: 'Valor comercial en caso de pérdida/daño']
+  precio_alquiler_dia  decimal(15,2) [note: 'Tarifa diaria — inicia desde fecha de pedido completo hasta devolución']
+  precio_reposicion    decimal(15,2) [note: 'Valor comercial en caso de pérdida/daño irreparable']
 
-  // Cálculo por área (requerimiento facturación)
+  // Cálculo por área
   calcula_por_m2       boolean       [default: false]
   precio_por_m2        decimal(15,2)
+
+  // Clasificación facturación (SEM-27)
+  centro_costo         varchar(5)    [note: '13=alquiler · 14=venta_reposicion — aplicado automáticamente en factura']
+  unidad_negocio       varchar(50)   [note: 'formaleta_metalica|multidireccional|transporte|formaleta_plastica|formaleta_tradicional']
+  codigo_tipo          varchar(10)   [note: 'alquiler|venta — no mezclar; al hacer venta no tomar de inventario de alquiler']
+  precio_transporte_calculo varchar(20) [note: 'peso_volumen|toneladas — el cobro real de transporte es por lo que ocupe (peso O volumen que llene el camión)']
 
   // Inventario
   stock_actual         integer       [default: 0]
@@ -532,12 +601,50 @@ Table catalogo_productos {
   created_at           timestamp     [default: `now()`]
   updated_at           timestamp     [default: `now()`]
 
-  Note: 'Catálogo oficial: andamios multidireccionales, formaletas, maquinaria y accesorios'
+  Note: 'Catálogo general anual — actualizado por Recepción cada año y distribuido a todas las áreas'
+}
+
+// Precios especiales por cliente (SEM-27)
+Table catalogo_precios_cliente {
+  id                  uuid    [pk, default: `gen_random_uuid()`]
+  cliente_id          uuid    [not null, ref: > clientes.id]
+  producto_id         uuid    [not null, ref: > catalogo_productos.id]
+  precio_alquiler_dia decimal(15,2)
+  precio_venta        decimal(15,2)
+  precio_reposicion   decimal(15,2)
+  vigente_desde       date    [not null]
+  vigente_hasta       date
+  acuerdo_comercial   text    [not null, note: 'Descripción del acuerdo — notificado por escrito a Facturación por el Comercial']
+  registrado_por      uuid    [ref: > usuarios.id]
+  created_at          timestamp [default: `now()`]
+  updated_at          timestamp [default: `now()`]
+
+  indexes {
+    (cliente_id, producto_id)
+    vigente_desde
+  }
+
+  Note: 'Precios especiales por cliente — el Comercial los acuerda y notifica por escrito a Facturación (ej: Marval con 30 obras)'
+}
+
+// Configuración de retenciones por tipo de concepto (SEM-27)
+Table retenciones_config {
+  id                  uuid    [pk, default: `gen_random_uuid()`]
+  tipo_concepto       varchar(30) [not null, note: 'alquiler|transporte|venta|reposicion']
+  nombre_retencion    varchar(30) [not null, note: 'rte_fuente|rte_ica|iva']
+  porcentaje          decimal(5,2) [not null]
+  centro_costo        varchar(5)  [note: '13=alquiler · 14=venta_reposicion']
+  vigente_desde       date    [not null]
+  vigente_hasta       date
+  nota                text    [note: 'Ej: Transporte Rte. Fuente 1% — diferente de alquiler; no mezclar en una factura o Siigo la rechaza']
+  creado_por          uuid    [ref: > usuarios.id]
+  created_at          timestamp [default: `now()`]
+
+  Note: 'Retenciones por tipo de concepto — transporte y alquiler tienen tasas distintas; si se mezclan, Siigo rechaza la factura'
 }
 
 // ============================================================
 // MÓDULO: COTIZACIONES
-// (Proceso actual: AutoCAD → Excel → PDF — entre 4 y 6 horas por dibujante)
 // ============================================================
 
 Table cotizaciones {
@@ -549,7 +656,7 @@ Table cotizaciones {
   comercial_id         uuid         [ref: > usuarios.id]
   estado               estado_cotizacion [default: 'borrador']
 
-  // Tipos de negocio habilitados en la cotización
+  // Tipos de negocio habilitados
   incluye_venta        boolean      [default: false]
   incluye_alquiler     boolean      [default: false]
   incluye_transporte   boolean      [default: false]
@@ -565,6 +672,9 @@ Table cotizaciones {
   archivo_plano_url    varchar(500)
   archivo_excel_url    varchar(500)  [note: 'Desglose de materiales exportado desde AutoCAD']
   pdf_cotizacion_url   varchar(500)  [note: 'PDF final con valores comerciales agregados']
+
+  // Indicador de catálogo especial
+  usa_precios_especiales boolean     [default: false, note: 'true si el cliente tiene catalogo_precios_cliente vigente']
 
   notas_dibujante      text
   notas_comercial      text
@@ -593,11 +703,15 @@ Table cotizacion_items {
   area_m2              decimal(12,2) [note: 'Para productos que calculan por metro cuadrado']
   precio_unitario      decimal(15,2) [not null]
   precio_por_m2        decimal(15,2)
-  dias_alquiler        integer       [note: 'Para ítems de alquiler: desde remisión hasta devolución']
+  dias_alquiler        integer       [note: 'Para ítems de alquiler: desde pedido completo hasta devolución']
+  // Transporte: peso Y volumen (SEM-27)
+  proveedor_transporte proveedor_transporte [note: 'G&H provee y cobra el flete, o el cliente lo gestiona por su cuenta']
+  peso_kg              decimal(10,2) [note: 'Peso del envío en kg — para cálculo de transporte']
+  volumen_m3           decimal(10,2) [note: 'Volumen del envío en m³ — si llena el camión se cobra la tarifa completa']
   subtotal             decimal(18,2) [not null]
   descripcion_adicional text
 
-  Note: 'Líneas de cotización con soporte para cálculo por m² y días de alquiler'
+  Note: 'Líneas de cotización. Transporte: G&H cobra por peso Y volumen (el mayor); si el cliente provee transporte, no se cobra flete'
 }
 
 Table archivos_planos {
@@ -659,6 +773,45 @@ Table contratos {
 // MÓDULO: INVENTARIOS Y LOGÍSTICA
 // ============================================================
 
+// Pedidos de despacho (SEM-27)
+Table pedidos {
+  id                     uuid    [pk, default: `gen_random_uuid()`]
+  numero_pedido          varchar(50) [unique, not null]
+  orden_compra_id        uuid    [not null, ref: > ordenes_compra.id]
+  obra_id                uuid    [not null, ref: > obras.id]
+  frente_id              uuid    [ref: > frentes_obra.id]
+  estado                 estado_pedido [default: 'pendiente']
+  fecha_pedido           date    [not null]
+  fecha_entrega_estimada date
+  autorizado_por         uuid    [ref: > usuarios.id, note: 'Ingeniero o Comercial que autoriza el despacho']
+  fecha_autorizacion     timestamp
+  motivo_cancelacion     text
+  cancelado_por          uuid    [ref: > usuarios.id]
+  fecha_alquiler_inicio  date    [note: 'Establecida automáticamente cuando estado = completo — desde aquí corren los días de alquiler']
+  notas                  text
+  created_at             timestamp [default: `now()`]
+  updated_at             timestamp [default: `now()`]
+
+  indexes {
+    orden_compra_id
+    estado
+    fecha_pedido
+  }
+
+  Note: 'Un pedido puede enviarse en múltiples viajes parciales. El alquiler SOLO inicia cuando el pedido queda completo'
+}
+
+Table pedido_items {
+  id                uuid    [pk, default: `gen_random_uuid()`]
+  pedido_id         uuid    [not null, ref: > pedidos.id]
+  producto_id       uuid    [not null, ref: > catalogo_productos.id]
+  cantidad_pedida   integer [not null]
+  cantidad_enviada  integer [default: 0, note: 'Acumulado de remisiones de salida vinculadas a este pedido']
+  created_at        timestamp [default: `now()`]
+
+  Note: 'Ítems de un pedido — cantidad_enviada se actualiza con cada remisión parcial hasta igualar cantidad_pedida'
+}
+
 Table conductores {
   id           uuid    [pk, default: `gen_random_uuid()`]
   nombre       varchar(200) [not null]
@@ -670,16 +823,20 @@ Table conductores {
   activo       boolean  [default: true]
   created_at   timestamp [default: `now()`]
 
-  Note: 'Conductores para transporte de equipos a obras'
+  Note: 'Conductores para transporte de equipos a obras — definen el estado inicial del equipo en devoluciones'
 }
 
 Table remisiones {
   id               uuid    [pk, default: `gen_random_uuid()`]
   numero_remision  varchar(50) [unique, not null]
   orden_compra_id  uuid    [not null, ref: > ordenes_compra.id]
+  pedido_id        uuid    [ref: > pedidos.id, note: 'Pedido al que pertenece esta remisión (puede ser parcial)']
   frente_id        uuid    [ref: > frentes_obra.id]
+  frente_ajuste_id uuid    [ref: > frentes_obra.id, note: 'Frente al que se reasignó cuando hay préstamo entre frentes']
   tipo_remision    tipo_remision [not null]
+  es_parcial       boolean [default: false, note: 'true si el pedido asociado no está aún completo']
   fecha_remision   date    [not null]
+  hora_remision    time    [note: 'Hora exacta del despacho o recepción']
   responsable_id   uuid    [ref: > usuarios.id]
   conductor_id     uuid    [ref: > conductores.id]
   vehiculo         varchar(100)
@@ -687,16 +844,22 @@ Table remisiones {
   direccion_destino text
   observaciones    text
   estado           estado_remision [default: 'programada']
+  // Verificación 3 fuentes en devolución (SEM-27)
+  formato_conductor    text   [note: 'Registro del conductor: lo que dice haber traído']
+  formato_despachador  text   [note: 'Conteo físico del despachador en bodega']
+  fotos_porteria_urls  text[] [note: 'URLs de fotos de portería de la obra — evidencia salida']
+  cruce_ajuste         text   [note: 'Justificación cuando se reasigna a otro frente por equipo prestado entre frentes']
   created_at       timestamp [default: `now()`]
   updated_at       timestamp [default: `now()`]
 
   indexes {
     orden_compra_id
+    pedido_id
     tipo_remision
     fecha_remision
   }
 
-  Note: 'Remisiones de salida y entrada al Kardex — control de equipos en obra'
+  Note: 'Remisiones de salida y entrada al Kardex — incluye verificación de 3 fuentes en devoluciones'
 }
 
 Table remision_items {
@@ -706,9 +869,50 @@ Table remision_items {
   cantidad_programada integer [not null]
   cantidad_real       integer
   estado_item         estado_item_remision [default: 'pendiente']
-  novedad             text    [note: 'Descripción de daño, faltante o novedad']
+  novedad             text    [note: 'Descripción de daño, faltante, mantenimiento o equipo ajeno']
+  clasificado_por     uuid    [ref: > usuarios.id, note: 'Conductor o Despachador que clasificó el estado']
 
-  Note: 'Detalle de equipos por remisión — base para calcular reposiciones y actualizar Kardex'
+  Note: 'Detalle de equipos por remisión — 5 estados: ok/dañado/mantenimiento/faltante/ajeno'
+}
+
+// Cronograma diario Recepción → Almacén (SEM-27)
+Table cronograma_recogidas {
+  id                  uuid    [pk, default: `gen_random_uuid()`]
+  fecha               date    [not null]
+  obra_id             uuid    [not null, ref: > obras.id]
+  cliente_id          uuid    [not null, ref: > clientes.id]
+  numero_corte        varchar(50)
+  fecha_corte         date
+  estado              varchar(20) [default: 'programada', note: 'programada|parcial|completada|sin_recoger']
+  registrado_por      uuid    [ref: > usuarios.id, note: 'Viviana — Recepción']
+  notas               text
+  created_at          timestamp [default: `now()`]
+  updated_at          timestamp [default: `now()`]
+
+  indexes {
+    fecha
+    estado
+    obra_id
+  }
+
+  Note: 'Cronograma diario: Viviana (Recepción) lo crea; Almacén (Angie) actualiza con recogidas realizadas'
+}
+
+// Equipo ajeno recibido en devoluciones (SEM-27)
+Table equipos_ajenos {
+  id                  uuid    [pk, default: `gen_random_uuid()`]
+  remision_id         uuid    [ref: > remisiones.id]
+  descripcion         text    [not null]
+  empresa_origen      varchar(200) [note: 'Empresa a quien pertenece el equipo']
+  fecha_recepcion     date    [not null]
+  estado              varchar(20) [default: 'en_bodega', note: 'en_bodega|devuelto']
+  fecha_devolucion    date
+  devuelto_a          varchar(200)
+  notas               text
+  registrado_por      uuid    [ref: > usuarios.id]
+  created_at          timestamp [default: `now()`]
+
+  Note: 'Equipo que no pertenece a G&H y llega en devoluciones — debe ser devuelto a la empresa correspondiente'
 }
 
 Table agenda_transporte {
@@ -747,6 +951,10 @@ Table facturas {
   fecha_emision    date    [not null]
   fecha_vencimiento date   [not null]
 
+  // Modalidad y centro de costo (SEM-27)
+  modalidad_factura modalidad_factura [note: 'Por remisión, consolidada o por valor — transporte siempre va en factura separada']
+  centro_costo      varchar(5)        [note: '13=alquiler · 14=venta_reposicion — aplicado automáticamente según líneas']
+
   // Valores con retenciones (según condiciones FT-AC-001 Sección VI)
   subtotal         decimal(18,2) [not null]
   descuento        decimal(18,2) [default: 0]
@@ -755,6 +963,16 @@ Table facturas {
   rte_ica          decimal(18,2) [default: 0]
   total            decimal(18,2) [not null]
   saldo_pendiente  decimal(18,2) [not null]
+
+  // Validación DIAN (SEM-27)
+  // Integración Siigo → DIAN (no es directa — flujo: factura → Siigo → DIAN)
+  cufe             varchar(200)  [note: 'Código Único de Factura Electrónica — generado por Siigo al transmitir a DIAN']
+  siigo_estado     varchar(30)   [note: 'Estado en Siigo: sin_enviar|enviada_siigo|rechazada_siigo|transmitida_dian']
+  siigo_enviada_at timestamp     [note: 'Fecha y hora en que se envió a Siigo']
+  estado_radian    estado_radian [default: 'sin_enviar', note: 'Estado validado por Facturación en portal DIAN — fuente de verdad (no el estado de Siigo)']
+  fecha_envio_dian timestamp     [note: 'Fecha de transmisión oficial a la DIAN (vía Siigo)']
+  fecha_validacion_dian timestamp [note: 'Fecha en que Facturación confirmó el estado en portal DIAN']
+  seguimiento_telefónico text    [note: 'Notas del seguimiento telefónico al cliente para confirmar recepción y procesamiento']
 
   pdf_url          varchar(500)
   notas            text
@@ -767,7 +985,7 @@ Table facturas {
     fecha_vencimiento
   }
 
-  Note: 'Facturación electrónica con retenciones, cálculo por m² y cruce contable'
+  Note: 'Facturación electrónica — CUFE + Radian son la prueba oficial (no el estado en Siigo)'
 }
 
 Table factura_items {
@@ -778,11 +996,15 @@ Table factura_items {
   tipo_cobro         tipo_item_cotizacion [not null]
   cantidad           decimal(12,3) [default: 1]
   area_m2            decimal(12,2)
-  dias_alquiler      integer [note: 'Calculado desde fecha remisión salida hasta devolución']
+  dias_alquiler      integer [note: 'Calculado desde fecha pedido completo hasta devolución']
   precio_unitario    decimal(15,2) [not null]
   subtotal           decimal(18,2) [not null]
+  // Retenciones por tipo de concepto (SEM-27)
+  centro_costo       varchar(5)   [note: '13=alquiler · 14=venta_reposicion (automático por tipo_cobro)']
+  retencion_tipo     varchar(30)  [note: 'rte_fuente|rte_ica|iva — diferente según tipo: transporte ≠ alquiler']
+  retencion_porcentaje decimal(5,2) [note: 'Porcentaje aplicado automáticamente desde retenciones_config']
 
-  Note: 'Líneas de factura: soporta cobro por m², por unidad y por días de alquiler'
+  Note: 'Líneas de factura con retención automática por tipo de concepto — no mezclar alquiler y transporte'
 }
 
 Table pagos {
@@ -790,13 +1012,14 @@ Table pagos {
   factura_id      uuid    [not null, ref: > facturas.id]
   monto           decimal(18,2) [not null]
   fecha_pago      date    [not null]
+  hora_pago       time    [note: 'Hora del pago para trazabilidad completa']
   metodo_pago     metodo_pago [not null]
   referencia_pago varchar(200)
   registrado_por  uuid    [ref: > usuarios.id]
   notas           text
   created_at      timestamp [default: `now()`]
 
-  Note: 'Registro de pagos recibidos — actualiza saldo_pendiente en facturas'
+  Note: 'Registro de pagos — gestionado por Cartera (Facturación solo genera y valida envío a DIAN)'
 }
 
 Table cartera {
@@ -807,10 +1030,12 @@ Table cartera {
   monto_mora           decimal(18,2) [default: 0]
   estado_gestion       estado_cartera [default: 'nueva']
   fecha_ultimo_contacto date
+  tipo_contacto_cobro  varchar(20) [note: 'llamada_telefonica|email|visita — según tipo_dominio_correo del cliente']
+  cufe_evidencia       varchar(200) [note: 'CUFE para mostrar al cliente que alega no haber recibido la factura']
   notas_gestion        text
   responsable_id       uuid    [ref: > usuarios.id]
   created_at           timestamp [default: `now()`]
   updated_at           timestamp [default: `now()`]
 
-  Note: 'Gestión de clientes con facturas vencidas — coordinado entre contabilidad y jurídica'
+  Note: 'Gestión de cartera — Cartera es quien hace el seguimiento de pagos; Facturación solo valida envío a DIAN'
 }

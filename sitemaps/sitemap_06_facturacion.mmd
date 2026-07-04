@@ -20,22 +20,56 @@ flowchart TD
     classDef cta     fill:#FF9F1C,color:#1A365D,stroke:#E8910A,stroke-width:2px,font-weight:bold
     classDef alerta  fill:#E53E3E,color:#FFFFFF,stroke:#C53030,stroke-width:1px
     classDef exito   fill:#38A169,color:#FFFFFF,stroke:#2F855A,stroke-width:1px
+    classDef nuevo   fill:#BEE3F8,color:#1A365D,stroke:#3182CE,stroke-width:1px
 
     FAC["💳 Facturación\n/facturacion"]:::modulo
+    CART["⚠️ Cartera\n/cartera\n(módulo independiente)"]:::modulo
+
+    subgraph S_CORTE["CORTES MENSUALES"]
+        FAC_CORTE["📅 Cortes por Cliente\n/facturacion/cortes\nPeriodo · Pedidos del mes · Estado"]:::nuevo
+        FAC_CORTE_CFG["⚙️ Configuración por Cliente\n/facturacion/cortes/config\n¿Consolidado o por remisión?\n¿Factura por valor ('lo que quepa')?"]:::nuevo
+        FAC_CORTE --> FAC_CORTE_CFG
+    end
+
+    subgraph S_PROFORMA["PROFORMA"]
+        FAC_PROF["📋 Proformas\n/facturacion/proformas"]:::nuevo
+        FAC_PROF_NEW["➕ Nueva Proforma\n/facturacion/proformas/nueva\nEspecificación de cobros al cliente\nantes de emitir la factura oficial"]:::cta
+        FAC_PROF_Q["❓ Aprobación Proforma\n/facturacion/proformas/:id/aprobar\nCliente confirma o solicita ajuste"]:::nuevo
+        FAC_PROF --> FAC_PROF_NEW
+        FAC_PROF_NEW --> FAC_PROF_Q
+    end
 
     subgraph S_FAC["FACTURACIÓN"]
         FAC_LIST["📋 Facturas\n/facturacion/facturas"]:::pagina
-        FAC_NEW["➕ Nueva Factura\n/facturacion/facturas/nueva\nDías alquiler · m² · Retenciones"]:::cta
+        FAC_NEW["➕ Nueva Factura\n/facturacion/facturas/nueva\nDías alquiler (desde pedido completo)\nm² · Retenciones · Centro costo"]:::cta
+        FAC_MODAL["📄 Modalidad de Factura\n― Por remisión (por contratista)\n― Consolidada (todo el período)\n― Por valor ('lo que quepa')\n⚠️ Transporte siempre factura separada"]:::nuevo
         FAC_PAG["💰 Registrar Pago\n/facturacion/:id/pago\nFecha · Hora · Valor · Método"]:::pagina
         FAC_LIST --> FAC_NEW & FAC_PAG
+        FAC_NEW --> FAC_MODAL
+    end
+
+    subgraph S_CCOSTO["CENTROS DE COSTO"]
+        FAC_CC["🏷️ Centros de Costo\n/facturacion/centros-costo\n13 = Alquileres\n14 = Ventas y Reposiciones\n(aplicado automáticamente)"]:::nuevo
+    end
+
+    subgraph S_DIAN["CUFE / DIAN / RADIAN"]
+        FAC_CUFE["✅ CUFE y Radian\n/facturacion/dian\nEstado de envío a la DIAN\n(fuente de verdad — no Siigo)\n― Sin enviar\n― Enviada + CUFE generado\n― Aceptada (triple check)\n― Rechazada (revisar errores)\n― Sin confirmar (dominio público)"]:::nuevo
     end
 
     subgraph S_RET["RETENCIONES"]
-        FAC_RET["🧾 Retenciones\n/facturacion/retenciones\nRte. Fuente · ICA · IVA"]:::pagina
+        FAC_RET["🧾 Retenciones por Tipo\n/facturacion/retenciones\nAlquiler · Transporte · Venta\n(tasas diferentes — no mezclar)"]:::nuevo
     end
 
-    subgraph S_CART["CARTERA"]
-        FAC_CART["⚠️ Cartera\n/facturacion/cartera\nMora · Seguimiento · Cobro jurídico"]:::alerta
+    subgraph S_CAT["CATÁLOGO ESPECIAL"]
+        FAC_CAT_CLI["💲 Precios Especiales por Cliente\n/facturacion/precios-especiales\nAcuerdo comercial · Vigencia\n(notificado por escrito por Comercial)"]:::nuevo
     end
 
-    FAC --> S_FAC & S_RET & S_CART
+    subgraph S_CART["CARTERA (módulo independiente)"]
+        CART_LIST["⚠️ Cartera\n/cartera\nMora · Seguimiento · Cobro jurídico"]:::alerta
+        CART_TIPO["📧 Estrategia por Tipo de Dominio\n/cartera/gestion\nCorporativo → triple check DIAN automático\nPúblico (Gmail/Hotmail) → llamada telefónica\n+ CUFE como evidencia de envío"]:::nuevo
+        CART_EST["📊 Estados de Gestión\nNueva · En Gestión · Acuerdo de Pago\nDemanda · Castigada · Recuperada"]:::pagina
+        CART_LIST --> CART_TIPO & CART_EST
+    end
+
+    FAC --> S_CORTE & S_PROFORMA & S_FAC & S_CCOSTO & S_DIAN & S_RET & S_CAT
+    CART --> S_CART

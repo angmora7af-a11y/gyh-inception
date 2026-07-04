@@ -210,36 +210,22 @@ def multi_diagram_section(sec_id, title, subtitle, diagrams):
   {blocks}
 </section>'''
 
-def roles_section(tabla_md, mmd_path):
+def roles_section(tabla_md, mmd_path=None):
     tabla_html = md2html(tabla_md)
-    raw   = rf(mmd_path)
-    fname = Path(mmd_path).name
-    stem  = Path(mmd_path).stem
     return f'''
 <section id="roles">
   <div class="section-header">
     <h2>Roles y Permisos (RBAC)</h2>
-    <p class="section-sub">8 roles · CEO/Ingeniero · Admin · Comercial · Dibujante · Contabilidad · Jurídica · Almacén · Conductor</p>
+    <p class="section-sub">11 roles · SuperAdmin · Admin · CEO/Ingeniero · Comercial · Dibujante · Contabilidad · Facturación · Jurídica · Almacén · Despachador · Conductor · Recepción</p>
   </div>
   <div class="callout warn">
-    <strong>Nuevo (Feedback 24-jun):</strong> Se añadió el rol <strong>CEO/Ingeniero</strong> con perfil de consulta, acceso a motivos de rechazo y capacidad de forzar la aprobación de un cliente bajo su estricta responsabilidad.
+    <strong>SEM-27:</strong> Roles <strong>Despachador</strong> y <strong>Recepción</strong> agregados.
+    <strong>Facturación</strong> separada de Contabilidad como rol independiente.
+    <strong>SuperAdmin</strong> para configuración global del sistema.
+    El <strong>CEO/Ingeniero</strong> conserva perfil de consulta, acceso a motivos de rechazo y aprobación forzada.
+    El diagrama de permisos fue reemplazado por las matrices detalladas a continuación.
   </div>
   <div class="md-content">{tabla_html}</div>
-  <h3 style="margin-top:2rem">Diagrama de Permisos por Rol</h3>
-  <div class="diagram-block">
-    <div class="diagram-label">
-      <span>📊 {fname}</span>
-      <button class="btn-dl-svg"
-              data-wrap="wrap-roles-mmd"
-              data-filename="{stem}.svg"
-              title="Descargar como SVG vectorial">
-        ⬇ Descargar SVG
-      </button>
-    </div>
-    <div class="mermaid-wrap" id="wrap-roles-mmd">
-      <pre class="mermaid">{raw}</pre>
-    </div>
-  </div>
 </section>'''
 
 def db_section(tables, enums, raw):
@@ -331,7 +317,7 @@ OVERVIEW = '''
 <section id="overview">
   <div class="section-header">
     <h2>Resumen del Proyecto</h2>
-    <p class="section-sub">G&H Obras y Estructuras Metálicas S.A.S · NIT: 901.218.896-8 · Bogotá · Sesión 2026-06-16 + Feedback 2026-06-24</p>
+    <p class="section-sub">G&H Obras y Estructuras Metálicas S.A.S · NIT: 901.218.896-8 · Bogotá · SEM-27 actualizado 2026-07-04</p>
   </div>
 
   <div class="metrics-grid">
@@ -345,14 +331,17 @@ OVERVIEW = '''
 
   <div class="two-col">
     <div class="info-card">
-      <h3>Módulos del Sistema</h3>
+      <h3>Módulos del Sistema (10)</h3>
       <ul class="module-list">
-        <li><span class="mod-badge">01</span> Cotizaciones — Dibujante + Comercial</li>
+        <li><span class="mod-badge">01</span> Cotizaciones — Catálogos duales · Líneas negocio</li>
         <li><span class="mod-badge">02</span> Registro y Aprobación de Clientes</li>
-        <li><span class="mod-badge">03</span> Contratos y Firma Electrónica</li>
-        <li><span class="mod-badge">04</span> Inventarios y Logística</li>
-        <li><span class="mod-badge">05</span> Facturación y Cartera</li>
-        <li><span class="mod-badge">06</span> Auditoría y Notificaciones</li>
+        <li><span class="mod-badge">03</span> Contratos y Firma Electrónica (Ooku)</li>
+        <li><span class="mod-badge">04</span> Almacén — Pedidos · Remisiones · Conductores</li>
+        <li><span class="mod-badge">05</span> Facturación — Proforma · Siigo/DIAN · Centros costo</li>
+        <li><span class="mod-badge">06</span> Cartera — Módulo independiente</li>
+        <li><span class="mod-badge">07</span> Auditoría — Log inmutable</li>
+        <li><span class="mod-badge">08</span> Notificaciones — Configuración de eventos</li>
+        <li><span class="mod-badge">09</span> Reportería — KPIs y exportaciones</li>
       </ul>
     </div>
     <div class="info-card">
@@ -361,35 +350,46 @@ OVERVIEW = '''
         <li><span class="stack-tag fe">Frontend</span> React + TypeScript</li>
         <li><span class="stack-tag be">Backend</span> FastAPI (Python)</li>
         <li><span class="stack-tag db">Base de Datos</span> PostgreSQL</li>
-        <li><span class="stack-tag ex">Firma</span> DocuSign / Okc</li>
+        <li><span class="stack-tag ex">Firma</span> Ooku (firma electrónica)</li>
+        <li><span class="stack-tag ex">Facturación</span> Siigo → DIAN</li>
         <li><span class="stack-tag ex">Storage</span> S3 Compatible</li>
         <li><span class="stack-tag ex">Notif.</span> Email + WhatsApp API</li>
+        <li><span class="stack-tag ex">Mapas</span> API Geocoding (trayectos km)</li>
       </ul>
     </div>
   </div>
 
   <div class="info-card" style="margin-top:1rem">
-    <h3>Roles del Sistema (8)</h3>
+    <h3>Roles del Sistema (12)</h3>
     <div class="roles-grid">
       <div class="role-chip">💼 Comercial</div>
       <div class="role-chip">✏️ Dibujante</div>
       <div class="role-chip">📊 Contabilidad</div>
+      <div class="role-chip">💳 Facturación</div>
       <div class="role-chip">⚖️ Jurídica</div>
       <div class="role-chip">🏭 Almacén</div>
       <div class="role-chip">🚛 Conductor</div>
+      <div class="role-chip">📦 Despachador</div>
+      <div class="role-chip">🗓️ Recepción</div>
       <div class="role-chip admin">👑 Admin</div>
+      <div class="role-chip admin">🛡️ SuperAdmin</div>
       <div class="role-chip ceo">🏗️ CEO/Ingeniero</div>
     </div>
   </div>
 
   <div class="callout" style="margin-top:1.25rem">
-    <strong>🆕 Ajustes Feedback 24-jun:</strong>
-    Subdivisión del catálogo por unidades de negocio (5) ·
-    Notas por especialidad en aprobación de clientes ·
-    Rol CEO/Ingeniero con aprobación final ·
-    Producción incluida en el Kardex de inventario ·
-    Alertas de recogidas logísticas ·
-    Campos de fecha y hora en transacciones
+    <strong>🆕 SEM-27 — Principales cambios:</strong>
+    Pedidos parciales (alquiler inicia al completarse) ·
+    Verificación 3 fuentes en devoluciones ·
+    6 estados de equipos (+ Baja) ·
+    Roles Despachador · Recepción · Facturación · SuperAdmin ·
+    Integración Siigo→DIAN (no directa) ·
+    Proforma antes de factura ·
+    Transporte: G&H o Cliente ·
+    Catálogos duales · Centros de costo 13/14 ·
+    Condiciones de pago por cliente ·
+    Módulo Reportería · Cartera independiente ·
+    Conectores de flujo en letra negra (legibles)
   </div>
 
   <div class="callout warn" style="margin-top:.75rem">
@@ -710,9 +710,9 @@ def generate():
       <span class="hero-chip">📅 {today}</span>
       <span class="hero-chip">🗄️ {len(tables)} tablas PostgreSQL</span>
       <span class="hero-chip">📊 {num_diagrams} diagramas Mermaid</span>
-      <span class="hero-chip">👤 8 roles del sistema</span>
+      <span class="hero-chip">👤 11 roles del sistema</span>
       <span class="hero-chip">🗺️ 7 sitemaps por flujo</span>
-      <span class="hero-chip">🆕 Feedback 24-jun aplicado</span>
+      <span class="hero-chip">🆕 SEM-27 aplicado</span>
     </div>
   </header>
 
