@@ -27,7 +27,7 @@ flowchart TD
     INICIO(["📝 Contrato firmado\n→ Operaciones Activas"]):::naranja
 
     %% STOCK TOTAL
-    KARDEX_TOTAL["📊 Stock Total (Momento Cero)\nBodega + Equipos en Clientes + En Producción\n⚠️ Sin inventario físico estandarizado — se trabaja con catálogos\nSaldos negativos serán visibles en el nuevo sistema"]:::azul
+    KARDEX_TOTAL["📊 Stock Total (Momento Cero)\nBodega + Equipos en Clientes + En Producción\n⚠️ Sin inventario físico estandarizado — se trabaja con catálogos\nLíneas: FT · FM · AMD · ALFOR · Consumibles\nSaldos negativos serán visibles en el nuevo sistema"]:::azul
 
     %% CRONOGRAMA DIARIO RECEPCIÓN
     subgraph CRONOGRAMA["🗓️  RECEPCIÓN — FLUJO DIARIO"]
@@ -98,9 +98,19 @@ flowchart TD
     subgraph CONDUCTORES["🚛  CONDUCTORES — LIQUIDACIÓN POR VIAJE"]
         direction LR
         CALC_KM["🗺️ Distancia del Trayecto\nRecogida → Entrega en km\n(regla configurable por SuperAdmin)"]:::nuevo
-        CALC_CARGA["⚖️ Capacidad Efectiva\nPeso (toneladas) + Volumen\nPor tipo de camión"]:::nuevo
+        CALC_CARGA["⚖️ Capacidad Efectiva\nPeso (toneladas) + Volumen\nPor tipo de camión\nTarifa: $2.500/ton Bogotá · $4.500/ton fuera"]:::nuevo
         CALC_COMB["⛽ Regla de Combustible\nValor km × factor de carga\nConfigurable por tipo de camión"]:::nuevo
-        CALC_LIQ["💰 Liquidación por Viaje\nValor = f(km, toneladas, volumen)\nRegistro por conductor · por viaje"]:::azul
+        CALC_CRIT["✅ Evaluación de Criterios\nMP Mant.Preventivo · RTE Recoger Total\nSER Sale+Regresa con equipo\nCL Entrega mismo día · PP Presentación"]:::nuevo
+        CALC_LIQ["💰 Liquidación por Viaje\nValor = f(km, toneladas, volumen, criterios)\nRegistro por conductor · por viaje\n(Solo califica si cumple criterios MP/RTE/SER/CL/PP)"]:::azul
+    end
+
+    %% KARDEX CONSUMIBLES
+    subgraph CONSUMIBLES_BODEGA["📦  CONSUMIBLES — KARDEX INTERNO DE BODEGA"]
+        direction LR
+        CONS_CAT["🗂️ Catálogo de Consumibles\nPINTURA ANTICORROSIVO (canecas)\nDISOLVENTE/THINNER (canecas)\nSOLDADURA 6013 (bolsas) · MIG 0.35 (cajas)\nTORNILLOS · Mezcla soldadura · Gas montacargas"]:::nuevo
+        CONS_KX["📋 Kardex de Consumibles\nFecha · Documento · Tipo movimiento\nEntrada · Salida · Saldo · Observaciones\nAlertas: Stock Mínimo / Máximo"]:::nuevo
+        CONS_ALERTA["🔔 Alerta Stock Mínimo\nNotificación automática a Almacén\ncuando el saldo baja del mínimo"]:::grisClaro
+        CONS_CAT --> CONS_KX --> CONS_ALERTA
     end
 
     %% FACTURACIÓN
@@ -129,7 +139,8 @@ flowchart TD
     ENTREGA -.->|"Liquidar viaje"| CALC_KM
     CALC_KM --> CALC_CARGA
     CALC_CARGA --> CALC_COMB
-    CALC_COMB --> CALC_LIQ
+    CALC_COMB --> CALC_CRIT
+    CALC_CRIT --> CALC_LIQ
 
     ENTREGA --> PEDIDOQ
     PEDIDOQ -->|"No — Parcial"| PARCIAL_ACU
@@ -165,3 +176,5 @@ flowchart TD
     DIAS --> FAC
 
     ENTREGA -->|"Si es Venta (no alquiler)"| FAC
+
+    KARDEX_TOTAL -.->|"Materiales internos\nbodega independiente"| CONS_CAT

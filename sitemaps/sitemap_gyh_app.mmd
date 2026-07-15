@@ -79,14 +79,15 @@ flowchart TD
 
     %% ── INVENTARIOS
     INV["📦 Inventarios\n/inventarios"]:::modulo
-    INV_STOCK["🗄️ Stock / Kardex\n/inventarios/stock"]:::pagina
+    INV_STOCK["🗄️ Stock / Kardex\n/inventarios/stock\nFT · FM · AMD · ALFOR"]:::pagina
     INV_REM["📤 Remisiones\n/inventarios/remisiones"]:::pagina
     INV_REM_NEW["➕ Nueva Remisión\n/inventarios/remisiones/nueva"]:::cta
     INV_AGENDA["🗓️ Agenda de Transporte\n/inventarios/agenda"]:::cta
     INV_COND["🚛 Conductores\n/inventarios/conductores"]:::pagina
     INV_DEV["📥 Devoluciones\n/inventarios/devoluciones"]:::pagina
     INV_ALERTA["🔔 Próximas Recogidas\n/inventarios/alertas"]:::alerta
-    INV --> INV_STOCK & INV_REM & INV_AGENDA & INV_COND & INV_DEV & INV_ALERTA
+    INV_CONS["📦 Consumibles Bodega\n/inventarios/consumibles\nPintura · Soldadura · Disolvente · etc."]:::pagina
+    INV --> INV_STOCK & INV_REM & INV_AGENDA & INV_COND & INV_DEV & INV_ALERTA & INV_CONS
     INV_REM --> INV_REM_NEW
 
     %% ── FACTURACIÓN
@@ -109,10 +110,12 @@ flowchart TD
     %% ── CONFIGURACIÓN
     CONF["⚙️ Configuración\n/configuracion"]:::modulo
     CONF_USR["👤 Usuarios y Roles\n/configuracion/usuarios"]:::pagina
-    CONF_CAT["📚 Catálogo Productos\n/configuracion/catalogo"]:::pagina
+    CONF_CAT["📚 Catálogo Productos\n/configuracion/catalogo\nFT · FM · AMD · ALFOR · Pesos"]:::pagina
     CONF_NOTIF["🔔 Notificaciones\n/configuracion/notificaciones"]:::pagina
     CONF_FIRMA["✍️ Integración Firma\nDocuSign / Okc API Keys"]:::pagina
-    CONF --> CONF_USR & CONF_CAT & CONF_NOTIF & CONF_FIRMA
+    CONF_TARIFA["🚛 Tarifas Transporte\n/configuracion/tarifas-transporte\nBogotá · Fuera · Por tipo de camión"]:::pagina
+    CONF_CRIT["✅ Criterios Conductores\n/configuracion/criterios-conductor\nMP · RTE · SER · CL · PP"]:::pagina
+    CONF --> CONF_USR & CONF_CAT & CONF_NOTIF & CONF_FIRMA & CONF_TARIFA & CONF_CRIT
 
     %% ── CONEXIONES RAÍZ
     ROOT --> AUTH

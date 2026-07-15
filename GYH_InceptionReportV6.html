@@ -610,6 +610,7 @@ footer strong { color: var(--primary); font-family: 'Montserrat', system-ui, san
   <div class="nav-group">Requerimientos Funcionales</div>
   <a href="#historias">📖 Historias de Usuario</a>
   <a href="#checklist">✅ Checklist Validado</a>
+  <a href="#notificaciones">🔔 Notificaciones</a>
 
   <div class="nav-divider"></div>
   <div class="nav-group">Arquitectura Técnica</div>
@@ -625,8 +626,8 @@ footer strong { color: var(--primary); font-family: 'Montserrat', system-ui, san
     <h1>Sistema de Gestión G&amp;H</h1>
     <p>Cotizaciones · Clientes · Contratos · Inventarios · Facturación · Auditoría</p>
     <div class="hero-meta">
-      <span class="hero-chip">📅 04 de July de 2026</span>
-      <span class="hero-chip">🗄️ 42 tablas PostgreSQL</span>
+      <span class="hero-chip">📅 14 de July de 2026</span>
+      <span class="hero-chip">🗄️ 47 tablas PostgreSQL</span>
       <span class="hero-chip">📊 13 diagramas Mermaid</span>
       <span class="hero-chip">👤 12 roles del sistema</span>
       <span class="hero-chip">🗺️ 7 sitemaps por módulo</span>
@@ -1057,6 +1058,9 @@ flowchart TD
 <tr><td><strong>Registrar y gestionar equipo ajeno</strong></td><td>—</td><td>✓</td><td>✓</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>✓</td><td>—</td><td>✓</td><td>—</td></tr>
 <tr><td><strong>Registrar indisponibilidad de conductor</strong></td><td>—</td><td>✓</td><td>✓</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>✓</td><td>—</td><td>—</td><td>—</td></tr>
 <tr><td><strong>Verificar y cargar camiones (despachador)</strong></td><td>—</td><td>✓</td><td>✓</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>✓</td><td>—</td></tr>
+<tr><td><strong>Ver y registrar movimientos de Kardex Consumibles</strong></td><td>—</td><td>✓</td><td>✓</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>✓</td><td>—</td><td>✓</td><td>—</td></tr>
+<tr><td><strong>Alerta de stock mínimo de consumibles</strong></td><td>—</td><td>✓</td><td>✓</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>✓</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><strong>Evaluar criterios de liquidación conductor por viaje</strong></td><td>—</td><td>✓</td><td>✓</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>✓</td><td>—</td><td>—</td><td>—</td></tr>
 </tbody></table></div>
 <hr>
 <h2>Módulo Facturación</h2>
@@ -1131,20 +1135,29 @@ flowchart TD
 <tr><td><strong>Configurar parámetros globales del sistema</strong></td><td>—</td><td>✓</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
 <tr><td><strong>Configurar reglas conductores (km · combustible · peso/volumen)</strong></td><td>—</td><td>✓</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
 <tr><td><strong>Configurar valor de km y reglas de trayecto</strong></td><td>—</td><td>✓</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><strong>Configurar tarifas de transporte por zona (Bogotá/Fuera)</strong></td><td>—</td><td>✓</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><strong>Configurar criterios de liquidación conductor (MP/RTE/SER/CL/PP)</strong></td><td>—</td><td>✓</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><strong>Configurar pesos por equipo del catálogo (FT/FM/AMD/ALFOR)</strong></td><td>—</td><td>✓</td><td>✓</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>✓</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><strong>Gestionar catálogo de consumibles</strong></td><td>—</td><td>✓</td><td>✓</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>✓</td><td>—</td><td>—</td><td>—</td></tr>
 </tbody></table></div>
 <hr>
 <h2>Catálogo de Productos — Líneas de Negocio</h2>
 <div class="table-wrap"><table><thead><tr>
 <th>Línea de Negocio</th>
+<th>Código Sistema</th>
+<th>Prefijo Remisión</th>
+<th>Ítems Aprox.</th>
 <th>Descripción</th>
-<th>Catálogo</th>
 </tr></thead><tbody>
-<tr><td><strong>Formaleta Metálica (FM)</strong></td><td>Sistemas de encofrado metálico (Excel FM)</td><td>General anual</td></tr>
-<tr><td><strong>Formaleta FP / FT</strong></td><td>Formaleta Plástica y Tradicional (Excel separado)</td><td>General anual</td></tr>
-<tr><td><strong>Multidireccional</strong></td><td>Andamios y sistemas multidireccionales</td><td>General anual</td></tr>
-<tr><td><strong>Transporte</strong></td><td>Fletes G&amp;H — precio por peso Y volumen (el mayor)</td><td>General anual</td></tr>
-<tr><td><strong>Otros / Accesorios</strong></td><td>Accesorios complementarios</td><td>General anual</td></tr>
+<tr><td><strong>Formaleta Tradicional</strong></td><td><code>formaleta_tradicional</code></td><td><code>FT</code></td><td>~18</td><td>Parales enano/corto/largo/extralargo, cerchas, crucetas corta/larga, andamio tubular, andamio colgante, escalera, saca corbatas</td></tr>
+<tr><td><strong>Formaleta Metálica</strong></td><td><code>formaleta_metalica</code></td><td><code>FM</code></td><td>~154</td><td>Tableros múltiples dimensiones (0.6×1.2, 0.5×1.2, …), rinconeras, ángulos, corbatas, muretes</td></tr>
+<tr><td><strong>Multidireccional AMD</strong></td><td><code>multidireccional</code></td><td><code>AMD</code></td><td>~202</td><td>Verticales con/sin espigo (0.5m, 1m, 2m), horizontales (0.7m, 1.4m, 2m, 3m), diagonales, tornillo nivelador</td></tr>
+<tr><td><strong>Sistema ALFOR</strong></td><td><code>andamio_alfor</code></td><td><code>ALFOR</code></td><td>~443</td><td>Abrazaderas fija/giratoria, alineadores (múltiples longitudes), bases, cruces, plataformas — referencia ALFOR/ALFOREQUIPOS</td></tr>
+<tr><td><strong>Transporte</strong></td><td><code>transporte</code></td><td><code>TRP</code></td><td>N/A</td><td>Fletes G&amp;H — precio por peso Y volumen (el mayor); Bogotá $2.500/ton, Fuera $4.500/ton</td></tr>
+<tr><td><strong>Consumibles (Bodega)</strong></td><td><code>consumible</code></td><td>N/A</td><td>~6 cat.</td><td>Pintura anticorrosivo, disolvente/thinner, soldadura 6013, soldadura MIG 0.35, tornillos, gases — NO se alquilan; kardex separado</td></tr>
+<tr><td><strong>Accesorios</strong></td><td><code>accesorio</code></td><td>N/A</td><td>Variable</td><td>Accesorios complementarios de cualquier línea</td></tr>
 </tbody></table></div>
+<p>&gt; <strong>Pesos por equipo</strong>: Registrados en la BD con campo <code>peso_kg_unitario</code> en <code>catalogo_productos</code>. Fuente de verdad: <code>PESO-EQUIPOS-GYH-ACTUAL.xlsx</code> (hojas PESO FT, PESO FM, PESOS EQUI-ALFOR, PESO FT — mantenida por Almacén).</p>
 <hr>
 <h2>Tipos de Catálogo de Precios</h2>
 <div class="table-wrap"><table><thead><tr>
@@ -1188,8 +1201,23 @@ flowchart TD
 <tr><td><strong>Valor por km</strong></td><td>SuperAdmin</td><td>Regla configurable por kilómetro de trayecto</td></tr>
 <tr><td><strong>Factor combustible</strong></td><td>SuperAdmin</td><td>Valor km × factor de carga por tipo de camión</td></tr>
 <tr><td><strong>Capacidad de carga</strong></td><td>SuperAdmin</td><td>Peso máximo (toneladas) + volumen por tipo de vehículo</td></tr>
-<tr><td><strong>Liquidación viaje</strong></td><td>Sistema</td><td>Calculada automáticamente: f(km, toneladas, volumen, combustible)</td></tr>
+<tr><td><strong>Tarifa por tonelada</strong></td><td>SuperAdmin</td><td>Bogotá: $2.500/ton · Fuera de Bogotá: $4.500/ton (configurable en <code>config_tarifas_transporte</code>)</td></tr>
+<tr><td><strong>Liquidación viaje</strong></td><td>Sistema</td><td>Calculada automáticamente: f(km, toneladas, volumen, combustible, criterios)</td></tr>
 </tbody></table></div>
+<h3>Criterios de acceso al pago por toneladas (fuente: PESO-EQUIPOS-GYH.xlsx — hoja CONSOLIDADO)</h3>
+<p>El conductor accede al pago por toneladas <strong>solo si cumple los 5 criterios</strong>. El incumplimiento descuenta esa remisión de la liquidación:</p>
+<div class="table-wrap"><table><thead><tr>
+<th>Código</th>
+<th>Nombre</th>
+<th>Descripción</th>
+</tr></thead><tbody>
+<tr><td><strong>MP</strong></td><td>Mantenimiento Preventivo</td><td>El carro debe salir en perfecto estado. El conductor debe avisar al mecánico o su jefe directo con anticipación — no el mismo día</td></tr>
+<tr><td><strong>RTE</strong></td><td>Recoger Totalidad del Equipo</td><td>Indicar al almacenista si se recogió la totalidad o quedó parcial. Debe quedar anotado en la remisión</td></tr>
+<tr><td><strong>SER</strong></td><td>Sale con Equipo · Regresa con Equipo</td><td>Carro que sale con equipo para entregar debe regresar con equipo recogido y con sus remisiones</td></tr>
+<tr><td><strong>CL</strong></td><td>Entrega el Mismo Día</td><td>Carro que sale con equipo lo debe entregar el mismo día. Si no ocurre, esa remisión no se paga</td></tr>
+<tr><td><strong>PP</strong></td><td>Presentación Personal</td><td>Buena presentación personal, tanto en la empresa como en las obras. Los sábados: carros lavados, tanqueados y en garaje</td></tr>
+</tbody></table></div>
+<p>&gt; <strong>Evaluación</strong>: Por viaje (<code>agenda_transporte</code>). Registrada en <code>evaluacion_criterios_conductor</code>. El sistema bloquea el pago de la remisión cuando <code>CL=false</code> (no entregó el mismo día) — regla automática.</p>
 <hr>
 <h2>Integración DIAN — Flujo Siigo</h2>
 <div class="table-wrap"><table><thead><tr>
@@ -1541,7 +1569,7 @@ flowchart TD
     INICIO(["📝 Contrato firmado\n→ Operaciones Activas"]):::naranja
 
     %% STOCK TOTAL
-    KARDEX_TOTAL["📊 Stock Total (Momento Cero)\nBodega + Equipos en Clientes + En Producción\n⚠️ Sin inventario físico estandarizado — se trabaja con catálogos\nSaldos negativos serán visibles en el nuevo sistema"]:::azul
+    KARDEX_TOTAL["📊 Stock Total (Momento Cero)\nBodega + Equipos en Clientes + En Producción\n⚠️ Sin inventario físico estandarizado — se trabaja con catálogos\nLíneas: FT · FM · AMD · ALFOR · Consumibles\nSaldos negativos serán visibles en el nuevo sistema"]:::azul
 
     %% CRONOGRAMA DIARIO RECEPCIÓN
     subgraph CRONOGRAMA["🗓️  RECEPCIÓN — FLUJO DIARIO"]
@@ -1612,9 +1640,19 @@ flowchart TD
     subgraph CONDUCTORES["🚛  CONDUCTORES — LIQUIDACIÓN POR VIAJE"]
         direction LR
         CALC_KM["🗺️ Distancia del Trayecto\nRecogida → Entrega en km\n(regla configurable por SuperAdmin)"]:::nuevo
-        CALC_CARGA["⚖️ Capacidad Efectiva\nPeso (toneladas) + Volumen\nPor tipo de camión"]:::nuevo
+        CALC_CARGA["⚖️ Capacidad Efectiva\nPeso (toneladas) + Volumen\nPor tipo de camión\nTarifa: $2.500/ton Bogotá · $4.500/ton fuera"]:::nuevo
         CALC_COMB["⛽ Regla de Combustible\nValor km × factor de carga\nConfigurable por tipo de camión"]:::nuevo
-        CALC_LIQ["💰 Liquidación por Viaje\nValor = f(km, toneladas, volumen)\nRegistro por conductor · por viaje"]:::azul
+        CALC_CRIT["✅ Evaluación de Criterios\nMP Mant.Preventivo · RTE Recoger Total\nSER Sale+Regresa con equipo\nCL Entrega mismo día · PP Presentación"]:::nuevo
+        CALC_LIQ["💰 Liquidación por Viaje\nValor = f(km, toneladas, volumen, criterios)\nRegistro por conductor · por viaje\n(Solo califica si cumple criterios MP/RTE/SER/CL/PP)"]:::azul
+    end
+
+    %% KARDEX CONSUMIBLES
+    subgraph CONSUMIBLES_BODEGA["📦  CONSUMIBLES — KARDEX INTERNO DE BODEGA"]
+        direction LR
+        CONS_CAT["🗂️ Catálogo de Consumibles\nPINTURA ANTICORROSIVO (canecas)\nDISOLVENTE/THINNER (canecas)\nSOLDADURA 6013 (bolsas) · MIG 0.35 (cajas)\nTORNILLOS · Mezcla soldadura · Gas montacargas"]:::nuevo
+        CONS_KX["📋 Kardex de Consumibles\nFecha · Documento · Tipo movimiento\nEntrada · Salida · Saldo · Observaciones\nAlertas: Stock Mínimo / Máximo"]:::nuevo
+        CONS_ALERTA["🔔 Alerta Stock Mínimo\nNotificación automática a Almacén\ncuando el saldo baja del mínimo"]:::grisClaro
+        CONS_CAT --> CONS_KX --> CONS_ALERTA
     end
 
     %% FACTURACIÓN
@@ -1643,7 +1681,8 @@ flowchart TD
     ENTREGA -.->|"Liquidar viaje"| CALC_KM
     CALC_KM --> CALC_CARGA
     CALC_CARGA --> CALC_COMB
-    CALC_COMB --> CALC_LIQ
+    CALC_COMB --> CALC_CRIT
+    CALC_CRIT --> CALC_LIQ
 
     ENTREGA --> PEDIDOQ
     PEDIDOQ -->|"No — Parcial"| PARCIAL_ACU
@@ -1679,6 +1718,8 @@ flowchart TD
     DIAS --> FAC
 
     ENTREGA -->|"Si es Venta (no alquiler)"| FAC
+
+    KARDEX_TOTAL -.->|"Materiales internos\nbodega independiente"| CONS_CAT
 </pre>
     </div>
   </div>
@@ -1728,12 +1769,14 @@ flowchart TD
     ROOT(["🏗️ G&H Sistema\ngyh.com.co"]):::root
 
     %% ── AUTH
-    subgraph S_AUTH["🔐 FLUJO 1 — Autenticación"]
+    subgraph S_AUTH["🔐 FLUJO 1 — Autenticación (2FA)"]
         AUTH["🔐 Autenticación"]:::auth
-        LOGIN["Iniciar Sesión\n/login"]:::pagina
+        LOGIN["Iniciar Sesión\n/login\nUsuario + Contraseña"]:::pagina
+        TWOFA["📧 Verificación 2FA\n/login/verify\nCódigo de seguridad al correo\n(6 dígitos · vigencia 10 min)"]:::cta
         FORGOT["Recuperar Contraseña\n/forgot-password"]:::pagina
         RESET["Nueva Contraseña\n/reset-password"]:::pagina
         AUTH --> LOGIN & FORGOT
+        LOGIN -->|"Credenciales válidas\n→ envío de código"| TWOFA
         FORGOT --> RESET
     end
 
@@ -2049,7 +2092,21 @@ flowchart TD
         INV_AJENOS_LIST["↩️ Equipos Ajenos en Bodega\n/almacen/equipos-ajenos\nEmpresa propietaria · Estado · Devolución"]:::nuevo
     end
 
-    INV --> S_STOCK & S_PEDIDOS & S_REM & S_VER & S_LOGISTICA & S_CRONOGRAMA & S_AJENOS
+    subgraph S_CONSUMIBLES["CONSUMIBLES — MATERIALES BODEGA"]
+        INV_CONS["📦 Kardex de Consumibles\n/almacen/consumibles\nPINTURA · DISOLVENTE · SOLDADURA\nTORNILLOS · GASES · OTROS"]:::nuevo
+        INV_CONS_CAT["🗂️ Catálogo de Consumibles\n/almacen/consumibles/catalogo\nNombre · Unidad · Bodega · Stock Min/Max"]:::pagina
+        INV_CONS_MOV["➕ Registrar Movimiento\n/almacen/consumibles/:id/movimiento\nEntrada · Salida · Documento · Observaciones"]:::cta
+        INV_CONS_ALERTA["🔔 Alertas de Stock Mínimo\n/almacen/consumibles/alertas\nProductos bajo nivel mínimo"]:::alerta
+        INV_CONS --> INV_CONS_CAT & INV_CONS_MOV & INV_CONS_ALERTA
+    end
+
+    subgraph S_CONFIG["CONFIGURACIÓN ALMACÉN (SuperAdmin)"]
+        INV_CONF_TARIFA["⚙️ Tarifas de Transporte\n/almacen/config/tarifas\nBogotá $2.500/ton · Fuera $4.500/ton\nTipo cálculo: mayor(peso,volumen)"]:::nuevo
+        INV_CONF_CRIT["✅ Criterios Liquidación Conductores\n/almacen/config/criterios-conductor\nMP · RTE · SER · CL · PP\nActivar/desactivar por período"]:::nuevo
+        INV_CONF_PESOS["⚖️ Catálogo de Pesos por Equipo\n/almacen/config/pesos-catalogo\nFT · FM · AMD · ALFOR\n(fuente: PESO-EQUIPOS-GYH.xlsx)"]:::nuevo
+    end
+
+    INV --> S_STOCK & S_PEDIDOS & S_REM & S_VER & S_LOGISTICA & S_CRONOGRAMA & S_AJENOS & S_CONSUMIBLES & S_CONFIG
 </pre>
     </div>
   </div>
@@ -2772,6 +2829,121 @@ flowchart TD
 </ul></div>
   </section>
 
+  <section id="notificaciones">
+    <div class="section-header">
+      <h2>Notificaciones del Sistema — Módulo 08</h2>
+      <p class="section-sub">29 notificaciones · Email · WhatsApp API · In-app · 2FA por correo en autenticación · Prioridades y destinatarios por evento</p>
+    </div>
+    <div class="callout">
+      <strong>🔐 Segundo Factor (2FA):</strong> El sistema requiere verificación de código al correo en cada inicio de sesión — sin código válido, el acceso no se habilita.
+      &nbsp;·&nbsp;
+      <strong>Canales:</strong> <strong>Email</strong> (plataforma) · <strong>WhatsApp API</strong> (externo — cliente) · <strong>In-app</strong> (notificación en interfaz).
+      &nbsp;·&nbsp;
+      <strong>Prioridad Alta</strong> = acción inmediata · <strong>Media</strong> = recordatorio · <strong>Baja</strong> = log / confirmación.
+    </div>
+    <div class="md-content"><h1>Notificaciones del Sistema — G&amp;H Gestión</h1>
+<p><strong>G&amp;H Obras y Estructuras Metálicas S.A.S</strong></p>
+<p>Versión 1.0 — SEM-27 (2026-07-14)</p>
+<p><strong>Canales:</strong> Email (plataforma) · WhatsApp API (externo — cliente) · In-app (notificación en interfaz)</p>
+<p><strong>Prioridad:</strong> Alta = acción inmediata requerida · Media = informativa / recordatorio · Baja = confirmación / log</p>
+<hr>
+<h2>Autenticación y Seguridad (2FA)</h2>
+<p>&gt; El sistema requiere <strong>segundo factor de autenticación (2FA)</strong> en cada inicio de sesión. Tras ingresar usuario y contraseña, se envía un <strong>código de seguridad de 6 dígitos al correo electrónico registrado</strong>. El código tiene vigencia de 10 minutos. Sin validarlo, el acceso no se habilita.</p>
+<div class="table-wrap"><table><thead><tr>
+<th>ID</th>
+<th>Evento Disparador</th>
+<th>Destinatario</th>
+<th>Canal</th>
+<th>Prioridad</th>
+<th>Descripción del Contenido</th>
+</tr></thead><tbody>
+<tr><td>N-01</td><td>Inicio de sesión — verificación 2FA</td><td>Usuario autenticado</td><td>Email</td><td>Alta</td><td>Código OTP de 6 dígitos · Vigencia 10 min · Asunto: &quot;Tu código de acceso G&amp;H Sistema&quot;</td></tr>
+<tr><td>N-02</td><td>Solicitud de recuperación de contraseña</td><td>Usuario solicitante</td><td>Email</td><td>Alta</td><td>Enlace seguro de restablecimiento · Vigencia 30 min</td></tr>
+<tr><td>N-03</td><td>Contraseña cambiada exitosamente</td><td>Usuario</td><td>Email</td><td>Media</td><td>Confirmación del cambio · Instrucciones si no fue el usuario quien lo realizó</td></tr>
+<tr><td>N-04</td><td>Múltiples intentos de acceso fallidos (&gt;=5)</td><td>Admin · SuperAdmin</td><td>Email + In-app</td><td>Alta</td><td>Alerta de seguridad: usuario afectado · IP · Fecha y hora del último intento</td></tr>
+</tbody></table></div>
+<hr>
+<h2>Cotizaciones</h2>
+<div class="table-wrap"><table><thead><tr>
+<th>ID</th>
+<th>Evento Disparador</th>
+<th>Destinatario</th>
+<th>Canal</th>
+<th>Prioridad</th>
+<th>Descripción del Contenido</th>
+</tr></thead><tbody>
+<tr><td>N-05</td><td>Cotización enviada al cliente</td><td>Cliente</td><td>Email + WhatsApp</td><td>Media</td><td>PDF adjunto con valores comerciales · Datos de contacto comercial G&amp;H</td></tr>
+<tr><td>N-06</td><td>Precios especiales asignados a un cliente</td><td>Facturación</td><td>Email</td><td>Alta</td><td>Notificación obligatoria por escrito de precios acordados por Comercial · Nombre del cliente · Productos afectados</td></tr>
+</tbody></table></div>
+<hr>
+<h2>Registro y Aprobación de Clientes</h2>
+<div class="table-wrap"><table><thead><tr>
+<th>ID</th>
+<th>Evento Disparador</th>
+<th>Destinatario</th>
+<th>Canal</th>
+<th>Prioridad</th>
+<th>Descripción del Contenido</th>
+</tr></thead><tbody>
+<tr><td>N-07</td><td>Nuevo cliente ingresado — inicia revisión multi-área</td><td>Contabilidad · Jurídica · Comercial</td><td>Email + In-app</td><td>Alta</td><td>Ficha básica del cliente · Link al formulario FT-AC-001 · Plazo sugerido de respuesta</td></tr>
+<tr><td>N-08</td><td>Área sin concepto registrado (recordatorio automático)</td><td>Área(s) pendiente(s)</td><td>Email + In-app</td><td>Media</td><td>Nombre del cliente · Días transcurridos · Link directo al formulario de concepto</td></tr>
+<tr><td>N-09</td><td>Cliente APROBADO — todos los conceptos favorables</td><td>Comercial · Todas las áreas</td><td>Email + In-app</td><td>Alta</td><td>Estado: Activo · Nombre del cliente · Puede proceder con pedido de inmediato</td></tr>
+<tr><td>N-10</td><td>Cliente RECHAZADO</td><td>Comercial</td><td>Email + In-app</td><td>Alta</td><td>Motivo(s) del rechazo por área · Documentación faltante o inconsistente</td></tr>
+<tr><td>N-11</td><td>CEO fuerza aprobación (override)</td><td>Todas las áreas · Auditoría</td><td>Email + In-app</td><td>Alta</td><td>Aprobación bajo responsabilidad del CEO/Ingeniero · Motivo y fecha registrados en auditoría</td></tr>
+</tbody></table></div>
+<hr>
+<h2>Contratos y Firma Electrónica</h2>
+<div class="table-wrap"><table><thead><tr>
+<th>ID</th>
+<th>Evento Disparador</th>
+<th>Destinatario</th>
+<th>Canal</th>
+<th>Prioridad</th>
+<th>Descripción del Contenido</th>
+</tr></thead><tbody>
+<tr><td>N-12</td><td>Contrato generado — pendiente de firma</td><td>Cliente externo / Área interna</td><td>Email (Ooku)</td><td>Alta</td><td>Invitación de firma electrónica vía Ooku · Resumen del contrato · Fecha límite de firma</td></tr>
+<tr><td>N-13</td><td>Recordatorio de firma pendiente (configurable: 24h/48h)</td><td>Cliente</td><td>Email</td><td>Media</td><td>Enlace directo al documento · Datos de contacto G&amp;H para resolver dudas</td></tr>
+<tr><td>N-14</td><td>Contrato firmado exitosamente</td><td>Admin · Comercial</td><td>Email + In-app</td><td>Alta</td><td>Contrato activado · Operaciones habilitadas · Link al documento firmado</td></tr>
+</tbody></table></div>
+<hr>
+<h2>Almacén, Pedidos y Logística</h2>
+<div class="table-wrap"><table><thead><tr>
+<th>ID</th>
+<th>Evento Disparador</th>
+<th>Destinatario</th>
+<th>Canal</th>
+<th>Prioridad</th>
+<th>Descripción del Contenido</th>
+</tr></thead><tbody>
+<tr><td>N-15</td><td>Ingeniero / Comercial autoriza despacho</td><td>Despachador · Conductor asignado</td><td>Email + In-app</td><td>Alta</td><td>Detalle del pedido: equipos, destino, ruta, hora estimada de salida</td></tr>
+<tr><td>N-16</td><td>Conductor asignado a ruta de despacho</td><td>Conductor</td><td>Email + In-app</td><td>Alta</td><td>Cronograma del viaje: equipos, dirección, km, cliente, obra y frente</td></tr>
+<tr><td>N-17</td><td>Pedido completado — contador de alquiler inicia</td><td>Almacén · Facturación</td><td>In-app</td><td>Alta</td><td>Fecha de inicio de alquiler · Listado completo de equipos entregados · Obra y frente</td></tr>
+<tr><td>N-18</td><td>Envío parcial registrado — equipos pendientes en cola</td><td>Almacén · Comercial</td><td>In-app</td><td>Media</td><td>Equipos pendientes · Programados para siguiente viaje · Estimado de despacho</td></tr>
+<tr><td>N-19</td><td>Alerta de próxima recogida (configurable: N días antes)</td><td>Jefe de Almacén · Recepción</td><td>Email + In-app</td><td>Alta</td><td>Lista de equipos a recoger · Cliente, obra y frente · Fecha acordada de devolución</td></tr>
+<tr><td>N-20</td><td>Devolución con daño o faltante detectado en inspección</td><td>Almacén · Comercial · Facturación</td><td>Email + In-app</td><td>Alta</td><td>Equipos afectados · Estado clasificado (Dañado / Faltante) · Genera reposición automática</td></tr>
+<tr><td>N-21</td><td>Cancelación de pedido registrada</td><td>Ingeniería · Comercial</td><td>Email + In-app</td><td>Alta</td><td>Pedido cancelado · Motivo registrado · Equipos liberados y devueltos al stock</td></tr>
+<tr><td>N-22</td><td>Stock de consumible por debajo del mínimo configurado</td><td>Jefe de Almacén</td><td>Email + In-app</td><td>Media</td><td>Producto · Cantidad actual vs. mínimo · Unidad de negocio · Sugerencia de reabastecimiento</td></tr>
+</tbody></table></div>
+<hr>
+<h2>Facturación y Cartera</h2>
+<div class="table-wrap"><table><thead><tr>
+<th>ID</th>
+<th>Evento Disparador</th>
+<th>Destinatario</th>
+<th>Canal</th>
+<th>Prioridad</th>
+<th>Descripción del Contenido</th>
+</tr></thead><tbody>
+<tr><td>N-23</td><td>Proforma generada para revisión del cliente</td><td>Cliente</td><td>Email + WhatsApp</td><td>Alta</td><td>Detalle de cobros (alquiler, transporte, reposiciones) · Solicita aprobación explícita antes de factura</td></tr>
+<tr><td>N-24</td><td>Cliente aprueba la proforma</td><td>Facturación</td><td>In-app</td><td>Alta</td><td>Autorización recibida · Proceder con generación de factura oficial</td></tr>
+<tr><td>N-25</td><td>Factura emitida y transmitida a Siigo / DIAN</td><td>Cliente · Comercial</td><td>Email</td><td>Alta</td><td>CUFE · Fecha de emisión · Valores · Recomendación: validar estado en portal DIAN</td></tr>
+<tr><td>N-26</td><td>Error en transmisión a Siigo / DIAN</td><td>Facturación · Admin</td><td>Email + In-app</td><td>Alta</td><td>Descripción del error · Acción manual requerida · Datos de la factura afectada</td></tr>
+<tr><td>N-27</td><td>Factura próxima a vencer (configurable: N días antes)</td><td>Cartera · Comercial</td><td>Email + In-app</td><td>Media</td><td>Cliente · Número de factura · Valor pendiente · Días para vencimiento</td></tr>
+<tr><td>N-28</td><td>Factura vencida — cliente en mora</td><td>Cartera · Comercial · CEO</td><td>Email + In-app</td><td>Alta</td><td>Estado mora · Días vencidos · Valor pendiente · Inicia gestión de cobro</td></tr>
+<tr><td>N-29</td><td>Pago registrado y confirmado</td><td>Cartera · Comercial</td><td>In-app</td><td>Baja</td><td>Referencia de pago · Monto aplicado · Factura(s) saldadas</td></tr>
+</tbody></table></div></div>
+  </section>
+
   
 <section id="arquitectura">
   <div class="section-header">
@@ -2935,7 +3107,7 @@ graph TB
 <section id="database">
   <div class="section-header">
     <h2>Esquema de Base de Datos — PostgreSQL</h2>
-    <p class="section-sub">DBML v1.0 · 42 tablas · 35 enumeraciones · Escala: ~180 clientes · 50 obras · 3-4 frentes</p>
+    <p class="section-sub">DBML v1.0 · 47 tablas · 35 enumeraciones · Escala: ~180 clientes · 50 obras · 3-4 frentes</p>
   </div>
   <div class="callout">
     <strong>Motor:</strong> PostgreSQL &nbsp;·&nbsp;
@@ -2963,7 +3135,7 @@ graph TB
 <div class="enum-pill"><strong>tipo_documento_registro</strong><span class="enum-vals">rut, camara_comercio, cedula_representante, estados_financieros, autorizacion_centrales_riesgo, formulario_registro_ft_ac_001 +3</span></div>
 <div class="enum-pill"><strong>estado_validacion_doc</strong><span class="enum-vals">pendiente, aprobado, rechazado, requiere_actualizacion</span></div>
 <div class="enum-pill"><strong>estado_obra</strong><span class="enum-vals">activa, pausada, finalizada, cancelada</span></div>
-<div class="enum-pill"><strong>tipo_producto</strong><span class="enum-vals">andamio, formaleta, maquinaria, accesorio, herramienta, otro</span></div>
+<div class="enum-pill"><strong>tipo_producto</strong><span class="enum-vals">formaleta_tradicional, formaleta_metalica, multidireccional, andamio_alfor, consumible, maquinaria +2</span></div>
 <div class="enum-pill"><strong>unidad_medida</strong><span class="enum-vals">unidad, metro, metro_cuadrado, juego, kit</span></div>
 <div class="enum-pill"><strong>estado_cotizacion</strong><span class="enum-vals">borrador, en_revision, enviada_cliente, aprobada_cliente, rechazada_cliente, vencida +1</span></div>
 <div class="enum-pill"><strong>tipo_item_cotizacion</strong><span class="enum-vals">venta, alquiler, transporte_ida, transporte_vuelta, reposicion, accesorio</span></div>
@@ -2989,7 +3161,7 @@ graph TB
 <div class="enum-pill"><strong>tipo_dominio_correo</strong><span class="enum-vals">corporativo, publico</span></div>
 </div>
 
-  <h3>Tablas (42)</h3>
+  <h3>Tablas (47)</h3>
   <div class="t-grid">
 <div class="t-card" style="--tcolor:#0B3C5D">
   <div class="t-head">
@@ -3111,11 +3283,11 @@ graph TB
 <div class="t-card" style="--tcolor:#553C9A">
   <div class="t-head">
     <span class="t-name">catalogo_productos</span>
-    <span class="t-count">20 cols</span>
+    <span class="t-count">25 cols</span>
   </div>
-  <p class="t-note">Catálogo general anual — actualizado por Recepción cada año y distribuido a todas las áreas</p>
+  <p class="t-note">Catálogo general anual — actualizado por Recepción cada año y distribuido a todas las áreas. Incluye peso_kg_unitario obligatorio para líneas FT/FM/AMD/ALFOR (fuente: PESO-EQUIPOS-GYH.xlsx). Consumibles (tipo_producto=consumible) usan kardex_consumibles, no kardex_movimientos</p>
   <table class="t-cols"><tbody><tr><td><code>id</code></td><td class="t-type">uuid</td><td></td></tr><tr><td><code>codigo</code></td><td class="t-type">varchar(100)</td><td><span class="badge uniq">UQ</span></td></tr><tr><td><code>nombre</code></td><td class="t-type">varchar(300)</td><td></td></tr><tr><td><code>descripcion</code></td><td class="t-type">text</td><td></td></tr><tr><td><code>tipo_producto</code></td><td class="t-type">tipo_producto</td><td></td></tr><tr><td><code>unidad_medida</code></td><td class="t-type">unidad_medida</td><td></td></tr><tr><td><code>precio_venta</code></td><td class="t-type">decimal(15,2)</td><td></td></tr></tbody></table>
-  <p class="t-more">+ 13 columnas más</p>
+  <p class="t-more">+ 18 columnas más</p>
 </div>
 <div class="t-card" style="--tcolor:#553C9A">
   <div class="t-head">
@@ -3134,6 +3306,51 @@ graph TB
   <p class="t-note">Retenciones por tipo de concepto — transporte y alquiler tienen tasas distintas; si se mezclan, Siigo rechaza la factura</p>
   <table class="t-cols"><tbody><tr><td><code>id</code></td><td class="t-type">uuid</td><td></td></tr><tr><td><code>tipo_concepto</code></td><td class="t-type">varchar(30)</td><td></td></tr><tr><td><code>nombre_retencion</code></td><td class="t-type">varchar(30)</td><td></td></tr><tr><td><code>porcentaje</code></td><td class="t-type">decimal(5,2)</td><td></td></tr><tr><td><code>centro_costo</code></td><td class="t-type">varchar(5)</td><td></td></tr><tr><td><code>vigente_desde</code></td><td class="t-type">date</td><td></td></tr><tr><td><code>vigente_hasta</code></td><td class="t-type">date</td><td></td></tr></tbody></table>
   <p class="t-more">+ 2 columnas más</p>
+</div>
+<div class="t-card" style="--tcolor:#0B3C5D">
+  <div class="t-head">
+    <span class="t-name">config_tarifas_transporte</span>
+    <span class="t-count">9 cols</span>
+  </div>
+  <p class="t-note">Tarifas de transporte configurables por SuperAdmin — fuente: planilla PESO-EQUIPOS-GYH.xlsx (CONSOLIDADO): Bogotá $2.500/ton, Fuera $4.500/ton. Se cobra el mayor entre peso real y volumen ocupado del camión</p>
+  <table class="t-cols"><tbody><tr><td><code>id</code></td><td class="t-type">uuid</td><td></td></tr><tr><td><code>zona</code></td><td class="t-type">varchar(50)</td><td></td></tr><tr><td><code>tarifa_por_ton</code></td><td class="t-type">decimal(10,2)</td><td></td></tr><tr><td><code>tarifa_por_m3</code></td><td class="t-type">decimal(10,2)</td><td></td></tr><tr><td><code>tipo_calculo</code></td><td class="t-type">varchar(20)</td><td></td></tr><tr><td><code>tipo_camion</code></td><td class="t-type">varchar(50)</td><td></td></tr><tr><td><code>vigente_desde</code></td><td class="t-type">date</td><td></td></tr></tbody></table>
+  <p class="t-more">+ 2 columnas más</p>
+</div>
+<div class="t-card" style="--tcolor:#0B3C5D">
+  <div class="t-head">
+    <span class="t-name">config_criterios_liquidacion_conductor</span>
+    <span class="t-count">7 cols</span>
+  </div>
+  <p class="t-note">Criterios de acceso al pago por toneladas cargadas — fuente: PESO-EQUIPOS-GYH.xlsx hoja CONSOLIDADO. MP=Mant.Preventivo, RTE=Recoger Totalidad, SER=Sale con equipo y regresa con equipo+remisiones, CL=Entrega mismo día, PP=Presentación Personal. Si no cumple un criterio se descuenta esa remisión de la liquidación</p>
+  <table class="t-cols"><tbody><tr><td><code>id</code></td><td class="t-type">uuid</td><td></td></tr><tr><td><code>codigo</code></td><td class="t-type">varchar(10)</td><td><span class="badge uniq">UQ</span></td></tr><tr><td><code>nombre</code></td><td class="t-type">varchar(100)</td><td></td></tr><tr><td><code>descripcion</code></td><td class="t-type">text</td><td></td></tr><tr><td><code>es_requerido</code></td><td class="t-type">boolean</td><td></td></tr><tr><td><code>activo</code></td><td class="t-type">boolean</td><td></td></tr><tr><td><code>created_at</code></td><td class="t-type">timestamp</td><td></td></tr></tbody></table>
+  
+</div>
+<div class="t-card" style="--tcolor:#0B3C5D">
+  <div class="t-head">
+    <span class="t-name">evaluacion_criterios_conductor</span>
+    <span class="t-count">8 cols</span>
+  </div>
+  <p class="t-note">Registro de cumplimiento de criterios por viaje — determina si el viaje califica para pago por tonelada</p>
+  <table class="t-cols"><tbody><tr><td><code>id</code></td><td class="t-type">uuid</td><td></td></tr><tr><td><code>agenda_transporte_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>conductor_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>criterio_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>cumplido</code></td><td class="t-type">boolean</td><td></td></tr><tr><td><code>observacion</code></td><td class="t-type">text</td><td></td></tr><tr><td><code>registrado_por</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr></tbody></table>
+  <p class="t-more">+ 1 columnas más</p>
+</div>
+<div class="t-card" style="--tcolor:#0B3C5D">
+  <div class="t-head">
+    <span class="t-name">consumibles_catalogo</span>
+    <span class="t-count">12 cols</span>
+  </div>
+  <p class="t-note">Catálogo de materiales de uso interno en bodega — NO son equipos de alquiler. Fuente: KARDEX.xlsx (G&amp;H). Categorías reales: PINTURA ANTICORROSIVO (canecas), DISOLVENTE/THINNER (canecas), SOLDADURA REVESTIDA 6013 (bolsas), SOLDADURA MIG 0.35 (cajas), TORNILLOS (varias medidas), CONSUMIBLES (mezcla soldadura, gas montacargas, etc.)</p>
+  <table class="t-cols"><tbody><tr><td><code>id</code></td><td class="t-type">uuid</td><td></td></tr><tr><td><code>codigo</code></td><td class="t-type">varchar(100)</td><td><span class="badge uniq">UQ</span></td></tr><tr><td><code>nombre</code></td><td class="t-type">varchar(300)</td><td></td></tr><tr><td><code>categoria</code></td><td class="t-type">varchar(100)</td><td></td></tr><tr><td><code>unidad_medida</code></td><td class="t-type">varchar(50)</td><td></td></tr><tr><td><code>marca_referencia</code></td><td class="t-type">varchar(200)</td><td></td></tr><tr><td><code>stock_minimo</code></td><td class="t-type">integer</td><td></td></tr></tbody></table>
+  <p class="t-more">+ 5 columnas más</p>
+</div>
+<div class="t-card" style="--tcolor:#0B3C5D">
+  <div class="t-head">
+    <span class="t-name">kardex_consumibles</span>
+    <span class="t-count">11 cols</span>
+  </div>
+  <p class="t-note">Kardex de movimientos de materiales de bodega — equivale digital al KARDEX.xlsx (G&amp;H). Columnas: Fecha, Documento, Tipo de Movimiento, Entrada (Cantidad), Salida (Cantidad), Saldo (Cantidad), Observaciones</p>
+  <table class="t-cols"><tbody><tr><td><code>id</code></td><td class="t-type">bigserial</td><td><span class="badge pk">PK</span></td></tr><tr><td><code>consumible_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>fecha</code></td><td class="t-type">date</td><td></td></tr><tr><td><code>numero_documento</code></td><td class="t-type">varchar(100)</td><td></td></tr><tr><td><code>tipo_movimiento</code></td><td class="t-type">varchar(30)</td><td></td></tr><tr><td><code>cantidad_entrada</code></td><td class="t-type">integer</td><td></td></tr><tr><td><code>cantidad_salida</code></td><td class="t-type">integer</td><td></td></tr></tbody></table>
+  <p class="t-more">+ 4 columnas más</p>
 </div>
 <div class="t-card" style="--tcolor:#553C9A">
   <div class="t-head">
@@ -3354,11 +3571,11 @@ graph TB
 <div class="t-card" style="--tcolor:#0B3C5D">
   <div class="t-head">
     <span class="t-name">rpt_conductores_viajes</span>
-    <span class="t-count">13 cols</span>
+    <span class="t-count">19 cols</span>
   </div>
-  <p class="t-note">Reporte de liquidación de conductores por período — calculado con reglas de km, peso/volumen y combustible configuradas por SuperAdmin</p>
+  <p class="t-note">Reporte de liquidación de conductores por período — incluye resumen de criterios MP/RTE/SER/CL/PP por viaje. Solo viajes_calificados se pagan a tarifa de tonelada. Fuente: evaluacion_criterios_conductor + config_tarifas_transporte</p>
   <table class="t-cols"><tbody><tr><td><code>id</code></td><td class="t-type">uuid</td><td></td></tr><tr><td><code>periodo_inicio</code></td><td class="t-type">date</td><td></td></tr><tr><td><code>periodo_fin</code></td><td class="t-type">date</td><td></td></tr><tr><td><code>conductor_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>vehiculo_id</code></td><td class="t-type">uuid</td><td><span class="badge fk">FK</span></td></tr><tr><td><code>total_viajes</code></td><td class="t-type">integer</td><td></td></tr><tr><td><code>km_total</code></td><td class="t-type">decimal(12,2)</td><td></td></tr></tbody></table>
-  <p class="t-more">+ 6 columnas más</p>
+  <p class="t-more">+ 12 columnas más</p>
 </div>
 <div class="t-card" style="--tcolor:#0B3C5D">
   <div class="t-head">
@@ -3486,12 +3703,14 @@ Enum estado_obra {
 }
 
 Enum tipo_producto {
-  andamio
-  formaleta
-  maquinaria
-  accesorio
-  herramienta
-  otro
+  formaleta_tradicional [note: &#x27;Línea FT — parales, cerchas, crucetas, andamio tubular, andamio colgante; prefijo remisión FT&#x27;]
+  formaleta_metalica    [note: &#x27;Línea FM — tableros (múltiples medidas), rinconeras, ángulos, corbatas; prefijo remisión FM&#x27;]
+  multidireccional      [note: &#x27;Línea AMD — verticales con/sin espigo, horizontales, diagonales, tornillo nivelador; sistema ALFOR/AMD&#x27;]
+  andamio_alfor         [note: &#x27;Sistema de andamio ALFOR — abrazaderas, alineadores, bases, cruces, plataformas; prefijo ALFOR&#x27;]
+  consumible            [note: &#x27;Materiales de bodega — pintura, disolvente/thinner, soldadura 6013, soldadura MIG, tornillos, gases; no se alquila&#x27;]
+  maquinaria            [note: &#x27;Equipos de maquinaria y herramienta mayor&#x27;]
+  accesorio             [note: &#x27;Accesorios y piezas complementarias de cualquier línea&#x27;]
+  otro                  [note: &#x27;Otros productos no clasificados&#x27;]
 }
 
 Enum unidad_medida {
@@ -3978,9 +4197,18 @@ Table catalogo_productos {
   codigo_tipo          varchar(10)   [note: &#x27;alquiler|venta — no mezclar; al hacer venta no tomar de inventario de alquiler&#x27;]
   precio_transporte_calculo varchar(20) [note: &#x27;peso_volumen|toneladas — el cobro real de transporte es por lo que ocupe (peso O volumen que llene el camión)&#x27;]
 
+  // Peso físico del equipo (fuente: PESO-EQUIPOS-GYH — tablas PESO FT, PESO FM, PESOS EQUI-ALFOR, PESO FT)
+  peso_kg_unitario     decimal(10,3) [note: &#x27;Peso unitario en kg — base para cálculo automático de flete por tonelada en remisiones; tabla fuente: PESO-EQUIPOS-GYH.xlsx&#x27;]
+
+  // Dimensiones físicas del ítem (para cálculo de volumen de carga — flete por volumen)
+  largo_m_ref          decimal(8,3)  [note: &#x27;Largo de referencia del producto en metros — para estimación volumétrica en despachos&#x27;]
+  ancho_m_ref          decimal(8,3)  [note: &#x27;Ancho de referencia en metros&#x27;]
+  alto_m_ref           decimal(8,3)  [note: &#x27;Alto de referencia en metros&#x27;]
+
   // Inventario
   stock_actual         integer       [default: 0]
   stock_minimo         integer       [default: 0]
+  stock_maximo         integer       [note: &#x27;Nivel máximo deseable — aplica también en kardex_consumibles para materiales&#x27;]
 
   imagen_url           varchar(500)
   activo               boolean       [default: true]
@@ -3988,7 +4216,7 @@ Table catalogo_productos {
   created_at           timestamp     [default: `now()`]
   updated_at           timestamp     [default: `now()`]
 
-  Note: &#x27;Catálogo general anual — actualizado por Recepción cada año y distribuido a todas las áreas&#x27;
+  Note: &#x27;Catálogo general anual — actualizado por Recepción cada año y distribuido a todas las áreas. Incluye peso_kg_unitario obligatorio para líneas FT/FM/AMD/ALFOR (fuente: PESO-EQUIPOS-GYH.xlsx). Consumibles (tipo_producto=consumible) usan kardex_consumibles, no kardex_movimientos&#x27;
 }
 
 // Precios especiales por cliente (SEM-27)
@@ -4028,6 +4256,105 @@ Table retenciones_config {
   created_at          timestamp [default: `now()`]
 
   Note: &#x27;Retenciones por tipo de concepto — transporte y alquiler tienen tasas distintas; si se mezclan, Siigo rechaza la factura&#x27;
+}
+
+// Configuración de tarifas de transporte por zona (SEM-27 + Análisis docs PESO-EQUIPOS)
+Table config_tarifas_transporte {
+  id               uuid    [pk, default: `gen_random_uuid()`]
+  zona             varchar(50)  [not null, note: &#x27;bogota|fuera_bogota|ibague|armenia|otro — corresponde a ciudad_sucursal o destino de la obra&#x27;]
+  tarifa_por_ton   decimal(10,2) [not null, note: &#x27;Valor en COP por tonelada — Bogotá: $2.500, Fuera de Bogotá: $4.500 (fuente: PESO-EQUIPOS-GYH.xlsx hoja CONSOLIDADO)&#x27;]
+  tarifa_por_m3    decimal(10,2) [note: &#x27;Valor por metro cúbico si el cálculo es por volumen (aplica cuando el camión va lleno en volumen pero no en toneladas)&#x27;]
+  tipo_calculo     varchar(20)  [not null, default: &#x27;mayor_valor&#x27;, note: &#x27;mayor_valor=se cobra el mayor entre peso_ton y volumen_m3; solo_ton; solo_m3&#x27;]
+  tipo_camion      varchar(50)  [note: &#x27;NULL=aplica a todos; o especificar tipo: furgon|camion|camioneta — para diferencial de tarifa por flota&#x27;]
+  vigente_desde    date    [not null]
+  vigente_hasta    date
+  creado_por       uuid    [ref: &gt; usuarios.id]
+  created_at       timestamp [default: `now()`]
+
+  indexes {
+    zona
+    vigente_desde
+  }
+
+  Note: &#x27;Tarifas de transporte configurables por SuperAdmin — fuente: planilla PESO-EQUIPOS-GYH.xlsx (CONSOLIDADO): Bogotá $2.500/ton, Fuera $4.500/ton. Se cobra el mayor entre peso real y volumen ocupado del camión&#x27;
+}
+
+// Criterios de bonificación en liquidación de conductores (fuente: hoja CONSOLIDADO de PESO-EQUIPOS-GYH.xlsx)
+Table config_criterios_liquidacion_conductor {
+  id               uuid    [pk, default: `gen_random_uuid()`]
+  codigo           varchar(10)  [unique, not null, note: &#x27;MP|RTE|SER|CL|PP — código corto del criterio&#x27;]
+  nombre           varchar(100) [not null]
+  descripcion      text    [not null, note: &#x27;Descripción completa del criterio tal como aparece en la planilla CONSOLIDADO&#x27;]
+  es_requerido     boolean [default: true, note: &#x27;Si no cumple, no se paga ese rubro de la liquidación&#x27;]
+  activo           boolean [default: true]
+  created_at       timestamp [default: `now()`]
+
+  Note: &#x27;Criterios de acceso al pago por toneladas cargadas — fuente: PESO-EQUIPOS-GYH.xlsx hoja CONSOLIDADO. MP=Mant.Preventivo, RTE=Recoger Totalidad, SER=Sale con equipo y regresa con equipo+remisiones, CL=Entrega mismo día, PP=Presentación Personal. Si no cumple un criterio se descuenta esa remisión de la liquidación&#x27;
+}
+
+// Evaluación por conductor/viaje de criterios de liquidación
+Table evaluacion_criterios_conductor {
+  id                  uuid    [pk, default: `gen_random_uuid()`]
+  agenda_transporte_id uuid   [not null, ref: &gt; agenda_transporte.id]
+  conductor_id        uuid    [not null, ref: &gt; conductores.id]
+  criterio_id         uuid    [not null, ref: &gt; config_criterios_liquidacion_conductor.id]
+  cumplido            boolean [not null]
+  observacion         text    [note: &#x27;Justificación si no cumplió o nota del almacén&#x27;]
+  registrado_por      uuid    [ref: &gt; usuarios.id]
+  created_at          timestamp [default: `now()`]
+
+  indexes {
+    (agenda_transporte_id, criterio_id) [unique]
+    conductor_id
+  }
+
+  Note: &#x27;Registro de cumplimiento de criterios por viaje — determina si el viaje califica para pago por tonelada&#x27;
+}
+
+// ============================================================
+// MÓDULO: KARDEX DE CONSUMIBLES (materiales de bodega interna)
+// Separado del kardex_movimientos que es para equipos de alquiler
+// Fuente: KARDEX.xlsx — hojas: PINTURA, DISOLVENTE, SOLDADURA 6013, SOLDADURA MIG, TORNILLOS, CONSUMIBLES
+// ============================================================
+
+Table consumibles_catalogo {
+  id               uuid    [pk, default: `gen_random_uuid()`]
+  codigo           varchar(100) [unique, not null]
+  nombre           varchar(300) [not null, note: &#x27;Ej: PINTURA ANTICORROSIVO, DISOLVENTE/THINNER, SOLDADURA REVESTIDA 6013, SOLDADURA MIG 0.35&#x27;]
+  categoria        varchar(100) [note: &#x27;pintura|disolvente|soldadura|tornillos|gases|lubricantes|otro&#x27;]
+  unidad_medida    varchar(50)  [not null, note: &#x27;CANECAS|BOLSA|CAJAS|LITROS|UNIDADES — según categoría&#x27;]
+  marca_referencia varchar(200)
+  ubicacion_bodega varchar(100) [note: &#x27;Ej: BODEGA 1 — del campo Ubicación en el KARDEX.xlsx&#x27;]
+  stock_minimo     integer      [note: &#x27;Stock Mínimo del KARDEX.xlsx — alerta cuando se llega a este nivel&#x27;]
+  stock_maximo     integer      [note: &#x27;Stock Máximo del KARDEX.xlsx&#x27;]
+  stock_actual     integer      [default: 0, note: &#x27;Calculado automáticamente desde los movimientos&#x27;]
+  activo           boolean      [default: true]
+  created_at       timestamp    [default: `now()`]
+  updated_at       timestamp    [default: `now()`]
+
+  Note: &#x27;Catálogo de materiales de uso interno en bodega — NO son equipos de alquiler. Fuente: KARDEX.xlsx (G&amp;H). Categorías reales: PINTURA ANTICORROSIVO (canecas), DISOLVENTE/THINNER (canecas), SOLDADURA REVESTIDA 6013 (bolsas), SOLDADURA MIG 0.35 (cajas), TORNILLOS (varias medidas), CONSUMIBLES (mezcla soldadura, gas montacargas, etc.)&#x27;
+}
+
+Table kardex_consumibles {
+  id                  bigserial    [pk]
+  consumible_id       uuid    [not null, ref: &gt; consumibles_catalogo.id]
+  fecha               date    [not null]
+  numero_documento    varchar(100) [note: &#x27;Número de documento fuente del movimiento (orden de compra, remisión interna, etc.)&#x27;]
+  tipo_movimiento     varchar(30)  [not null, note: &#x27;entrada|salida|ajuste|inicio_sistema&#x27;]
+  cantidad_entrada    integer      [default: 0, note: &#x27;Columna Entrada (Cantidad) del KARDEX.xlsx&#x27;]
+  cantidad_salida     integer      [default: 0, note: &#x27;Columna Salida (Cantidad) del KARDEX.xlsx&#x27;]
+  saldo              integer      [not null, note: &#x27;Saldo actualizado — columna Saldo (Cantidad) del KARDEX.xlsx&#x27;]
+  observaciones       text         [note: &#x27;Columna Observaciones del KARDEX.xlsx&#x27;]
+  registrado_por      uuid    [ref: &gt; usuarios.id]
+  created_at          timestamp    [default: `now()`]
+
+  indexes {
+    consumible_id
+    fecha
+    (consumible_id, fecha)
+  }
+
+  Note: &#x27;Kardex de movimientos de materiales de bodega — equivale digital al KARDEX.xlsx (G&amp;H). Columnas: Fecha, Documento, Tipo de Movimiento, Entrada (Cantidad), Salida (Cantidad), Saldo (Cantidad), Observaciones&#x27;
 }
 
 // ============================================================
@@ -4700,7 +5027,14 @@ Table rpt_conductores_viajes {
   peso_total_ton      decimal(12,3) [default: 0, note: &#x27;Toneladas transportadas en el período&#x27;]
   volumen_total_m3    decimal(12,3) [default: 0, note: &#x27;m³ ocupados en el período&#x27;]
   valor_combustible   decimal(18,2) [default: 0, note: &#x27;Costo estimado de combustible calculado por regla&#x27;]
-  valor_liquidacion   decimal(18,2) [default: 0, note: &#x27;Total a pagar = f(km, toneladas, volumen, combustible) — regla configurable por SuperAdmin&#x27;]
+  valor_liquidacion   decimal(18,2) [default: 0, note: &#x27;Total a pagar = f(km, toneladas, volumen, combustible, criterios) — regla configurable por SuperAdmin&#x27;]
+  // Resumen de criterios en el período
+  viajes_con_mp       integer [default: 0, note: &#x27;Viajes que cumplieron criterio MP (Mantenimiento Preventivo)&#x27;]
+  viajes_con_rte      integer [default: 0, note: &#x27;Viajes que cumplieron criterio RTE (Recoger Totalidad)&#x27;]
+  viajes_con_ser      integer [default: 0, note: &#x27;Viajes que cumplieron criterio SER (Sale y Regresa con equipo)&#x27;]
+  viajes_con_cl       integer [default: 0, note: &#x27;Viajes que cumplieron criterio CL (Entrega mismo día)&#x27;]
+  viajes_con_pp       integer [default: 0, note: &#x27;Viajes que cumplieron criterio PP (Presentación Personal)&#x27;]
+  viajes_calificados  integer [default: 0, note: &#x27;Viajes que califican para pago por tonelada (cumplieron todos los criterios obligatorios)&#x27;]
   generado_at         timestamp [default: `now()`]
   generado_por        uuid    [ref: &gt; usuarios.id]
 
@@ -4710,7 +5044,7 @@ Table rpt_conductores_viajes {
     conductor_id
   }
 
-  Note: &#x27;Reporte de liquidación de conductores por período — calculado con reglas de km, peso/volumen y combustible configuradas por SuperAdmin&#x27;
+  Note: &#x27;Reporte de liquidación de conductores por período — incluye resumen de criterios MP/RTE/SER/CL/PP por viaje. Solo viajes_calificados se pagan a tarifa de tonelada. Fuente: evaluacion_criterios_conductor + config_tarifas_transporte&#x27;
 }
 
 // 6. Rotación de inventario por producto
@@ -4743,7 +5077,7 @@ Table rpt_inventario_rotacion {
 
   <footer>
     <p><strong>G&amp;H Obras y Estructuras Metálicas S.A.S</strong> &nbsp;·&nbsp; NIT: 901.218.896-8 &nbsp;·&nbsp; Calle 64 #112C-27, Engativá, Bogotá — Colombia</p>
-    <p style="margin-top:.4rem">Generado el 04 de July de 2026 &nbsp;·&nbsp; Sesión: 2026-06-16 &nbsp;·&nbsp; Feedback: 2026-06-24 &nbsp;·&nbsp; SEM-27: 2026-07-04 &nbsp;·&nbsp; imagineapps.co</p>
+    <p style="margin-top:.4rem">Generado el 14 de July de 2026 &nbsp;·&nbsp; Sesión: 2026-06-16 &nbsp;·&nbsp; Feedback: 2026-06-24 &nbsp;·&nbsp; SEM-27: 2026-07-04 &nbsp;·&nbsp; imagineapps.co</p>
   </footer>
 
 </main>

@@ -81,4 +81,18 @@ flowchart TD
         INV_AJENOS_LIST["↩️ Equipos Ajenos en Bodega\n/almacen/equipos-ajenos\nEmpresa propietaria · Estado · Devolución"]:::nuevo
     end
 
-    INV --> S_STOCK & S_PEDIDOS & S_REM & S_VER & S_LOGISTICA & S_CRONOGRAMA & S_AJENOS
+    subgraph S_CONSUMIBLES["CONSUMIBLES — MATERIALES BODEGA"]
+        INV_CONS["📦 Kardex de Consumibles\n/almacen/consumibles\nPINTURA · DISOLVENTE · SOLDADURA\nTORNILLOS · GASES · OTROS"]:::nuevo
+        INV_CONS_CAT["🗂️ Catálogo de Consumibles\n/almacen/consumibles/catalogo\nNombre · Unidad · Bodega · Stock Min/Max"]:::pagina
+        INV_CONS_MOV["➕ Registrar Movimiento\n/almacen/consumibles/:id/movimiento\nEntrada · Salida · Documento · Observaciones"]:::cta
+        INV_CONS_ALERTA["🔔 Alertas de Stock Mínimo\n/almacen/consumibles/alertas\nProductos bajo nivel mínimo"]:::alerta
+        INV_CONS --> INV_CONS_CAT & INV_CONS_MOV & INV_CONS_ALERTA
+    end
+
+    subgraph S_CONFIG["CONFIGURACIÓN ALMACÉN (SuperAdmin)"]
+        INV_CONF_TARIFA["⚙️ Tarifas de Transporte\n/almacen/config/tarifas\nBogotá $2.500/ton · Fuera $4.500/ton\nTipo cálculo: mayor(peso,volumen)"]:::nuevo
+        INV_CONF_CRIT["✅ Criterios Liquidación Conductores\n/almacen/config/criterios-conductor\nMP · RTE · SER · CL · PP\nActivar/desactivar por período"]:::nuevo
+        INV_CONF_PESOS["⚖️ Catálogo de Pesos por Equipo\n/almacen/config/pesos-catalogo\nFT · FM · AMD · ALFOR\n(fuente: PESO-EQUIPOS-GYH.xlsx)"]:::nuevo
+    end
+
+    INV --> S_STOCK & S_PEDIDOS & S_REM & S_VER & S_LOGISTICA & S_CRONOGRAMA & S_AJENOS & S_CONSUMIBLES & S_CONFIG

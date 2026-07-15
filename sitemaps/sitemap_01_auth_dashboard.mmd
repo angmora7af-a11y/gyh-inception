@@ -25,12 +25,14 @@ flowchart TD
     ROOT(["🏗️ G&H Sistema\ngyh.com.co"]):::root
 
     %% ── AUTH
-    subgraph S_AUTH["🔐 FLUJO 1 — Autenticación"]
+    subgraph S_AUTH["🔐 FLUJO 1 — Autenticación (2FA)"]
         AUTH["🔐 Autenticación"]:::auth
-        LOGIN["Iniciar Sesión\n/login"]:::pagina
+        LOGIN["Iniciar Sesión\n/login\nUsuario + Contraseña"]:::pagina
+        TWOFA["📧 Verificación 2FA\n/login/verify\nCódigo de seguridad al correo\n(6 dígitos · vigencia 10 min)"]:::cta
         FORGOT["Recuperar Contraseña\n/forgot-password"]:::pagina
         RESET["Nueva Contraseña\n/reset-password"]:::pagina
         AUTH --> LOGIN & FORGOT
+        LOGIN -->|"Credenciales válidas\n→ envío de código"| TWOFA
         FORGOT --> RESET
     end
 

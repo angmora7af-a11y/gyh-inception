@@ -827,6 +827,7 @@ def generate():
     tables, enums     = parse_dbml(dbml_raw)
     us_html           = md2html(rf('user-stories/historias_usuario.md'))
     ck_html           = md2html(rf('checklist-validado.md'))
+    notif_html        = md2html(rf('notificaciones.md'))
     roles_tabla_md    = rf('architecture/06_roles_y_permisos_tabla.md')
     db_html           = db_section(tables, enums, dbml_raw)
     today             = date.today().strftime("%d de %B de %Y")
@@ -1041,6 +1042,7 @@ def generate():
   <div class="nav-group">Requerimientos Funcionales</div>
   <a href="#historias">📖 Historias de Usuario</a>
   <a href="#checklist">✅ Checklist Validado</a>
+  <a href="#notificaciones">🔔 Notificaciones</a>
 
   <div class="nav-divider"></div>
   <div class="nav-group">Arquitectura Técnica</div>
@@ -1111,6 +1113,21 @@ def generate():
       <p class="section-sub">Sesión 2026-06-16 · Feedback 2026-06-24 · SEM-27 2026-07-04 · Cubre todos los módulos del sistema</p>
     </div>
     <div class="md-content">{ck_html}</div>
+  </section>
+
+  <section id="notificaciones">
+    <div class="section-header">
+      <h2>Notificaciones del Sistema — Módulo 08</h2>
+      <p class="section-sub">29 notificaciones · Email · WhatsApp API · In-app · 2FA por correo en autenticación · Prioridades y destinatarios por evento</p>
+    </div>
+    <div class="callout">
+      <strong>🔐 Segundo Factor (2FA):</strong> El sistema requiere verificación de código al correo en cada inicio de sesión — sin código válido, el acceso no se habilita.
+      &nbsp;·&nbsp;
+      <strong>Canales:</strong> <strong>Email</strong> (plataforma) · <strong>WhatsApp API</strong> (externo — cliente) · <strong>In-app</strong> (notificación en interfaz).
+      &nbsp;·&nbsp;
+      <strong>Prioridad Alta</strong> = acción inmediata · <strong>Media</strong> = recordatorio · <strong>Baja</strong> = log / confirmación.
+    </div>
+    <div class="md-content">{notif_html}</div>
   </section>
 
   {diagram_section("arquitectura",

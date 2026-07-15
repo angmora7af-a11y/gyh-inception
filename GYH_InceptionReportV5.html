@@ -610,7 +610,6 @@ footer strong { color: var(--primary); font-family: 'Montserrat', system-ui, san
   <div class="nav-group">Requerimientos Funcionales</div>
   <a href="#historias">📖 Historias de Usuario</a>
   <a href="#checklist">✅ Checklist Validado</a>
-  <a href="#notificaciones">🔔 Notificaciones</a>
 
   <div class="nav-divider"></div>
   <div class="nav-group">Arquitectura Técnica</div>
@@ -1769,14 +1768,12 @@ flowchart TD
     ROOT(["🏗️ G&H Sistema\ngyh.com.co"]):::root
 
     %% ── AUTH
-    subgraph S_AUTH["🔐 FLUJO 1 — Autenticación (2FA)"]
+    subgraph S_AUTH["🔐 FLUJO 1 — Autenticación"]
         AUTH["🔐 Autenticación"]:::auth
-        LOGIN["Iniciar Sesión\n/login\nUsuario + Contraseña"]:::pagina
-        TWOFA["📧 Verificación 2FA\n/login/verify\nCódigo de seguridad al correo\n(6 dígitos · vigencia 10 min)"]:::cta
+        LOGIN["Iniciar Sesión\n/login"]:::pagina
         FORGOT["Recuperar Contraseña\n/forgot-password"]:::pagina
         RESET["Nueva Contraseña\n/reset-password"]:::pagina
         AUTH --> LOGIN & FORGOT
-        LOGIN -->|"Credenciales válidas\n→ envío de código"| TWOFA
         FORGOT --> RESET
     end
 
@@ -2827,121 +2824,6 @@ flowchart TD
 <li class="check-item"><span class="chk">☐</span> Definir regla exacta de km/combustible para conductores (configurable por SuperAdmin)</li>
 <li class="check-item"><span class="chk">☐</span> Confirmar si el módulo de Proforma requiere firma o confirmación simple del cliente</li>
 </ul></div>
-  </section>
-
-  <section id="notificaciones">
-    <div class="section-header">
-      <h2>Notificaciones del Sistema — Módulo 08</h2>
-      <p class="section-sub">29 notificaciones · Email · WhatsApp API · In-app · 2FA por correo en autenticación · Prioridades y destinatarios por evento</p>
-    </div>
-    <div class="callout">
-      <strong>🔐 Segundo Factor (2FA):</strong> El sistema requiere verificación de código al correo en cada inicio de sesión — sin código válido, el acceso no se habilita.
-      &nbsp;·&nbsp;
-      <strong>Canales:</strong> <strong>Email</strong> (plataforma) · <strong>WhatsApp API</strong> (externo — cliente) · <strong>In-app</strong> (notificación en interfaz).
-      &nbsp;·&nbsp;
-      <strong>Prioridad Alta</strong> = acción inmediata · <strong>Media</strong> = recordatorio · <strong>Baja</strong> = log / confirmación.
-    </div>
-    <div class="md-content"><h1>Notificaciones del Sistema — G&amp;H Gestión</h1>
-<p><strong>G&amp;H Obras y Estructuras Metálicas S.A.S</strong></p>
-<p>Versión 1.0 — SEM-27 (2026-07-14)</p>
-<p><strong>Canales:</strong> Email (plataforma) · WhatsApp API (externo — cliente) · In-app (notificación en interfaz)</p>
-<p><strong>Prioridad:</strong> Alta = acción inmediata requerida · Media = informativa / recordatorio · Baja = confirmación / log</p>
-<hr>
-<h2>Autenticación y Seguridad (2FA)</h2>
-<p>&gt; El sistema requiere <strong>segundo factor de autenticación (2FA)</strong> en cada inicio de sesión. Tras ingresar usuario y contraseña, se envía un <strong>código de seguridad de 6 dígitos al correo electrónico registrado</strong>. El código tiene vigencia de 10 minutos. Sin validarlo, el acceso no se habilita.</p>
-<div class="table-wrap"><table><thead><tr>
-<th>ID</th>
-<th>Evento Disparador</th>
-<th>Destinatario</th>
-<th>Canal</th>
-<th>Prioridad</th>
-<th>Descripción del Contenido</th>
-</tr></thead><tbody>
-<tr><td>N-01</td><td>Inicio de sesión — verificación 2FA</td><td>Usuario autenticado</td><td>Email</td><td>Alta</td><td>Código OTP de 6 dígitos · Vigencia 10 min · Asunto: &quot;Tu código de acceso G&amp;H Sistema&quot;</td></tr>
-<tr><td>N-02</td><td>Solicitud de recuperación de contraseña</td><td>Usuario solicitante</td><td>Email</td><td>Alta</td><td>Enlace seguro de restablecimiento · Vigencia 30 min</td></tr>
-<tr><td>N-03</td><td>Contraseña cambiada exitosamente</td><td>Usuario</td><td>Email</td><td>Media</td><td>Confirmación del cambio · Instrucciones si no fue el usuario quien lo realizó</td></tr>
-<tr><td>N-04</td><td>Múltiples intentos de acceso fallidos (&gt;=5)</td><td>Admin · SuperAdmin</td><td>Email + In-app</td><td>Alta</td><td>Alerta de seguridad: usuario afectado · IP · Fecha y hora del último intento</td></tr>
-</tbody></table></div>
-<hr>
-<h2>Cotizaciones</h2>
-<div class="table-wrap"><table><thead><tr>
-<th>ID</th>
-<th>Evento Disparador</th>
-<th>Destinatario</th>
-<th>Canal</th>
-<th>Prioridad</th>
-<th>Descripción del Contenido</th>
-</tr></thead><tbody>
-<tr><td>N-05</td><td>Cotización enviada al cliente</td><td>Cliente</td><td>Email + WhatsApp</td><td>Media</td><td>PDF adjunto con valores comerciales · Datos de contacto comercial G&amp;H</td></tr>
-<tr><td>N-06</td><td>Precios especiales asignados a un cliente</td><td>Facturación</td><td>Email</td><td>Alta</td><td>Notificación obligatoria por escrito de precios acordados por Comercial · Nombre del cliente · Productos afectados</td></tr>
-</tbody></table></div>
-<hr>
-<h2>Registro y Aprobación de Clientes</h2>
-<div class="table-wrap"><table><thead><tr>
-<th>ID</th>
-<th>Evento Disparador</th>
-<th>Destinatario</th>
-<th>Canal</th>
-<th>Prioridad</th>
-<th>Descripción del Contenido</th>
-</tr></thead><tbody>
-<tr><td>N-07</td><td>Nuevo cliente ingresado — inicia revisión multi-área</td><td>Contabilidad · Jurídica · Comercial</td><td>Email + In-app</td><td>Alta</td><td>Ficha básica del cliente · Link al formulario FT-AC-001 · Plazo sugerido de respuesta</td></tr>
-<tr><td>N-08</td><td>Área sin concepto registrado (recordatorio automático)</td><td>Área(s) pendiente(s)</td><td>Email + In-app</td><td>Media</td><td>Nombre del cliente · Días transcurridos · Link directo al formulario de concepto</td></tr>
-<tr><td>N-09</td><td>Cliente APROBADO — todos los conceptos favorables</td><td>Comercial · Todas las áreas</td><td>Email + In-app</td><td>Alta</td><td>Estado: Activo · Nombre del cliente · Puede proceder con pedido de inmediato</td></tr>
-<tr><td>N-10</td><td>Cliente RECHAZADO</td><td>Comercial</td><td>Email + In-app</td><td>Alta</td><td>Motivo(s) del rechazo por área · Documentación faltante o inconsistente</td></tr>
-<tr><td>N-11</td><td>CEO fuerza aprobación (override)</td><td>Todas las áreas · Auditoría</td><td>Email + In-app</td><td>Alta</td><td>Aprobación bajo responsabilidad del CEO/Ingeniero · Motivo y fecha registrados en auditoría</td></tr>
-</tbody></table></div>
-<hr>
-<h2>Contratos y Firma Electrónica</h2>
-<div class="table-wrap"><table><thead><tr>
-<th>ID</th>
-<th>Evento Disparador</th>
-<th>Destinatario</th>
-<th>Canal</th>
-<th>Prioridad</th>
-<th>Descripción del Contenido</th>
-</tr></thead><tbody>
-<tr><td>N-12</td><td>Contrato generado — pendiente de firma</td><td>Cliente externo / Área interna</td><td>Email (Ooku)</td><td>Alta</td><td>Invitación de firma electrónica vía Ooku · Resumen del contrato · Fecha límite de firma</td></tr>
-<tr><td>N-13</td><td>Recordatorio de firma pendiente (configurable: 24h/48h)</td><td>Cliente</td><td>Email</td><td>Media</td><td>Enlace directo al documento · Datos de contacto G&amp;H para resolver dudas</td></tr>
-<tr><td>N-14</td><td>Contrato firmado exitosamente</td><td>Admin · Comercial</td><td>Email + In-app</td><td>Alta</td><td>Contrato activado · Operaciones habilitadas · Link al documento firmado</td></tr>
-</tbody></table></div>
-<hr>
-<h2>Almacén, Pedidos y Logística</h2>
-<div class="table-wrap"><table><thead><tr>
-<th>ID</th>
-<th>Evento Disparador</th>
-<th>Destinatario</th>
-<th>Canal</th>
-<th>Prioridad</th>
-<th>Descripción del Contenido</th>
-</tr></thead><tbody>
-<tr><td>N-15</td><td>Ingeniero / Comercial autoriza despacho</td><td>Despachador · Conductor asignado</td><td>Email + In-app</td><td>Alta</td><td>Detalle del pedido: equipos, destino, ruta, hora estimada de salida</td></tr>
-<tr><td>N-16</td><td>Conductor asignado a ruta de despacho</td><td>Conductor</td><td>Email + In-app</td><td>Alta</td><td>Cronograma del viaje: equipos, dirección, km, cliente, obra y frente</td></tr>
-<tr><td>N-17</td><td>Pedido completado — contador de alquiler inicia</td><td>Almacén · Facturación</td><td>In-app</td><td>Alta</td><td>Fecha de inicio de alquiler · Listado completo de equipos entregados · Obra y frente</td></tr>
-<tr><td>N-18</td><td>Envío parcial registrado — equipos pendientes en cola</td><td>Almacén · Comercial</td><td>In-app</td><td>Media</td><td>Equipos pendientes · Programados para siguiente viaje · Estimado de despacho</td></tr>
-<tr><td>N-19</td><td>Alerta de próxima recogida (configurable: N días antes)</td><td>Jefe de Almacén · Recepción</td><td>Email + In-app</td><td>Alta</td><td>Lista de equipos a recoger · Cliente, obra y frente · Fecha acordada de devolución</td></tr>
-<tr><td>N-20</td><td>Devolución con daño o faltante detectado en inspección</td><td>Almacén · Comercial · Facturación</td><td>Email + In-app</td><td>Alta</td><td>Equipos afectados · Estado clasificado (Dañado / Faltante) · Genera reposición automática</td></tr>
-<tr><td>N-21</td><td>Cancelación de pedido registrada</td><td>Ingeniería · Comercial</td><td>Email + In-app</td><td>Alta</td><td>Pedido cancelado · Motivo registrado · Equipos liberados y devueltos al stock</td></tr>
-<tr><td>N-22</td><td>Stock de consumible por debajo del mínimo configurado</td><td>Jefe de Almacén</td><td>Email + In-app</td><td>Media</td><td>Producto · Cantidad actual vs. mínimo · Unidad de negocio · Sugerencia de reabastecimiento</td></tr>
-</tbody></table></div>
-<hr>
-<h2>Facturación y Cartera</h2>
-<div class="table-wrap"><table><thead><tr>
-<th>ID</th>
-<th>Evento Disparador</th>
-<th>Destinatario</th>
-<th>Canal</th>
-<th>Prioridad</th>
-<th>Descripción del Contenido</th>
-</tr></thead><tbody>
-<tr><td>N-23</td><td>Proforma generada para revisión del cliente</td><td>Cliente</td><td>Email + WhatsApp</td><td>Alta</td><td>Detalle de cobros (alquiler, transporte, reposiciones) · Solicita aprobación explícita antes de factura</td></tr>
-<tr><td>N-24</td><td>Cliente aprueba la proforma</td><td>Facturación</td><td>In-app</td><td>Alta</td><td>Autorización recibida · Proceder con generación de factura oficial</td></tr>
-<tr><td>N-25</td><td>Factura emitida y transmitida a Siigo / DIAN</td><td>Cliente · Comercial</td><td>Email</td><td>Alta</td><td>CUFE · Fecha de emisión · Valores · Recomendación: validar estado en portal DIAN</td></tr>
-<tr><td>N-26</td><td>Error en transmisión a Siigo / DIAN</td><td>Facturación · Admin</td><td>Email + In-app</td><td>Alta</td><td>Descripción del error · Acción manual requerida · Datos de la factura afectada</td></tr>
-<tr><td>N-27</td><td>Factura próxima a vencer (configurable: N días antes)</td><td>Cartera · Comercial</td><td>Email + In-app</td><td>Media</td><td>Cliente · Número de factura · Valor pendiente · Días para vencimiento</td></tr>
-<tr><td>N-28</td><td>Factura vencida — cliente en mora</td><td>Cartera · Comercial · CEO</td><td>Email + In-app</td><td>Alta</td><td>Estado mora · Días vencidos · Valor pendiente · Inicia gestión de cobro</td></tr>
-<tr><td>N-29</td><td>Pago registrado y confirmado</td><td>Cartera · Comercial</td><td>In-app</td><td>Baja</td><td>Referencia de pago · Monto aplicado · Factura(s) saldadas</td></tr>
-</tbody></table></div></div>
   </section>
 
   

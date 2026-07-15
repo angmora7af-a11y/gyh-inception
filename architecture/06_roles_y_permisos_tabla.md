@@ -63,6 +63,9 @@
 | **Registrar y gestionar equipo ajeno** | — | ✓ | ✓ | — | — | — | — | — | ✓ | — | ✓ | — |
 | **Registrar indisponibilidad de conductor** | — | ✓ | ✓ | — | — | — | — | — | ✓ | — | — | — |
 | **Verificar y cargar camiones (despachador)** | — | ✓ | ✓ | — | — | — | — | — | — | — | ✓ | — |
+| **Ver y registrar movimientos de Kardex Consumibles** | — | ✓ | ✓ | — | — | — | — | — | ✓ | — | ✓ | — |
+| **Alerta de stock mínimo de consumibles** | — | ✓ | ✓ | — | — | — | — | — | ✓ | — | — | — |
+| **Evaluar criterios de liquidación conductor por viaje** | — | ✓ | ✓ | — | — | — | — | — | ✓ | — | — | — |
 
 ---
 
@@ -104,18 +107,26 @@
 | **Configurar parámetros globales del sistema** | — | ✓ | — | — | — | — | — | — | — | — | — | — |
 | **Configurar reglas conductores (km · combustible · peso/volumen)** | — | ✓ | — | — | — | — | — | — | — | — | — | — |
 | **Configurar valor de km y reglas de trayecto** | — | ✓ | — | — | — | — | — | — | — | — | — | — |
+| **Configurar tarifas de transporte por zona (Bogotá/Fuera)** | — | ✓ | — | — | — | — | — | — | — | — | — | — |
+| **Configurar criterios de liquidación conductor (MP/RTE/SER/CL/PP)** | — | ✓ | — | — | — | — | — | — | — | — | — | — |
+| **Configurar pesos por equipo del catálogo (FT/FM/AMD/ALFOR)** | — | ✓ | ✓ | — | — | — | — | — | ✓ | — | — | — |
+| **Gestionar catálogo de consumibles** | — | ✓ | ✓ | — | — | — | — | — | ✓ | — | — | — |
 
 ---
 
 ## Catálogo de Productos — Líneas de Negocio
 
-| Línea de Negocio | Descripción | Catálogo |
-|------------------|-------------|---------|
-| **Formaleta Metálica (FM)** | Sistemas de encofrado metálico (Excel FM) | General anual |
-| **Formaleta FP / FT** | Formaleta Plástica y Tradicional (Excel separado) | General anual |
-| **Multidireccional** | Andamios y sistemas multidireccionales | General anual |
-| **Transporte** | Fletes G&H — precio por peso Y volumen (el mayor) | General anual |
-| **Otros / Accesorios** | Accesorios complementarios | General anual |
+| Línea de Negocio | Código Sistema | Prefijo Remisión | Ítems Aprox. | Descripción |
+|------------------|:--------------:|:----------------:|:------------:|-------------|
+| **Formaleta Tradicional** | `formaleta_tradicional` | `FT` | ~18 | Parales enano/corto/largo/extralargo, cerchas, crucetas corta/larga, andamio tubular, andamio colgante, escalera, saca corbatas |
+| **Formaleta Metálica** | `formaleta_metalica` | `FM` | ~154 | Tableros múltiples dimensiones (0.6×1.2, 0.5×1.2, …), rinconeras, ángulos, corbatas, muretes |
+| **Multidireccional AMD** | `multidireccional` | `AMD` | ~202 | Verticales con/sin espigo (0.5m, 1m, 2m), horizontales (0.7m, 1.4m, 2m, 3m), diagonales, tornillo nivelador |
+| **Sistema ALFOR** | `andamio_alfor` | `ALFOR` | ~443 | Abrazaderas fija/giratoria, alineadores (múltiples longitudes), bases, cruces, plataformas — referencia ALFOR/ALFOREQUIPOS |
+| **Transporte** | `transporte` | `TRP` | N/A | Fletes G&H — precio por peso Y volumen (el mayor); Bogotá $2.500/ton, Fuera $4.500/ton |
+| **Consumibles (Bodega)** | `consumible` | N/A | ~6 cat. | Pintura anticorrosivo, disolvente/thinner, soldadura 6013, soldadura MIG 0.35, tornillos, gases — NO se alquilan; kardex separado |
+| **Accesorios** | `accesorio` | N/A | Variable | Accesorios complementarios de cualquier línea |
+
+> **Pesos por equipo**: Registrados en la BD con campo `peso_kg_unitario` en `catalogo_productos`. Fuente de verdad: `PESO-EQUIPOS-GYH-ACTUAL.xlsx` (hojas PESO FT, PESO FM, PESOS EQUI-ALFOR, PESO FT — mantenida por Almacén).
 
 ---
 
@@ -158,7 +169,22 @@ El sistema aplica automáticamente el centro de costo según el tipo de concepto
 | **Valor por km** | SuperAdmin | Regla configurable por kilómetro de trayecto |
 | **Factor combustible** | SuperAdmin | Valor km × factor de carga por tipo de camión |
 | **Capacidad de carga** | SuperAdmin | Peso máximo (toneladas) + volumen por tipo de vehículo |
-| **Liquidación viaje** | Sistema | Calculada automáticamente: f(km, toneladas, volumen, combustible) |
+| **Tarifa por tonelada** | SuperAdmin | Bogotá: $2.500/ton · Fuera de Bogotá: $4.500/ton (configurable en `config_tarifas_transporte`) |
+| **Liquidación viaje** | Sistema | Calculada automáticamente: f(km, toneladas, volumen, combustible, criterios) |
+
+### Criterios de acceso al pago por toneladas (fuente: PESO-EQUIPOS-GYH.xlsx — hoja CONSOLIDADO)
+
+El conductor accede al pago por toneladas **solo si cumple los 5 criterios**. El incumplimiento descuenta esa remisión de la liquidación:
+
+| Código | Nombre | Descripción |
+|:------:|--------|-------------|
+| **MP** | Mantenimiento Preventivo | El carro debe salir en perfecto estado. El conductor debe avisar al mecánico o su jefe directo con anticipación — no el mismo día |
+| **RTE** | Recoger Totalidad del Equipo | Indicar al almacenista si se recogió la totalidad o quedó parcial. Debe quedar anotado en la remisión |
+| **SER** | Sale con Equipo · Regresa con Equipo | Carro que sale con equipo para entregar debe regresar con equipo recogido y con sus remisiones |
+| **CL** | Entrega el Mismo Día | Carro que sale con equipo lo debe entregar el mismo día. Si no ocurre, esa remisión no se paga |
+| **PP** | Presentación Personal | Buena presentación personal, tanto en la empresa como en las obras. Los sábados: carros lavados, tanqueados y en garaje |
+
+> **Evaluación**: Por viaje (`agenda_transporte`). Registrada en `evaluacion_criterios_conductor`. El sistema bloquea el pago de la remisión cuando `CL=false` (no entregó el mismo día) — regla automática.
 
 ---
 

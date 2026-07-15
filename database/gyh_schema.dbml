@@ -111,12 +111,14 @@ Enum estado_obra {
 }
 
 Enum tipo_producto {
-  andamio
-  formaleta
-  maquinaria
-  accesorio
-  herramienta
-  otro
+  formaleta_tradicional [note: 'Línea FT — parales, cerchas, crucetas, andamio tubular, andamio colgante; prefijo remisión FT']
+  formaleta_metalica    [note: 'Línea FM — tableros (múltiples medidas), rinconeras, ángulos, corbatas; prefijo remisión FM']
+  multidireccional      [note: 'Línea AMD — verticales con/sin espigo, horizontales, diagonales, tornillo nivelador; sistema ALFOR/AMD']
+  andamio_alfor         [note: 'Sistema de andamio ALFOR — abrazaderas, alineadores, bases, cruces, plataformas; prefijo ALFOR']
+  consumible            [note: 'Materiales de bodega — pintura, disolvente/thinner, soldadura 6013, soldadura MIG, tornillos, gases; no se alquila']
+  maquinaria            [note: 'Equipos de maquinaria y herramienta mayor']
+  accesorio             [note: 'Accesorios y piezas complementarias de cualquier línea']
+  otro                  [note: 'Otros productos no clasificados']
 }
 
 Enum unidad_medida {
@@ -603,9 +605,18 @@ Table catalogo_productos {
   codigo_tipo          varchar(10)   [note: 'alquiler|venta — no mezclar; al hacer venta no tomar de inventario de alquiler']
   precio_transporte_calculo varchar(20) [note: 'peso_volumen|toneladas — el cobro real de transporte es por lo que ocupe (peso O volumen que llene el camión)']
 
+  // Peso físico del equipo (fuente: PESO-EQUIPOS-GYH — tablas PESO FT, PESO FM, PESOS EQUI-ALFOR, PESO FT)
+  peso_kg_unitario     decimal(10,3) [note: 'Peso unitario en kg — base para cálculo automático de flete por tonelada en remisiones; tabla fuente: PESO-EQUIPOS-GYH.xlsx']
+
+  // Dimensiones físicas del ítem (para cálculo de volumen de carga — flete por volumen)
+  largo_m_ref          decimal(8,3)  [note: 'Largo de referencia del producto en metros — para estimación volumétrica en despachos']
+  ancho_m_ref          decimal(8,3)  [note: 'Ancho de referencia en metros']
+  alto_m_ref           decimal(8,3)  [note: 'Alto de referencia en metros']
+
   // Inventario
   stock_actual         integer       [default: 0]
   stock_minimo         integer       [default: 0]
+  stock_maximo         integer       [note: 'Nivel máximo deseable — aplica también en kardex_consumibles para materiales']
 
   imagen_url           varchar(500)
   activo               boolean       [default: true]
@@ -613,7 +624,7 @@ Table catalogo_productos {
   created_at           timestamp     [default: `now()`]
   updated_at           timestamp     [default: `now()`]
 
-  Note: 'Catálogo general anual — actualizado por Recepción cada año y distribuido a todas las áreas'
+  Note: 'Catálogo general anual — actualizado por Recepción cada año y distribuido a todas las áreas. Incluye peso_kg_unitario obligatorio para líneas FT/FM/AMD/ALFOR (fuente: PESO-EQUIPOS-GYH.xlsx). Consumibles (tipo_producto=consumible) usan kardex_consumibles, no kardex_movimientos'
 }
 
 // Precios especiales por cliente (SEM-27)
@@ -653,6 +664,105 @@ Table retenciones_config {
   created_at          timestamp [default: `now()`]
 
   Note: 'Retenciones por tipo de concepto — transporte y alquiler tienen tasas distintas; si se mezclan, Siigo rechaza la factura'
+}
+
+// Configuración de tarifas de transporte por zona (SEM-27 + Análisis docs PESO-EQUIPOS)
+Table config_tarifas_transporte {
+  id               uuid    [pk, default: `gen_random_uuid()`]
+  zona             varchar(50)  [not null, note: 'bogota|fuera_bogota|ibague|armenia|otro — corresponde a ciudad_sucursal o destino de la obra']
+  tarifa_por_ton   decimal(10,2) [not null, note: 'Valor en COP por tonelada — Bogotá: $2.500, Fuera de Bogotá: $4.500 (fuente: PESO-EQUIPOS-GYH.xlsx hoja CONSOLIDADO)']
+  tarifa_por_m3    decimal(10,2) [note: 'Valor por metro cúbico si el cálculo es por volumen (aplica cuando el camión va lleno en volumen pero no en toneladas)']
+  tipo_calculo     varchar(20)  [not null, default: 'mayor_valor', note: 'mayor_valor=se cobra el mayor entre peso_ton y volumen_m3; solo_ton; solo_m3']
+  tipo_camion      varchar(50)  [note: 'NULL=aplica a todos; o especificar tipo: furgon|camion|camioneta — para diferencial de tarifa por flota']
+  vigente_desde    date    [not null]
+  vigente_hasta    date
+  creado_por       uuid    [ref: > usuarios.id]
+  created_at       timestamp [default: `now()`]
+
+  indexes {
+    zona
+    vigente_desde
+  }
+
+  Note: 'Tarifas de transporte configurables por SuperAdmin — fuente: planilla PESO-EQUIPOS-GYH.xlsx (CONSOLIDADO): Bogotá $2.500/ton, Fuera $4.500/ton. Se cobra el mayor entre peso real y volumen ocupado del camión'
+}
+
+// Criterios de bonificación en liquidación de conductores (fuente: hoja CONSOLIDADO de PESO-EQUIPOS-GYH.xlsx)
+Table config_criterios_liquidacion_conductor {
+  id               uuid    [pk, default: `gen_random_uuid()`]
+  codigo           varchar(10)  [unique, not null, note: 'MP|RTE|SER|CL|PP — código corto del criterio']
+  nombre           varchar(100) [not null]
+  descripcion      text    [not null, note: 'Descripción completa del criterio tal como aparece en la planilla CONSOLIDADO']
+  es_requerido     boolean [default: true, note: 'Si no cumple, no se paga ese rubro de la liquidación']
+  activo           boolean [default: true]
+  created_at       timestamp [default: `now()`]
+
+  Note: 'Criterios de acceso al pago por toneladas cargadas — fuente: PESO-EQUIPOS-GYH.xlsx hoja CONSOLIDADO. MP=Mant.Preventivo, RTE=Recoger Totalidad, SER=Sale con equipo y regresa con equipo+remisiones, CL=Entrega mismo día, PP=Presentación Personal. Si no cumple un criterio se descuenta esa remisión de la liquidación'
+}
+
+// Evaluación por conductor/viaje de criterios de liquidación
+Table evaluacion_criterios_conductor {
+  id                  uuid    [pk, default: `gen_random_uuid()`]
+  agenda_transporte_id uuid   [not null, ref: > agenda_transporte.id]
+  conductor_id        uuid    [not null, ref: > conductores.id]
+  criterio_id         uuid    [not null, ref: > config_criterios_liquidacion_conductor.id]
+  cumplido            boolean [not null]
+  observacion         text    [note: 'Justificación si no cumplió o nota del almacén']
+  registrado_por      uuid    [ref: > usuarios.id]
+  created_at          timestamp [default: `now()`]
+
+  indexes {
+    (agenda_transporte_id, criterio_id) [unique]
+    conductor_id
+  }
+
+  Note: 'Registro de cumplimiento de criterios por viaje — determina si el viaje califica para pago por tonelada'
+}
+
+// ============================================================
+// MÓDULO: KARDEX DE CONSUMIBLES (materiales de bodega interna)
+// Separado del kardex_movimientos que es para equipos de alquiler
+// Fuente: KARDEX.xlsx — hojas: PINTURA, DISOLVENTE, SOLDADURA 6013, SOLDADURA MIG, TORNILLOS, CONSUMIBLES
+// ============================================================
+
+Table consumibles_catalogo {
+  id               uuid    [pk, default: `gen_random_uuid()`]
+  codigo           varchar(100) [unique, not null]
+  nombre           varchar(300) [not null, note: 'Ej: PINTURA ANTICORROSIVO, DISOLVENTE/THINNER, SOLDADURA REVESTIDA 6013, SOLDADURA MIG 0.35']
+  categoria        varchar(100) [note: 'pintura|disolvente|soldadura|tornillos|gases|lubricantes|otro']
+  unidad_medida    varchar(50)  [not null, note: 'CANECAS|BOLSA|CAJAS|LITROS|UNIDADES — según categoría']
+  marca_referencia varchar(200)
+  ubicacion_bodega varchar(100) [note: 'Ej: BODEGA 1 — del campo Ubicación en el KARDEX.xlsx']
+  stock_minimo     integer      [note: 'Stock Mínimo del KARDEX.xlsx — alerta cuando se llega a este nivel']
+  stock_maximo     integer      [note: 'Stock Máximo del KARDEX.xlsx']
+  stock_actual     integer      [default: 0, note: 'Calculado automáticamente desde los movimientos']
+  activo           boolean      [default: true]
+  created_at       timestamp    [default: `now()`]
+  updated_at       timestamp    [default: `now()`]
+
+  Note: 'Catálogo de materiales de uso interno en bodega — NO son equipos de alquiler. Fuente: KARDEX.xlsx (G&H). Categorías reales: PINTURA ANTICORROSIVO (canecas), DISOLVENTE/THINNER (canecas), SOLDADURA REVESTIDA 6013 (bolsas), SOLDADURA MIG 0.35 (cajas), TORNILLOS (varias medidas), CONSUMIBLES (mezcla soldadura, gas montacargas, etc.)'
+}
+
+Table kardex_consumibles {
+  id                  bigserial    [pk]
+  consumible_id       uuid    [not null, ref: > consumibles_catalogo.id]
+  fecha               date    [not null]
+  numero_documento    varchar(100) [note: 'Número de documento fuente del movimiento (orden de compra, remisión interna, etc.)']
+  tipo_movimiento     varchar(30)  [not null, note: 'entrada|salida|ajuste|inicio_sistema']
+  cantidad_entrada    integer      [default: 0, note: 'Columna Entrada (Cantidad) del KARDEX.xlsx']
+  cantidad_salida     integer      [default: 0, note: 'Columna Salida (Cantidad) del KARDEX.xlsx']
+  saldo              integer      [not null, note: 'Saldo actualizado — columna Saldo (Cantidad) del KARDEX.xlsx']
+  observaciones       text         [note: 'Columna Observaciones del KARDEX.xlsx']
+  registrado_por      uuid    [ref: > usuarios.id]
+  created_at          timestamp    [default: `now()`]
+
+  indexes {
+    consumible_id
+    fecha
+    (consumible_id, fecha)
+  }
+
+  Note: 'Kardex de movimientos de materiales de bodega — equivale digital al KARDEX.xlsx (G&H). Columnas: Fecha, Documento, Tipo de Movimiento, Entrada (Cantidad), Salida (Cantidad), Saldo (Cantidad), Observaciones'
 }
 
 // ============================================================
@@ -1325,7 +1435,14 @@ Table rpt_conductores_viajes {
   peso_total_ton      decimal(12,3) [default: 0, note: 'Toneladas transportadas en el período']
   volumen_total_m3    decimal(12,3) [default: 0, note: 'm³ ocupados en el período']
   valor_combustible   decimal(18,2) [default: 0, note: 'Costo estimado de combustible calculado por regla']
-  valor_liquidacion   decimal(18,2) [default: 0, note: 'Total a pagar = f(km, toneladas, volumen, combustible) — regla configurable por SuperAdmin']
+  valor_liquidacion   decimal(18,2) [default: 0, note: 'Total a pagar = f(km, toneladas, volumen, combustible, criterios) — regla configurable por SuperAdmin']
+  // Resumen de criterios en el período
+  viajes_con_mp       integer [default: 0, note: 'Viajes que cumplieron criterio MP (Mantenimiento Preventivo)']
+  viajes_con_rte      integer [default: 0, note: 'Viajes que cumplieron criterio RTE (Recoger Totalidad)']
+  viajes_con_ser      integer [default: 0, note: 'Viajes que cumplieron criterio SER (Sale y Regresa con equipo)']
+  viajes_con_cl       integer [default: 0, note: 'Viajes que cumplieron criterio CL (Entrega mismo día)']
+  viajes_con_pp       integer [default: 0, note: 'Viajes que cumplieron criterio PP (Presentación Personal)']
+  viajes_calificados  integer [default: 0, note: 'Viajes que califican para pago por tonelada (cumplieron todos los criterios obligatorios)']
   generado_at         timestamp [default: `now()`]
   generado_por        uuid    [ref: > usuarios.id]
 
@@ -1335,7 +1452,7 @@ Table rpt_conductores_viajes {
     conductor_id
   }
 
-  Note: 'Reporte de liquidación de conductores por período — calculado con reglas de km, peso/volumen y combustible configuradas por SuperAdmin'
+  Note: 'Reporte de liquidación de conductores por período — incluye resumen de criterios MP/RTE/SER/CL/PP por viaje. Solo viajes_calificados se pagan a tarifa de tonelada. Fuente: evaluacion_criterios_conductor + config_tarifas_transporte'
 }
 
 // 6. Rotación de inventario por producto
