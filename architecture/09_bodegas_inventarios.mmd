@@ -1,0 +1,144 @@
+%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'primaryColor': '#1A365D',
+    'primaryTextColor': '#FFFFFF',
+    'primaryBorderColor': '#1A365D',
+    'lineColor': '#4A5568',
+    'secondaryColor': '#EDF2F7',
+    'clusterBkg': '#2D3748',
+    'clusterBorder': '#1A202C',
+    'titleColor': '#FFFFFF',
+    'edgeLabelBackground': '#F7FAFC',
+    'fontFamily': 'Montserrat, sans-serif'
+  }
+}}%%
+
+flowchart TD
+    classDef azul       fill:#1A365D,color:#FFFFFF,stroke:#0F2440,stroke-width:2px
+    classDef naranja    fill:#FF9F1C,color:#1A365D,stroke:#E8910A,stroke-width:2px,font-weight:bold
+    classDef gris       fill:#4A5568,color:#FFFFFF,stroke:#2D3748,stroke-width:1px
+    classDef grisClaro  fill:#EDF2F7,color:#1A365D,stroke:#CBD5E0,stroke-width:1px
+    classDef exito      fill:#38A169,color:#FFFFFF,stroke:#2F855A,stroke-width:2px
+    classDef peligro    fill:#E53E3E,color:#FFFFFF,stroke:#C53030,stroke-width:2px
+    classDef nuevo      fill:#BEE3F8,color:#1A365D,stroke:#3182CE,stroke-width:2px
+    classDef alerta     fill:#FED7D7,color:#1A365D,stroke:#FC8181,stroke-width:2px
+    classDef bodega1    fill:#1A365D,color:#FFFFFF,stroke:#0F2440,stroke-width:3px
+    classDef bodega2    fill:#2563eb,color:#FFFFFF,stroke:#1d4ed8,stroke-width:3px
+    classDef bodega40   fill:#d97706,color:#FFFFFF,stroke:#b45309,stroke-width:3px
+    classDef bodega50   fill:#16a34a,color:#FFFFFF,stroke:#15803d,stroke-width:3px
+
+    linkStyle default color:#1A365D
+
+    INICIO(["🏭 Sistema de Inventarios por Bodegas"]):::naranja
+
+    subgraph BODEGAS["🏢  LAS 4 BODEGAS DE G&H"]
+        direction TB
+
+        B1["🏭 BODEGA 1 — Engativá<br/>━━━━━━━━━━━━━━━━━━━━<br/>• Principal de almacenamiento<br/>• Stock disponible + en mantenimiento<br/>• Visible para: Almacén, Producción, Soporte"]:::bodega1
+
+        B2["🏭 BODEGA 2 — Luz<br/>━━━━━━━━━━━━━━━━━━━━<br/>• Almacenamiento secundario<br/>• Stock disponible + en mantenimiento<br/>• Visible para: Almacén, Producción, Soporte"]:::bodega2
+
+        B40["🔧 BODEGA 40 — Mantenimiento<br/>━━━━━━━━━━━━━━━━━━━━<br/>• Equipo en reparación<br/>• NO disponible para alquiler<br/>• Visible para: Almacén, Producción<br/>• NO visible para: Soporte Atención"]:::bodega40
+
+        B50["👔 BODEGA 50 — Clientes<br/>━━━━━━━━━━━━━━━━━━━━<br/>• Equipo en poder de clientes<br/>• Alquilado actualmente<br/>• Visible para: Almacén<br/>• NO visible para: Producción, Soporte"]:::bodega50
+    end
+
+    subgraph CONSULTA["🔍  MÓDULO CONSULTIVO (NO RESTRICTIVO)"]
+        direction TB
+
+        CONS_INICIO["👤 Usuario accede a Inventarios"]:::azul
+
+        CONS_FILTRO_ROL{"Filtrar bodegas<br/>según rol"}:::naranja
+
+        CONS_ALMACEN["👷 ROL: Almacén/Despachador<br/>Ve TODAS las 4 bodegas"]:::azul
+
+        CONS_PRODUCCION["🏭 ROL: Producción<br/>Ve Bodega 1, 2 y 40<br/>(NO ve Bodega 50 — Clientes)"]:::grisClaro
+
+        CONS_SOPORTE["👤 ROL: Soporte Atención<br/>Ve Bodega 1 y 2<br/>(NO ve Bodega 40 ni 50)"]:::nuevo
+
+        CONS_MOSTRAR["📊 Mostrar inventario con KPIs:<br/>• Stock disponible<br/>• Stock en alquiler<br/>• Stock en mantenimiento<br/>• Total por bodega"]:::azul
+
+        CONS_ESTADOS["🎨 Indicadores visuales de stock:<br/>━━━━━━━━━━━━━━━━━━━━<br/>🔴 SIN STOCK (0 unidades)<br/>🟡 STOCK BAJO (< 50 unidades)<br/>🟢 STOCK MEDIO (50-200 unidades)<br/>🔵 STOCK ALTO (> 200 unidades)"]:::nuevo
+
+        CONS_ALERTA["⚠️ Alertas NO bloqueantes<br/>• Si stock bajo: mostrar advertencia<br/>• NO impide crear cotización/pedido<br/>• Permite continuar operación"]:::alerta
+    end
+
+    subgraph DISTRIBUCION["📦  DISTRIBUCIÓN DE STOCK POR PRODUCTO"]
+        direction TB
+
+        DIST_PRODUCTO["📦 Seleccionar producto<br/>(ej: Formaleta Tradicional 0.60m)"]:::azul
+
+        DIST_DETALLE["📊 Ver distribución en 4 bodegas:<br/>━━━━━━━━━━━━━━━━━━━━━━━━━━<br/>Bodega 1: 450 disp + 320 alq + 30 mant = 800<br/>Bodega 2: 280 disp + 180 alq + 20 mant = 480<br/>Bodega 40: 0 disp + 0 alq + 45 mant = 45<br/>Bodega 50: 0 disp + 500 alq + 0 mant = 500<br/>━━━━━━━━━━━━━━━━━━━━━━━━━━<br/>TOTAL: 730 disponibles + 1,000 alquilados + 95 mantenimiento"]:::nuevo
+
+        DIST_GRAFICA["📈 Gráfica visual<br/>Barra por bodega con colores distintivos"]:::grisClaro
+    end
+
+    subgraph MOVIMIENTOS["🔄  REGISTRO DE MOVIMIENTOS"]
+        direction TB
+
+        MOV_SALIDA["📤 SALIDA (Remisión de envío)<br/>━━━━━━━━━━━━━━━━━━━━<br/>Acción:<br/>• Bodega 1/2: stock_disponible -= cantidad<br/>• Bodega 50: stock_en_alquiler += cantidad<br/><br/>Registra: remisión tipo='salida'"]:::exito
+
+        MOV_DEVOLUCION["📥 DEVOLUCIÓN<br/>━━━━━━━━━━━━━━━━━━━━<br/>Clasifica estado del equipo devuelto:<br/>1. OK → Bodega 1/2 (disponible)<br/>2. Daño Leve → Bodega 1/2 (disponible con nota)<br/>3. Requiere Mantenimiento → Bodega 40<br/>4. Baja → Descarta del inventario<br/>5. Faltante → Registra pérdida<br/>6. Ajeno → Bodega de Equipos Ajenos"]:::alerta
+
+        MOV_MANTENIMIENTO_IN["🔧 ENVÍO A MANTENIMIENTO<br/>━━━━━━━━━━━━━━━━━━━━<br/>Bodega 1/2: stock_disponible -= cantidad<br/>Bodega 40: stock_mantenimiento += cantidad"]:::bodega40
+
+        MOV_MANTENIMIENTO_OUT["✅ SALIDA DE MANTENIMIENTO<br/>━━━━━━━━━━━━━━━━━━━━<br/>Bodega 40: stock_mantenimiento -= cantidad<br/>Bodega 1/2: stock_disponible += cantidad"]:::exito
+
+        MOV_AUDITORIA["📋 Registro de Auditoría<br/>Todos los movimientos quedan registrados en:<br/>• tabla: auditoria<br/>• usuario_id<br/>• antes/despues<br/>• timestamp"]:::grisClaro
+    end
+
+    subgraph INTEGRACION["🔗  INTEGRACIÓN CON OTROS MÓDULOS"]
+        direction TB
+
+        INT_COTIZACION["💼 Módulo Cotizaciones<br/>━━━━━━━━━━━━━━━━━━━━<br/>Al crear cotización autogestionada:<br/>• Consulta stock disponible en Bodega 1 y 2<br/>• Muestra disponibilidad en tiempo real<br/>• NO bloquea si hay stock bajo<br/>• Solo advierte al cliente"]:::nuevo
+
+        INT_PEDIDOS["📦 Módulo Pedidos<br/>━━━━━━━━━━━━━━━━━━━━<br/>Al crear pedido:<br/>• Verifica disponibilidad en Bodega 1/2<br/>• Si stock insuficiente: alerta pero NO bloquea<br/>• Permite crear pedidos parciales<br/>• Genera alertas para Almacén"]:::alerta
+
+        INT_FACTURACION["💰 Módulo Facturación<br/>━━━━━━━━━━━━━━━━━━━━<br/>Al generar factura:<br/>• Consulta Bodega 50 (equipo en clientes)<br/>• Construye kardex de movimientos<br/>• Calcula períodos de alquiler"]:::azul
+    end
+
+    %% ── FLUJO PRINCIPAL ──
+    INICIO --> BODEGAS
+
+    BODEGAS --> CONS_INICIO
+    CONS_INICIO --> CONS_FILTRO_ROL
+
+    CONS_FILTRO_ROL -->|"Almacén/Despachador"| CONS_ALMACEN
+    CONS_FILTRO_ROL -->|"Producción"| CONS_PRODUCCION
+    CONS_FILTRO_ROL -->|"Soporte Atención"| CONS_SOPORTE
+
+    CONS_ALMACEN --> CONS_MOSTRAR
+    CONS_PRODUCCION --> CONS_MOSTRAR
+    CONS_SOPORTE --> CONS_MOSTRAR
+
+    CONS_MOSTRAR --> CONS_ESTADOS
+    CONS_ESTADOS --> CONS_ALERTA
+
+    CONS_ALERTA --> DIST_PRODUCTO
+    DIST_PRODUCTO --> DIST_DETALLE
+    DIST_DETALLE --> DIST_GRAFICA
+
+    DIST_GRAFICA --> MOV_SALIDA
+    DIST_GRAFICA --> MOV_DEVOLUCION
+    DIST_GRAFICA --> MOV_MANTENIMIENTO_IN
+
+    MOV_SALIDA --> MOV_AUDITORIA
+    MOV_DEVOLUCION --> MOV_AUDITORIA
+    MOV_MANTENIMIENTO_IN --> MOV_AUDITORIA
+    MOV_MANTENIMIENTO_OUT --> MOV_AUDITORIA
+
+    MOV_AUDITORIA --> INT_COTIZACION
+    MOV_AUDITORIA --> INT_PEDIDOS
+    MOV_AUDITORIA --> INT_FACTURACION
+
+    %% ── NOTAS ADICIONALES ──
+    NOTE1["💡 FILOSOFÍA: CONSULTIVO, NO RESTRICTIVO<br/>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━<br/>• El sistema MUESTRA disponibilidad<br/>• El sistema ADVIERTE si hay stock bajo<br/>• El sistema NO BLOQUEA operaciones<br/>• Permite crear cotizaciones y pedidos<br/>  incluso con stock insuficiente<br/>• La decisión final es del operador/comercial"]:::nuevo
+
+    NOTE2["⚠️ CASOS ESPECIALES<br/>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━<br/>• Equipo Ajeno: se registra en bodega separada<br/>• Baja de Equipo: se descarta del inventario<br/>• Faltantes: se registran como pérdida<br/>• Mantenimiento: puede tomar días o semanas<br/>• Última actualización: timestamp por producto"]:::alerta
+
+    NOTE3["🎯 ROLES Y VISIBILIDAD<br/>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━<br/>Almacén/Despachador: Ve TODO (4 bodegas)<br/>Producción: Ve 1, 2, 40 (NO clientes)<br/>Soporte Atención: Ve 1, 2 (solo disponibles)<br/>Comercial: Consulta para cotizaciones<br/>CEO/Admin: Visibilidad completa"]:::azul
+
+    B1 & B2 & B40 & B50 -.-> NOTE3
+    CONS_ALERTA -.-> NOTE1
+    MOV_DEVOLUCION -.-> NOTE2

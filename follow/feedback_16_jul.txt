@@ -1,0 +1,175 @@
+Aquí tienes la transcripción completa de las grabaciones de voz orientadas en orden cronológico, todo consolidado en un solo texto continuo:
+
+---
+
+**[Audio 1]**
+
+**Persona 1:** Amarillo 180.
+
+**Persona 2:** Ajá.
+
+**Persona 1:** Pide tantos metros de formaleta, tantos andamios, entonces ellos piden, en esta orden de compra incluyen todo eso, se les empieza a despachar. Pero al momento de facturación...
+
+**Persona 2:** ¿Puede que sea separado?
+
+**Persona 1:** Puede ser que sea separado. De esta orden de compra no va a ir completa, sino va a ir de acuerdo a lo que hayan devuelto.
+
+**Persona 2:** Okay, listo, ajá.
+
+**Persona 1:** Entonces, ellos devuelven de a puchitos.
+
+**Persona 2:** Claro.
+
+**Persona 1:** Y el... aquí se hace es el corte mensual, entonces a determinada fecha dicen: listo, hay que facturarle, muestre a ver qué es lo que piden en el kardex, que era el que yo te mostraba acá, que es ese mamotreto. Y la idea es que ese mamotreto que llamamos, pues sea más funcional en el módulo, ¿cierto?
+
+**Persona 2:** Entonces aquí debería haber una opción donde sea como ¿cómo quiere facturar?, ¿no? Para entender si necesita por orden de compra o un detalle más específico.
+
+**Persona 1:** Por remisión, por ejemplo aquí sería la remisión completa, pero uno quisiera que, por ejemplo lo que se remisionó, efectivamente eso devolvieron y listo, le facturo. Solo facturo lo que hayan devuelto.
+
+**Persona 2:** Lo que esté todavía en poder del cliente.
+
+**Persona 1:** Ajá.
+
+**Persona 2:** ¿Okay?
+
+**Persona 1:** ¿Sí? Eso es lo que uno va a facturar.
+
+**Persona 2:** Ah ya, te entiendo, claro.
+
+**Persona 1:** Sí, ahí ya evitaría el punteo que hacen porque pues ya la herramienta lo... ya estaría teniendo el... Digamos, el corazón de lo que necesitamos en factura tiene que ver acá. ¿Sí? Porque es... es qué productos son los que puedo facturar según lo que me dé el cliente.
+
+**Persona 2:** Mmm, entonces aquí debería estar el detalle del kardex.
+
+**Persona 1:** Exacto.
+
+**Persona 2:** Listo, mmm.
+
+**Persona 1:** Que esta partecita sería bueno que la viera, si se pudiera alcanzar a oír, no sé, la viera Lenis, solamente esto, facturación, no más. Porque ella te va a dar más luces de detalles puntuales que tienen en el proceso de facturación.
+
+**Persona 2:** Listo, listo, sí. Pero digamos el cuerpo en sí de la factura ya está diseñado. ¿Sí?
+
+**Persona 3:** Claro, lo que yo necesito es que la factura: cantidad, producto, fecha inicio, fecha de terminación. Y que si ya devuelven parcial de ese equipo o un total, se discrimine en el sentido de que... volvamos al ejemplo: 100 formaletas.
+
+**Persona 2:** Mmm.
+
+**Persona 3:** Entonces salieron el primero de... de primero de enero. Pero resulta que de esas 100 formaletas devolvieron el 20 de enero, 20.
+
+**Persona 2:** Ajá.
+
+**Persona 3:** 20 unidades. ¿Cuántas quedan? 80, ¿cierto?
+
+**Persona 2:** Sí.
+
+**Persona 3:** Entonces sería 80 formaletas del 21 de enero al 31 de enero. Es eso, y que cuando haga la operación el programa lo detalle, que diga: 100 formaletas por 30 de... por 20 días por 1,000 pesos día. Y que hay que tener parámetros es que aquí se factura es por... hay unas unidades que... unas cosas que se facturan por unidad y otras por metro cuadrado.
+
+**Persona 2:** Ajá. Entonces, eso ya lo...
+
+**Persona 3:** Entonces, que era lo que decía Lenis, que hay que tener en cuenta que cuando se integra... se entra al kardex es por unidad, pero cuando se va a facturar ciertos productos es por metro cuadrado. Entonces, la idea es que él automáticamente pues nos haga la... la conversión. Si yo tengo 100 formaletas...
+
+**Persona 2:** Que ese sea el proceso de cálculo.
+
+**Persona 3:** Exacto, haga el proceso. Ya sabemos que entonces coge el ancho, sabemos que esto tiene 60 centímetros por una altura de 90 y me da 0.72. Por las 100 formaletas me da 72 metros cuadrados. Ya automáticamente... pues es algo que es algo que es estándar, no es flexible sino que es estándar, una multiplicación de área.
+
+**Persona 2:** Listo.
+
+**Persona 3:** ¿Mmm?
+
+**Persona 2:** Bien.
+
+**Persona 3:** Eso... eso faltaría. Yo lo otro...
+
+---
+
+**[Audio 2]**
+
+**Persona 3:** ...nosotros los subimos, pero ¿quién o eso cómo se sube?, ¿cómo lo subirían? ¿Sí me hago entender? Que si hay...
+
+**Persona 2:** Sí, sí, hay dos formas de flujo, incluso ahí hay como un botón arriba que dice dice "Nuevo cliente". Lo puede, digamos un comercial lo... puede agregar el nuevo cliente si le quiere apoyar, no sé, está un rol que tendría que ser el de Viviana o la autogestión del cliente. Entonces, yo como cliente desde cero me registro...
+
+**Persona 3:** Ah, pero espérate, mire que me hace caer en cuenta de otra cosa: yo no quiero depender de Viviana. Por eso. No digamos de Viviana, del área del área de atención al...
+
+**Persona 2:** Claro, principalmente está planteado para que el mismo cliente llegue y si se le gustó, llene, o el comercial, llene la información y suba sus documentos, ¿cierto? Y para todo sea transparente el proceso pues de aprobación.
+
+**Persona 3:** Eso es lo que yo necesito saber.
+
+**Persona 2:** Ajá.
+
+**Persona 3:** Listo, bien, okay. Y ya me imagino que tú nos darás las herramientas, miren esta es la manera más súper práctica de... ya sea un WhatsApp, ya sea un celular, ya sea una laptop, ya sea donde sea, súbalo. De las herramientas comunes, ¿no? Nada pues súper...
+
+**Persona 2:** Lo va a poder subir, digamos que esto es web, ¿no? En la propuesta, entonces lo va a poder subir en un computador así, o lo va a poder subir desde el celular, o desde una tablet, lo va a poder subir desde donde sea.
+
+**Persona 3:** Que sea súper fácil. O tú misma me estás diciendo, un dummy.
+
+**Persona 2:** Sí, ahí pues por eso le mostré que es como solo adjuntar los documentos y ya. Ahí le dice qué documento es en cada parte y que también algo que me decía que facturación es un dolor es porque a veces, por ejemplo, así sea un RUT o una cámara de comercio, no le puede facturar sin ese documento, entonces vaya busque y tal persona no lo... ya está ahí. Entonces, ahí ya saben como ese histórico, como esa hoja clínica del cliente.
+
+**Persona 3:** Ah, claro.
+
+**Persona 2:** Ya queda ahí.
+
+**Persona 3:** Ya no depende de nadie, ya depende del sistema. No, ahí estará en el sistema, ahí queda guardado. Depende del sistema qué seguridad nos ofreces, ¿en qué sentido? Uno, que no nos hagan un súper hacker y me intenten bajar la información y y se me va para la competencia, puede pasar.
+
+**Persona 2:** Ajá.
+
+**Persona 3:** Dos, que pase lo que nos ha pasado acá: se dañó un computador, se dañó la nube, porque eso va para la nube, se dañó el interfaz, no sé, yo hablo basura de pendejadas porque yo de este tema no entiendo mucho, pero ¿qué seguridad nos ofrecería hoy el sistema en el sentido uno, que nos hackeen y dos, que... yo pongo el ejemplo actual, se dañó el servidor, quedamos...
+
+**Persona 2:** Claro.
+
+**Persona 3:** ...en blanco.
+
+**Persona 2:** Ajá.
+
+**Persona 3:** Algo que de pronto mire: sí, señores, eh esta es la copia original y esta es una copia... no sé, algo que que se pueda hacer, por ejemplo.
+
+**Persona 2:** En AWS se maneja por servidores, eso es pro... eh en temas de infraestructura lo que se hace es, digamos se tiene eh todo el aplicativo en un servidor. Eso se le puede programar, de manera nocturna casi siempre es, las copias de seguridad para que tenga una réplica, que si algo le pasa al sistema, que si algo le pasa al... se puede digamos restaurar desde cierto punto. Pero vamos por partes, digamos como que a nivel de seguridad de infraestructura funciona así, en AWS.
+
+**Persona 3:** Basados... basados en que va para la nube.
+
+**Persona 2:** Solamente en la nube, esto es en la nube. La propuesta no es sino en la nube, eh aquí no se va a llegar a instalar ni en un servidor, nada. Todo eso es 100% nube y se va a hacer en AWS. Okay. La la parte de seguridad de las personas o del tema de súper hacker, por eso decíamos el tema del código que a cada rato lo pide, del OTP, porque es de las cosas pues más seguras que le lleguen al correo. ¿No? Si ya queremos ser muy estrictos, podemos mirar un un eh un envío de un... puede ser una llave segura, esa es otra, como de autenticación. Entonces, yo tengo un código que solo lo puedo ver desde mi celular y no lo puedo ver desde otro lado, y otro que llega es mensaje de correo. El más seguro sería biométrico. Ah, ya. Entre más seguridad, eso es como una puerta, si usted le pone más chapas, más caro le va a salir, ¿no? No, sí, pero lo que me interesa a mí es que uno, no me hackeen la información; dos, que alguna de las personas, cualquier persona de la empresa, que hubo unas sucursales, coja y lo que ha pasado, yo pongo los ejemplos de lo que ha pasado para que tú miras cómo contrarrestarlo, cojan una USB, bajan toda la información y se la venden a la competencia. Pues eso es un... Porque eso es oro líquido. Claro, eso es muy complejo, pero también estamos hablando de procesos de como de transparencia, es decir, yo no le puedo garantizar si algún empleado hace una mala práctica, porque obviamente va a tener su usuario, un comercial digamos, y se baja la lista de los clientes y va y hace lo que quiera con eso, eso ya ustedes se forran es un tema legal, ¿no? Porque el aplicativo hasta allá pues no puede, o sea, no le va a preguntar para qué necesita la información.
+
+**Persona 3:** No, pero yo por ejemplo si...
+
+**Persona 2:** Por permisos, claro, por permisos yo sí le puedo decir: venga, este va a tener permisos a este botón o a este, sí, como esto lo puede descargar, esto no. Por eso es importante este azulito de que lo miren con detalle porque en esa matriz es donde está ese tipo de detallitos, ¿no? Oiga, necesito que tal persona no pueda hacer esto en este módulo, listo, lo vamos agregando. Entonces, esa sería la...
+
+**Persona 3:** Eso está en el correo que tú nos enviaste. Sí, correcto.
+
+**Persona 1:** Perdón, eh yo, pues hablando porque ya un poco hicimos el recorrido, eh para este sábado sí voy a pedir que una sesión sea con el equipo que tiene que ver con todo esto, porque es que nadie se pone... bueno nadie no, Lenis sí lo hizo, con todo. ella se puso y leyó y ella fue la que mandó mis observaciones. Pero yo de ayer ayer estaba Blanquita en esa mesa. Blanquita también por ahí miró algo, pero es bueno que estemos, como no se puede hacer reunión entre semana, el sábado... todo el equipo mire en detalle que no nos falte nada. Pero hay un tema ahí, para que mi papá se no de lo que sea, pero lo que pasa es que los sábados tenemos 2 horas ahora no más y pues los sábados ya tenemos programadas otro tipo de reuniones, en cambio esta sí nos va a tocar porque esto a carreras no me funciona. No, este sábado yo creo que a ti no te sirve que venga: ve ah bueno sí, no y ya. No, y después a deshacer y volver a hacer, pues no. No, ya no. No porque es tiempo que está perdiendo ella, plata que pierde la empresa, no. Entonces, yo creo que nos va a tocar es... Por eso se envió de manera asíncrona para que cada quien encuentre un proceso o un espacio tranquilo y diga: bueno, me voy a sentar a mirar esto, venga ¿y qué pasa si hago esto?, ¿y qué pasa?, ay ve, aquí le faltó esto. Eso es lo que yo necesito que pase, pero que es un ejercicio que de manera, eso sí, de cada...
+
+---
+
+**[Audio 3]**
+
+**Persona 3:** ...como un, ¿cómo lo decimos?, como un informe que lo bote automático en un cuadrito de esos que genial, que está genial estos cuadritos aquí arriba. Pedidos hay tres al... no completos, tres completos, tres incompletos, y ya uno se mira al detalle a cuáles son los tres que salen incompletos.
+
+**Persona 2:** Mmm, okay, listo.
+
+**Persona 3:** Sí, como algo así, y que este esto lo bote en una alarma a las áreas comerciales a quien correspondan, oiga está pendiente. Mire, ¿va a estar recibiendo una llamada?, o se les despachó el equipo, yo creo que ese ni está enterado que le mandaron el equipo incompleto. Fueron a armar y resulta que no está el equipo completo, entonces hubiera una una alarma. Mire que mandaron por ejemplo, haz de cuenta que mandaron el carro pero sin llantas.
+
+**Persona 2:** Ajá, sí no, no se puede usar.
+
+**Persona 3:** Entonces me está diciendo el ingeniero: venga ¿y cómo pongo a andar ese carro sin llantas? Algo así, pongo un ejemplo paralelo, ¿no? Claro. Entonces, si queda incompleto, coge el área comercial, venga ojo que está pendiente este pedido y uno baja y está pendiente. Claro. Porque el de abajo tiene que tener otro cuento. Sí, un segundo. Tranquilo. ¡Juan!
+
+---
+
+**[Audio 4]**
+
+**Persona 2:** Hay que revisar un usuario para Viviana o revisar un flujo que permita realizar los pedidos desde esa atención al cliente, no desde autogestión del cliente netamente, aunque también podría ser, sino también desde un apoyo que se haga desde atención al cliente, que es actualmente la misma persona que maneja los contratos. Que ahora los manejaría la plataforma con firma digital. Pero eh agregando ese ese espacio para el tema de pedidos, y agregando la lógica de que un pedido solo podría hacerse para un cliente ya aprobado.
+
+---
+
+**[Audio 5]**
+
+**Persona 2:** Ahí tendríamos entonces en en general, ese gráfico es muy importante, ese gráfico si quieres ahorita me lo envías porque me parece muy clave. Entonces tiene integración con Sigo, cuando cotice va a quedar un registro ahí porque pues Sigo lo puede recibir, cuando haga el pedido, Sigo lo lo lo lo recibe, el pedido entonces lo puede hacer Viviana, porque lo está haciendo Viviana o también lo puede hacer en autogestión el cliente. ¿No? Con aprobación. Eh cuando haga remisión también se le informa digamos a Sigo, cuando se hace devolución también se le informa a Sigo. Todo esto se procesa y hay un estado de kardex que es igualito tanto en la plataforma, debe ser igual en la plataforma que en Sigo, pues porque es un balance, luego va a la factura que también va digamos a Sigo, Sigo ya se encarga de hacer todo eso internamente, y luego se puede validar el Radian. Exacto. Entonces mira, yo lo había hecho esto lo lo hizo... Ah bueno, espórame, entonces todas esas son integraciones que va desde la plataforma informándole a Sigo, y Sigo tiene que confirmar que sí, me informó y registré. Pero la cartera sería al contrario. La cartera es al contrario, entonces la cartera puede ser un proceso automático, diario o en la noche, no sé, va consulta en Sigo: venga ¿qué han pagado?, usted es el que sabe los pagos, lo traigo y lo cruzo y puedo tener un una cartera actualizada dentro de la plataforma. Exacto. Basado en los pagos de Sigo. Exacto. Entonces esta es la versión eh bonita, esta la versión arcaica como ya la hago. ¿Okay? ¿Sí? Donde yo dije bueno, de la página web alguien entra mediante inteligencia hace una cotización, aquí hay la validación del cliente, eso genera entonces ya después de contrato y x x que ya tú la tienes clara, un pedido que aquí es donde está la app y el corazón de lo que queríamos desarrollar. Entonces si te das cuenta pedido, es esto azul es el Sigo. Ajá, sí. Esto verde es el la aplicación o el módulo. Ajá. Entonces pedido, conexión directa, remisión conexión directa, devolución, kardex, factura, dirección directa. Ya aquí se sale a la DIAN. Ajá. ¿Sí? Y ahí era donde decían que con IA el reporte de la DIAN. Exacto, entonces aquí ya sería al contrario, no de la app hacia allá sino de la DIAN hacia el módulo, y cartera va de la de Sigo hacia el módulo. Digamos que al revés, sería del módulo a la DIAN porque la DIAN no es que se vaya a integrar con nosotros, sino nosotros a la DIAN a ir a preguntarle allá. Ah sí, y jalarle el jalarle la información, y cartera pues vendrá siendo un reflejo dentro del módulo. final Tengo ahí una pregunta, entonces hablamos de dos procesos de IA muy claves: eh el del reporte del Radian, súper claro, esto ya lo miramos con detalle. por eso tiene ese color diferente. Y el de la página web me parece clave porque actualmente la cotización hasta que no pase por un dibujante y no sé qué... No, y lo que quiere el ingeniero, resulta que aquí tú llamas, no contestan. Claro, sí eso también ya lo vi, pero entonces eso sería muy aparte de la plataforma propiamente. ¿Cómo lo ven?, como en esa en esa primera parte, o sea quieren hacer una automatización de WhatsApp, eh... Yo pienso que hay que plantear una propuesta porque eso... Solo para esa primera parte, porque igual todo lo que hemos construido es para la plataforma como tal. Sí, mmm. Entonces de que un cliente se registre, claro se puede hacer una cotización. Pero la cotización es un reflejo del Excel que entregan allá. Exacto. Es eso, entonces lo que se lo que se quiere acá Que si el cliente mismo pueda generar su cotización, claro, ese es otro flujo. es que uno diga, exacto. La idea es que uno haga esto: eh IH Bogotá entra a la página y por aquí en algún lado diga cotícenos. Eh como hay en algunas páginas, cotícenos qué, y le va a dar una cotización con el precio genérico, por allá en letra le dirá Claro. si usted puede contáctese con su asesor para, no sé, mejorar... Y ahí es con el comercial y demás, listo, y ahí allá, ¿sí? Pero la idea es que por lo menos ese primer abrebocas lo tenga el cliente ya, ahora ahí no serán los mejores precios, ahí será una tabla La estándar, que tiene que se parametrizó de ese otro lado. Exacto. Eso es importante de agregarlo en el prototipo, prototipo falta ese flujo, falta el flujo de venga las cotizaciones autogestionadas podemos decirle va por aquí. Es diferente también a un tema de WhatsApp, la automatización de WhatsApp es distinta, es otra cosa, eso ya podemos mirar otro prototipo para eso, cómo sería la experiencia de un cliente atendido por WhatsApp, pero por un agente. Llegado, y tiene unos costos distintos, y no tiene incidencia en la plataforma directamente. Eso se hace con WhatsApp, o sea es como con otras tecnologías, ¿no? Mmm, listo, pero entonces me lo llevo para poderlo revisar porque eso no lo hemos, hace rato no hablábamos de eso. No. Es de los puntos iniciales. ¿Sí?, o sea ese es el gran, ah bueno, aquí yo te te explico. Realmente el corazón nuestro es esto, ¿sí? Ajá. Pero estas aristas, Si se logran, porque ¿qué dijimos? La idea es un sistema que permita que en dado momento si queremos avanzar a una siguiente etapa y decir: oiga, fomentemos tal cosa, se pueda hacer. Porque por ejemplo con lo que tenemos, ellos dicen: se hizo eso, y así se quedó hasta n tiempo. No le puede hacer nada. Claro, sí lo que pasa es que igual pues son desarrollos distintos, o sea por ejemplo la experiencia y todo lo que te planteo de WhatsApp pues puede ser fácilmente puede ser otro proyecto. Sí. Solamente ese flujo. Solamente, porque es que va a utilizar otras cosas, o sea WhatsApp no va a estar en la plataforma, es WhatsApp, ¿sí? O sea, que se puede integrar claro, que de pronto luego luego es una una pestaña que diga agente. Mmm, mmm. Agente cotizador, no sé, y ahí puede ver vea, tuvo tantas conversaciones, esto fue más o menos lo que los indicadores de lo que la gente pregunta, tantas cotizaciones sacó el agente, por tanta plata, no sé, tantos están calientes, o sea pues a nivel de venta es por lo que ellos se hablan. Mmm, mmm. Ahora habrá mucha gente también que...
+
+---
+
+**[Audio 6]**
+
+**Persona 1:** ...que tiene que hablar con un técnico de allá, pero toca de técnico a técnico, porque si uno queda... Claro.
+
+**Persona 2:** No, desde que yo tenga el contacto yo me comunico con ellos, no pasa nada. Pero sí necesito entender un poco la lógica en qué puntos necesitan que se integre el sistema con Sigo. ¿Sí?, a nivel de negocio. Entonces ya hablamos un punto que era al momento de hacer la remisión hace una afectación en Sigo, la registra, que fue lo que me mostraste ahí, remisión, ahí es donde hace un primer tema con Sigo. Luego hay otro momento, que es cuando se factura, se factura, que eso proforma, luego factura y en la factura se encarga, lo revisa en la DIAN y ahí es donde se revisa el código. Esos son los dos puntos de integración de Sigo, ¿no? Sí, lo tenemos acá. Módulo. Proceso de integración, no sé cuál fue el más reciente, el 102. Nosotros tenemos la cotización, o sea este es el Sigo. Sí. ¿Sí? Entonces, tenemos la cotización automatizada, que es todo lo que ya tú hiciste, esto es tan, ¿sí? Aquí está pues solamente el se menciona, porque todo el detalle ya tú lo tienes claro. Eso Sigo tiene también módulo de de cotización. ¿Mmm, sí? Luego la radicación de documentos, eso no necesariamente tiene que ir en Sigo, mmm, ¿sí? Estudio tampoco va en Sigo. Pero el pedido el pedido sí ya, este actualmente va en Sigo. Por eso es que la remisión se hace, porque la remisión se... Hay un pedido, el pedido lo hace, mira el pedido lo hace eh Viviana, la niña de atención al cliente. Luego Angie, la niña de almacén, es la que hace la remisión. Sí, correcto. Una cosa es el pedido, lo que pidió el cliente. Ah bueno, claro, sí ella se lo pasa a diario. Eso sí me dijo como ella le dice: vea hoy lo que hay que entregar es esto para estas estas personas. Exacto, entonces Y ella ¿qué se encarga? De hecho, almacén, o Angie ella debería manejar inventarios, ella no tiene ni idea si ahí si no hay. Ella lo único que hace es hacer remisiones y devoluciones, y programar los carros. Sí, es es operativo. Exacto, entonces, remisiones esto se hace en el módulo, pero automáticamente se integra Sigo. Mmm, okay, ajá. ¿Sí? Luego el cliente hace la devolución y esto lo hace también almacén, que lo registra en el sistema, vienen esas hojas tan despachoneadas del del conductor. Le toca a analizar el jeroglífico. Y lo me y lo incluye al sistema y es de una vez a Sigo. Eso está aquí en el módulo. Okay, ajá. O sea, aquí está en el módulo. Que son proceso, revisión y devolución. Ah, listo. ¿Sí? De cotizaciones no va, prefactura y factura. Ajá. Cotizaciones nunca la manejan. Bueno, entonces en este se vincula el pedido, se vincula la remisión, se vincula la devolución. Mmm, mmm. Esto automáticamente le da un estado de kardex, que se muestra en el módulo pero que también está integrado obviamente en el sistema. Claro, Sigo lo conoce, ajá. ¿Sí? Factura electrónica se hace en el módulo, se integra Sigo y ahí sale a la DIAN. Okay. ¿Sí? Que propiamente es hacer la factura. Sí, mmm, sí ya la parte de legal ya se encarga Sigo. Sí. de hacer eso. Okay, listo. ¿Y el paso final que fue la variación del código? Es, eso es. Eso ya es por la DIAN, ya lo miraremos cómo cómo funciona porque eso tiene eso tiene sus sus aristas. Reporte Radian, ahí es donde está el reporte Radian, el estado. Estado Radian. Que te lo iba a mostrar pero no quería interrumpirte. Entonces el en sí en Sigo ¿qué están? Todos los documentos: cotización, pedido, remisión, devolución, kardex, factura, de sincronizan con el Sigo web, Sigo web genera la factura, la envía a la DIAN, la DIAN valida, y aquí tenemos esta retroalimentación. Y ya. Por ahora, eso fue lo primero de mente planteado. ¿Aham? ¿Sí? Ahí no habíamos metido cartera. ¿Sí? Pero cartera es el producto, o sea el producto de esto más allá, porque como te digo ya eso depende de un reporte de estado de cartera que fue el que yo te acabo de enviar. Claro. Que es este del del Mmm una pregunta: ¿en Sigo cuando pagan registran? En Sigo cuando pagan ¿Cómo es el cliente? ¿Un cliente paga, se registra en Sigo algo? Sí, se registra en Sigo, pero pero no en el módulo. No, en Sigo. En Sigo, aquí se registra Porque de ahí la integración es al revés. Yo me jalo la información de Sigo para saber qué se pagó, qué no. Exactamente. Mmm, porque ese es el es el ente clave. Claro, sí, sí. Entonces ahí ya la la integración no es... Ya me ya me hiciste entender. No es... Entonces listo, ahí para resumirlo:
+
+---
+
+**[Audio 7]**
+
+**Persona 1:** ...es el equipo principalmente lo tenemos bodega 1, que es la de Engativá. Es esta bodega. ¿Ajá, sí? Entonces aquí hay un número de equipos, ¿sí? Ajá. Bodega 2, que también es Engativá, pero es una bodega de luz, tiene un número de equipos, y sí tenemos el reporte del número de equipos. Ajá, okay. ¿Sí? Tenemos eh bodega 50, que le dimos un número así cerrado como muy rep- que no fuera que se confundiera, se llama clientes. Mmm, mmm. Y aquí es donde en el momento en que se hace la remisión, en el momento en que aquí hace la remisión, pasa de la bodega 1 a la bodega 50 de clientes. Okay, ¿sí? Mmm, mmm. Está la bodega eh 40, creo que es, de mantenimiento. Es decir, después de que va y da la vuelta, no queda en bodega 1, ¿por qué?, porque tiene que primero pasar a mantenimiento, Eso sí me decían, que lo limpien eso, para poder que quede otra vez que los equipos cuando los devuelven, van y les hacen mantenimiento. Exacto. Entonces, sumado estos números nosotros tenemos x número de piezas de cada cosa. Mmm, sí. ¿Sí? Entonces nuestro sistema sí lo tiene. Okay, ¿sí? Listo. Y eso te lo podemos enviar en un Excel, donde se ve. Los clientes cada uno... Eso no está nada acá, porque precisamente en las entrevistas no salió. Mira, este es el listado, este, este que te estoy mostrando, es este. Ah, ya. ¿Sí? Sí. Pero nosotros lo podemos bajar con un Excel, o sea eso es un... Mmm, listo, entonces eh el compromiso ahí sería entonces enviar la información de los inventarios para que aquí se pueda analizar. Ahora ¿qué incidencia...?, eso sí ya es más pregunta, ¿en qué momento... yo reviso inventarios?, ¿podría yo vender sin que haya disponibilidad?, ¿podría yo alquilar un equipo que sé que me lo entregan el 15 pero lo estoy alquilando el 10? Eh... No. A ver, eh digamos que el el sistema por ahora sí tiene que ser flexible, porque la idea es que fuera una camisa de fuerza: usted no puede despachar si no hay. Claro, por eso está diseñado así, porque bajo el seguro que se dijo es: siempre venden. Siempre venden. Allá, o sea que hay que vender. Exacto. Entonces ¿por qué qué es lo que sucede? Esto va a venir a mejorar harto. ¿Aham? ¿Sí? Pero aquí no había inventario, aquí no se sabía si había o no había. Lo que pasa es que el sistema no puede ser flexible, o sea o es o no es, porque eso es un uno o un cero, es un blanco o un negro. Hay o no hay, lo reviso. Que de pronto, yo pueda agregar una opción, por ejemplo en consultar inventarios, va y revisa e idea: sí, más o menos hay esto. Exacto. Pero no va a bloquear nada, solamente va a mirar, solamente va a mirar qué hay pero hasta ahí. Porque si se vuelve restrictivo, y por eso yo te diga que sí que es un chicharrón tener inventarios, porque no tienen la minucia, ustedes no tienen el orden. No, no, no, no, no, no. No. No y nosotros en el sistema acá, nosotros tenemos sí, tenemos un inventario. ¿Sí? O sea, nosotros vamos acá y tenemos de hecho el módulo de inventarios que en Sigo nube, tengo entendido, no se tiene, por eso es importante que este quede diseñado. Claro. ¿Sí? Porque si no quedamos muy bravos. ¿Y sabes también por qué no lo tienen? Porque es que tienen una lógica muy específica de que los catálogos no son estándares. Pero sin tema- Ah, ¿hay uno con temporizador? Listo. Entonces, si yo le miro movimiento total, él me dice, por ejemplo, vamos a mirar solamente de este mes para que no salga un reporte de... terriblemente exagerado. Aquí me va a mostrar todo el inventario, y claro, eso es un eso es gigante. Claro, o sea si tienen 16,000, ¿por qué me dijiste?, 16,000 referencias referencias referencias de producto. Pues cuántas cuántos productos realmente van a haber. Claro, si no más en este año hicimos eh que tuvimos el sábado el comité, hemos hecho 42,000 piezas de producto. Claro, dentro de producción si tienen eso más claro. Claro, sí. Entonces, eh si yo miro acá Entonces mira, este es el código, cómo se construye el código, ¿ajá? Y lo hemos construido con una lógica: el 100 significa una cosa, el 200 otra, y el 300 otra, según el número con el que inicie. Movimiento de inventarios. ¿O sea, estos números son diferentes? Entonces el 100 siempre va a ser materia prima. Y aquí entonces esta la orden de producción, por ejemplo, mira. Listo. La orden de producción y ahí me va diciendo qué saldo yo tengo eh en dado momento. Ajá, que hay de mental, entonces vamos a hacer una cosa, listo. Ya quedamos que solo es consultivo. Sí. ¿Qué rol debe consultar los inventarios? Ah bueno, los inventarios ¿quién los puede consultar? Porque aquí ya tenemos ocho. ¿Ocho? Ocho eh roles. Ah sí, ¿quién los puede consultar? Empezamos por gerencia, comerciales, entonces tienen que, comerciales tienen que saber si sí hay o no hay para saber si mandan a producir o no. Okay. Eso sería, o sea eso nos empieza a poner un orden. Mmm, mmm, ¿sí? ¿Sí? Porque póngale cuidado que que digamos eh en el sistema me dice no hay, y van a la producción y nos van a oír: no sea gran pendejo que sí hay, no ve que hay ahí. Ah bueno, pues muestre a ver, registremos eso que no está registrado. Registre lo que no está correcto. Ahí yo tengo una pregunta porque hoy pasando, porque justo creo que aquí al lado es producción, ¿no? ¿Sí? Sí, justo ahí me saludó como con tres señores eh trabajando fuertemente, entonces yo decía: venga, de todo el sistema hay un pedacito que no hemos revisado y es producción. Ellos también tendrían usuario, porque cada vez que produzcan tendrían que tener precisamente dónde registrar, tú no vas a estar detrás de ellos registrando. Allá tiene que haber una persona que salieron no sé cuántos tornillos, no sé cuántas gavetas, no sé cuántos tableros, ahí tienen que estar diciendo, porque ellos son los que alimentan la entrada, los que afectan o de una u otra forma pueden registrar la salida, pues viene siendo los que comercialmente ya se hace o abajo en en en almacén, que son los que dicen: sí, salió, no está, o sí, se vendió, ya no está. ¿Mmm? Entonces queda consultivo, ellos van a tener esos esos esos El de producción debe ser consultivo, ya te digo por qué. Espérame, eh espérame porque el hombre me dijo que tenía algo... ¡Don Edgardo!

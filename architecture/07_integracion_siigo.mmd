@@ -1,0 +1,126 @@
+%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'primaryColor': '#1A365D',
+    'primaryTextColor': '#FFFFFF',
+    'primaryBorderColor': '#1A365D',
+    'lineColor': '#4A5568',
+    'secondaryColor': '#EDF2F7',
+    'clusterBkg': '#2D3748',
+    'clusterBorder': '#1A202C',
+    'titleColor': '#FFFFFF',
+    'edgeLabelBackground': '#F7FAFC',
+    'fontFamily': 'Montserrat, sans-serif'
+  }
+}}%%
+
+sequenceDiagram
+    autonumber
+
+    participant GYH as 🏗️ Sistema GYH
+    participant Facturacion as 👤 Facturación
+    participant Siigo as 📊 Siigo Nube
+    participant DIAN as 🏛️ Portal DIAN
+    participant Cliente as 👔 Cliente
+
+    Note over GYH,Cliente: 🔄 FLUJO COMPLETO DE FACTURACIÓN ELECTRÓNICA
+
+    rect rgb(237, 242, 247)
+        Note over GYH,Facturacion: FASE 1: GENERACIÓN DE FACTURA
+        Facturacion->>GYH: Selecciona Orden de Compra
+        GYH->>GYH: Construye kardex detallado<br/>(remisiones de salida y devoluciones)
+        GYH->>GYH: Calcula periodos de alquiler<br/>(considera devoluciones parciales)
+        GYH->>GYH: Aplica conversión de unidades<br/>(UND → M² si aplica)
+        GYH->>GYH: Calcula subtotales, IVA, retenciones<br/>(según centro de costo 13/14)
+        GYH->>Facturacion: Muestra pre-facturación con detalle
+        Facturacion->>GYH: Confirma y genera factura
+        GYH->>GYH: Asigna número consecutivo<br/>Estado: "enviada"
+    end
+
+    rect rgb(254, 243, 199)
+        Note over GYH,Siigo: FASE 2: ENVÍO A SIIGO (INTEGRACIÓN)
+        Facturacion->>Siigo: Envía factura via API/Manual
+        Note right of Siigo: Datos enviados:<br/>- Cliente (NIT, razón social)<br/>- Items (código, cant, precio)<br/>- Centro de costo (13/14)<br/>- Retenciones (según tipo)<br/>- IVA 19% si aplica
+
+        Siigo->>Siigo: Valida estructura
+
+        alt Validación exitosa
+            Siigo-->>GYH: ✅ Confirmación de recepción
+            GYH->>GYH: Actualiza siigo_estado: "enviada"
+        else Error de validación
+            Siigo-->>GYH: ❌ Error de validación<br/>(ej: centros de costo mezclados)
+            GYH->>GYH: Actualiza siigo_estado: "error"
+            Facturacion->>GYH: Corrige errores y reenvía
+        end
+    end
+
+    rect rgb(190, 227, 248)
+        Note over Siigo,DIAN: FASE 3: TRANSMISIÓN DIAN (AUTOMÁTICA)
+        Siigo->>DIAN: Transmite factura electrónica
+        Note right of DIAN: Siigo envía XML<br/>con firma digital
+
+        DIAN->>DIAN: Valida factura electrónica<br/>(estructura, NIT, rangos)
+
+        alt Aceptada por DIAN
+            DIAN-->>Siigo: ✅ CUFE generado<br/>Estado: Aceptada
+            Siigo->>Siigo: Registra CUFE
+            Note right of Siigo: ⚠️ IMPORTANTE:<br/>El estado en Siigo<br/>puede NO reflejar<br/>el estado real en DIAN
+        else Rechazada por DIAN
+            DIAN-->>Siigo: ❌ Rechazo DIAN<br/>(error en datos)
+            Siigo->>Siigo: Marca como rechazada
+        end
+    end
+
+    rect rgb(254, 215, 215)
+        Note over GYH,DIAN: FASE 4: VALIDACIÓN MANUAL (CRÍTICA)
+        Facturacion->>DIAN: Accede al Portal DIAN<br/>https://catalogo-vpfe.dian.gov.co
+        DIAN-->>Facturacion: Muestra estado real<br/>(aceptada/rechazada/pendiente)
+
+        alt Aceptada en DIAN
+            Facturacion->>GYH: Registra validación exitosa
+            GYH->>GYH: Actualiza estado_radian: "aceptada_dian"<br/>fecha_validacion_dian: NOW()<br/>CUFE: [código]
+        else Rechazada en DIAN
+            Facturacion->>GYH: Registra rechazo
+            GYH->>GYH: Actualiza estado_radian: "rechazada"<br/>fecha_validacion_dian: NOW()
+            Note right of GYH: ⚠️ Acción requerida:<br/>1. Anular factura<br/>2. Generar nueva factura<br/>con datos corregidos
+        else Pendiente en DIAN
+            Facturacion->>GYH: Marca como pendiente
+            GYH->>GYH: Actualiza estado_radian: "pendiente"
+            Note right of GYH: Se validará automáticamente<br/>en siguiente revisión nocturna
+        end
+    end
+
+    rect rgb(198, 246, 213)
+        Note over GYH,Cliente: FASE 5: NOTIFICACIÓN AL CLIENTE
+
+        alt Si factura aceptada
+            GYH->>Cliente: Envía factura electrónica por email
+            Note right of Cliente: Email incluye:<br/>- PDF de la factura<br/>- XML firmado<br/>- CUFE para verificación
+
+            Facturacion->>Cliente: Seguimiento telefónico<br/>(especialmente si correo público)
+            Cliente->>Facturacion: Confirma recepción
+
+            Facturacion->>GYH: Registra seguimiento
+            GYH->>GYH: seguimiento_telefonico: true<br/>fecha_seguimiento: NOW()
+        else Si factura rechazada
+            Facturacion->>Cliente: Notifica anulación y nueva emisión
+        end
+    end
+
+    rect rgb(237, 242, 247)
+        Note over GYH,Cliente: FASE 6: GESTIÓN DE PAGO
+        Cliente->>Cliente: Procesa pago según<br/>días de tramitación
+        Cliente->>GYH: Realiza pago
+
+        Facturacion->>GYH: Registra pago recibido
+        GYH->>GYH: Actualiza estado: "pagada"<br/>saldo_pendiente: 0<br/>fecha_pago: NOW()
+
+        GYH->>GYH: Elimina de cartera
+    end
+
+    Note over GYH,Cliente: ✅ PROCESO COMPLETO
+
+    %% Notas adicionales
+    Note over Siigo: ⚠️ REGLAS CRÍTICAS SIIGO:<br/>1. NO mezclar centros de costo 13 y 14<br/>2. Transporte siempre factura separada<br/>3. Retenciones diferenciadas por tipo<br/>4. Validar SIEMPRE en portal DIAN
+
+    Note over GYH: 🤖 AUTOMATIZACIONES:<br/>1. Validación DIAN automática (1h después)<br/>2. Revisión nocturna de pendientes<br/>3. Alertas de facturas rechazadas<br/>4. Recordatorios de seguimiento telefónico

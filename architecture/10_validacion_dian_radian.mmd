@@ -1,0 +1,180 @@
+%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'primaryColor': '#1A365D',
+    'primaryTextColor': '#FFFFFF',
+    'primaryBorderColor': '#1A365D',
+    'lineColor': '#4A5568',
+    'secondaryColor': '#EDF2F7',
+    'clusterBkg': '#2D3748',
+    'clusterBorder': '#1A202C',
+    'titleColor': '#FFFFFF',
+    'edgeLabelBackground': '#F7FAFC',
+    'fontFamily': 'Montserrat, sans-serif'
+  }
+}}%%
+
+flowchart TD
+    classDef azul       fill:#1A365D,color:#FFFFFF,stroke:#0F2440,stroke-width:2px
+    classDef naranja    fill:#FF9F1C,color:#1A365D,stroke:#E8910A,stroke-width:2px,font-weight:bold
+    classDef gris       fill:#4A5568,color:#FFFFFF,stroke:#2D3748,stroke-width:1px
+    classDef grisClaro  fill:#EDF2F7,color:#1A365D,stroke:#CBD5E0,stroke-width:1px
+    classDef exito      fill:#38A169,color:#FFFFFF,stroke:#2F855A,stroke-width:2px
+    classDef peligro    fill:#E53E3E,color:#FFFFFF,stroke:#C53030,stroke-width:2px
+    classDef nuevo      fill:#BEE3F8,color:#1A365D,stroke:#3182CE,stroke-width:2px
+    classDef alerta     fill:#FED7D7,color:#1A365D,stroke:#FC8181,stroke-width:2px
+    classDef pendiente  fill:#FED7AA,color:#1A365D,stroke:#F59E0B,stroke-width:2px
+
+    linkStyle default color:#1A365D
+
+    INICIO(["🏛️ Validación DIAN / RADIAN"]):::naranja
+
+    subgraph CONTEXTO["📚  ¿QUÉ ES RADIAN?"]
+        direction TB
+        RADIAN_INFO["🏛️ RADIAN (Registro de Aceptación DIAN)<br/>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━<br/>• Sistema de la DIAN para validar facturas electrónicas<br/>• TODA factura electrónica debe ser validada por RADIAN<br/>• Sin validación RADIAN = sin validez fiscal<br/>• Colombia: obligatorio desde 2019"]:::nuevo
+    end
+
+    subgraph GENERACION["📄  FASE 1: GENERACIÓN DE FACTURA"]
+        direction TB
+        GEN_FACTURA["📋 Factura generada en sistema GYH<br/>• Número consecutivo asignado<br/>• Estado inicial: 'enviada'<br/>• CUFE: null (pendiente)<br/>• estado_radian: 'pendiente'"]:::azul
+
+        GEN_TIMESTAMP["⏰ Registrar timestamp<br/>fecha_elaboracion: NOW()"]:::grisClaro
+    end
+
+    subgraph ENVIO_SIIGO["📤  FASE 2: ENVÍO A SIIGO"]
+        direction TB
+        SIIGO_ENVIO["📊 Enviar factura a Siigo<br/>(vía API o manual)"]:::azul
+
+        SIIGO_VALIDA{"¿Siigo valida<br/>estructura?"}:::naranja
+
+        SIIGO_OK["✅ Validación exitosa<br/>siigo_estado: 'enviada'"]:::exito
+
+        SIIGO_ERROR["❌ Error de validación<br/>siigo_estado: 'error'<br/><br/>Errores comunes:<br/>• Centros de costo mezclados<br/>• Datos de cliente incorrectos<br/>• Retenciones mal aplicadas"]:::peligro
+
+        SIIGO_CORREGIR["🔧 Corregir errores<br/>y reenviar"]:::alerta
+    end
+
+    subgraph TRANSMISION_DIAN["🏛️  FASE 3: TRANSMISIÓN A DIAN (AUTOMÁTICA)"]
+        direction TB
+        DIAN_TRANSMISION["📡 Siigo transmite automáticamente<br/>a la DIAN (XML firmado)"]:::azul
+
+        DIAN_PROCESA["⚙️ DIAN procesa factura electrónica<br/>• Valida estructura XML<br/>• Verifica NIT emisor y receptor<br/>• Valida rangos de numeración<br/>• Firma digital"]:::grisClaro
+
+        DIAN_RESPUESTA{"Respuesta<br/>DIAN"}:::naranja
+
+        DIAN_ACEPTADA["✅ ACEPTADA<br/>• DIAN genera CUFE<br/>• Factura válida para efectos fiscales"]:::exito
+
+        DIAN_RECHAZADA["❌ RECHAZADA<br/>• Error en datos<br/>• NIT no coincide<br/>• Numeración inválida"]:::peligro
+
+        DIAN_PENDIENTE["⏳ PENDIENTE<br/>• En proceso de validación<br/>• Puede tomar horas"]:::pendiente
+    end
+
+    subgraph VALIDACION_MANUAL["👤  FASE 4: VALIDACIÓN MANUAL (CRÍTICA)"]
+        direction TB
+        MANUAL_ALERTA["⚠️ REGLA CRÍTICA:<br/>━━━━━━━━━━━━━━━━━━━━━━━━━━<br/>El estado en Siigo puede NO reflejar<br/>el estado real en DIAN.<br/><br/>SIEMPRE validar manualmente<br/>en el Portal DIAN"]:::alerta
+
+        MANUAL_ACCESO["🌐 Acceder al Portal DIAN<br/>https://catalogo-vpfe.dian.gov.co"]:::azul
+
+        MANUAL_BUSCAR["🔍 Buscar factura por:<br/>• Número de factura<br/>• NIT del emisor<br/>• Rango de fechas"]:::grisClaro
+
+        MANUAL_VERIFICAR["👁️ Verificar estado real:<br/>• ✅ Aceptada<br/>• ❌ Rechazada<br/>• ⏳ Pendiente"]:::azul
+
+        MANUAL_REGISTRAR{"¿Estado en DIAN?"}:::naranja
+
+        MANUAL_ACEPTADA["✅ ACEPTADA EN DIAN<br/>━━━━━━━━━━━━━━━━━━━<br/>Actualizar en sistema:<br/>• estado_radian: 'aceptada_dian'<br/>• CUFE: [código de DIAN]<br/>• fecha_validacion_dian: NOW()<br/>• siigo_estado: 'aceptada'"]:::exito
+
+        MANUAL_RECHAZADA["❌ RECHAZADA EN DIAN<br/>━━━━━━━━━━━━━━━━━━━<br/>Actualizar en sistema:<br/>• estado_radian: 'rechazada'<br/>• fecha_validacion_dian: NOW()<br/>• siigo_estado: 'rechazada_dian'<br/><br/>⚠️ ACCIONES REQUERIDAS:<br/>1. Anular esta factura<br/>2. Generar nueva factura<br/>3. Corregir datos erróneos"]:::peligro
+
+        MANUAL_PENDIENTE["⏳ PENDIENTE EN DIAN<br/>━━━━━━━━━━━━━━━━━━━<br/>Actualizar en sistema:<br/>• estado_radian: 'pendiente'<br/><br/>Se validará nuevamente:<br/>• En 1 hora (automático)<br/>• En revisión nocturna<br/>• Manual cuando desee"]:::pendiente
+    end
+
+    subgraph AUTOMATIZACION["🤖  FASE 5: VALIDACIONES AUTOMÁTICAS"]
+        direction TB
+        AUTO_1H["⏰ Validación automática +1 hora<br/>━━━━━━━━━━━━━━━━━━━━━━━━━<br/>Sistema consulta DIAN automáticamente<br/>1 hora después de generar factura"]:::nuevo
+
+        AUTO_NOCTURNA["🌙 Revisión nocturna diaria<br/>━━━━━━━━━━━━━━━━━━━━━━━━━<br/>Todas las noches a las 2:00 AM:<br/>• Busca facturas con estado 'pendiente'<br/>• Consulta estado en portal DIAN<br/>• Actualiza automáticamente"]:::nuevo
+
+        AUTO_ALERTA_RECHAZADA["🚨 Alerta automática si rechazada<br/>━━━━━━━━━━━━━━━━━━━━━━━━━<br/>Notifica a:<br/>• Facturación (email + sistema)<br/>• Admin<br/>• Comercial del cliente"]:::peligro
+
+        AUTO_NOTIF_ACEPTADA["✅ Notificación si aceptada<br/>━━━━━━━━━━━━━━━━━━━━━━━━━<br/>• Email al cliente con PDF + XML<br/>• Incluye CUFE para verificación<br/>• Notifica a Facturación"]:::exito
+    end
+
+    subgraph SEGUIMIENTO["📞  FASE 6: SEGUIMIENTO AL CLIENTE"]
+        direction TB
+        SEG_TIPO{"Tipo de dominio<br/>correo cliente"}:::naranja
+
+        SEG_CORPORATIVO["🏢 Correo Corporativo<br/>━━━━━━━━━━━━━━━━━━━<br/>Estrategia: Triple Check<br/>1. Email automático<br/>2. Email de seguimiento<br/>3. Llamada telefónica"]:::azul
+
+        SEG_PUBLICO["📧 Correo Público (Gmail, Hotmail)<br/>━━━━━━━━━━━━━━━━━━━━━━━━━<br/>Estrategia: Llamada directa<br/>• Mayor riesgo de spam<br/>• Confirmar recepción por teléfono<br/>• Reenviar si es necesario"]:::alerta
+
+        SEG_CONFIRMAR["✅ Cliente confirma recepción"]:::exito
+
+        SEG_REGISTRAR["📝 Registrar seguimiento<br/>━━━━━━━━━━━━━━━━━━━<br/>• seguimiento_telefonico: true<br/>• fecha_seguimiento: NOW()<br/>• notas_seguimiento: [comentarios]"]:::grisClaro
+    end
+
+    %% ── FLUJO PRINCIPAL ──
+    INICIO --> CONTEXTO
+    CONTEXTO --> GEN_FACTURA
+
+    GEN_FACTURA --> GEN_TIMESTAMP
+    GEN_TIMESTAMP --> SIIGO_ENVIO
+
+    SIIGO_ENVIO --> SIIGO_VALIDA
+
+    SIIGO_VALIDA -->|"✓ OK"| SIIGO_OK
+    SIIGO_VALIDA -->|"✗ Error"| SIIGO_ERROR
+
+    SIIGO_ERROR --> SIIGO_CORREGIR
+    SIIGO_CORREGIR --> SIIGO_ENVIO
+
+    SIIGO_OK --> DIAN_TRANSMISION
+    DIAN_TRANSMISION --> DIAN_PROCESA
+    DIAN_PROCESA --> DIAN_RESPUESTA
+
+    DIAN_RESPUESTA -->|"Aceptada"| DIAN_ACEPTADA
+    DIAN_RESPUESTA -->|"Rechazada"| DIAN_RECHAZADA
+    DIAN_RESPUESTA -->|"Pendiente"| DIAN_PENDIENTE
+
+    DIAN_ACEPTADA --> MANUAL_ALERTA
+    DIAN_RECHAZADA --> MANUAL_ALERTA
+    DIAN_PENDIENTE --> MANUAL_ALERTA
+
+    MANUAL_ALERTA --> MANUAL_ACCESO
+    MANUAL_ACCESO --> MANUAL_BUSCAR
+    MANUAL_BUSCAR --> MANUAL_VERIFICAR
+    MANUAL_VERIFICAR --> MANUAL_REGISTRAR
+
+    MANUAL_REGISTRAR -->|"✅ Aceptada"| MANUAL_ACEPTADA
+    MANUAL_REGISTRAR -->|"❌ Rechazada"| MANUAL_RECHAZADA
+    MANUAL_REGISTRAR -->|"⏳ Pendiente"| MANUAL_PENDIENTE
+
+    MANUAL_ACEPTADA --> AUTO_1H
+    MANUAL_PENDIENTE --> AUTO_1H
+
+    AUTO_1H --> AUTO_NOCTURNA
+    AUTO_NOCTURNA --> AUTO_ALERTA_RECHAZADA
+    AUTO_NOCTURNA --> AUTO_NOTIF_ACEPTADA
+
+    AUTO_NOTIF_ACEPTADA --> SEG_TIPO
+
+    SEG_TIPO -->|"Corporativo"| SEG_CORPORATIVO
+    SEG_TIPO -->|"Público"| SEG_PUBLICO
+
+    SEG_CORPORATIVO --> SEG_CONFIRMAR
+    SEG_PUBLICO --> SEG_CONFIRMAR
+
+    SEG_CONFIRMAR --> SEG_REGISTRAR
+
+    %% Caso de rechazo
+    MANUAL_RECHAZADA -.->|"Requiere<br/>nueva factura"| GEN_FACTURA
+
+    %% ── NOTAS ADICIONALES ──
+    NOTE1["💡 FRECUENCIAS DE VALIDACIÓN<br/>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━<br/>✓ Automática: 1 hora después de generar<br/>✓ Nocturna: Diaria a las 2:00 AM<br/>✓ Manual: En cualquier momento con el botón<br/><br/>Se recomienda validación manual inmediata<br/>para facturas urgentes o de alto valor"]:::nuevo
+
+    NOTE2["⚠️ CASOS ESPECIALES<br/>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━<br/>• Si DIAN rechaza: anular y crear nueva<br/>• Si Siigo dice 'aceptada' pero DIAN 'pendiente':<br/>  confiar en DIAN (es la fuente de verdad)<br/>• Si cliente no confirma recepción:<br/>  seguimiento telefónico obligatorio<br/>• CUFE es evidencia para cartera"]:::alerta
+
+    NOTE3["🎯 INDICADORES DE GESTIÓN<br/>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━<br/>• % facturas aceptadas DIAN (meta: > 98%)<br/>• Tiempo promedio de validación<br/>• # facturas rechazadas por mes<br/>• % facturas con seguimiento telefónico"]:::azul
+
+    AUTO_1H & AUTO_NOCTURNA -.-> NOTE1
+    MANUAL_RECHAZADA -.-> NOTE2
+    SEG_REGISTRAR -.-> NOTE3

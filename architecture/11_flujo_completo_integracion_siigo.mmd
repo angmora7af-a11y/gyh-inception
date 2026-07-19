@@ -1,0 +1,235 @@
+%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'primaryColor': '#1A365D',
+    'primaryTextColor': '#FFFFFF',
+    'primaryBorderColor': '#1A365D',
+    'lineColor': '#4A5568',
+    'secondaryColor': '#EDF2F7',
+    'clusterBkg': '#2D3748',
+    'clusterBorder': '#1A202C',
+    'titleColor': '#FFFFFF',
+    'edgeLabelBackground': '#F7FAFC',
+    'fontFamily': 'Montserrat, sans-serif'
+  }
+}}%%
+
+flowchart TD
+    classDef azul       fill:#1A365D,color:#FFFFFF,stroke:#0F2440,stroke-width:2px
+    classDef naranja    fill:#FF9F1C,color:#1A365D,stroke:#E8910A,stroke-width:2px,font-weight:bold
+    classDef gris       fill:#4A5568,color:#FFFFFF,stroke:#2D3748,stroke-width:1px
+    classDef grisClaro  fill:#EDF2F7,color:#1A365D,stroke:#CBD5E0,stroke-width:1px
+    classDef exito      fill:#38A169,color:#FFFFFF,stroke:#2F855A,stroke-width:2px
+    classDef peligro    fill:#E53E3E,color:#FFFFFF,stroke:#C53030,stroke-width:2px
+    classDef nuevo      fill:#BEE3F8,color:#1A365D,stroke:#3182CE,stroke-width:2px
+    classDef siigo      fill:#FF6B6B,color:#FFFFFF,stroke:#C92A2A,stroke-width:2px
+    classDef dian       fill:#4C6EF5,color:#FFFFFF,stroke:#364FC7,stroke-width:2px
+    classDef automatico fill:#12B886,color:#FFFFFF,stroke:#0CA678,stroke-width:2px
+
+    linkStyle default color:#1A365D
+
+    INICIO(["🏗️ INTEGRACIÓN COMPLETA<br/>SIIGO - DIAN - GYH"]):::naranja
+
+    subgraph FASE1["📋  FASE 1: COTIZACIÓN (GYH → SIIGO)"]
+        direction TB
+
+        COT_CREAR["💼 Comercial/Dibujante<br/>crea COTIZACIÓN en GYH<br/>━━━━━━━━━━━━━━━━━━━<br/>• Cliente seleccionado<br/>• Productos y cantidades<br/>• Precios y descuentos<br/>• IVA y retenciones"]:::azul
+
+        COT_APROBAR["✅ Cliente APRUEBA<br/>cotización"]:::exito
+
+        COT_SIIGO{"¿Enviar cotización<br/>a Siigo?"}:::naranja
+
+        COT_SIIGO_ENVIO["📤 ENVÍO A SIIGO<br/>━━━━━━━━━━━━━━━━━━━<br/>API/Manual:<br/>• Datos de cliente (NIT)<br/>• Items cotizados<br/>• Valores calculados<br/>• Centro de costo estimado"]:::siigo
+
+        COT_SIIGO_OK["✅ Siigo registra<br/>cotización<br/>━━━━━━━━━━━━━━━━━━━<br/>Estado: 'Cotización registrada'<br/>ID Siigo: generado"]:::exito
+
+        COT_NO_ENVIO["⚠️ Solo en GYH<br/>(opcional no enviar)"]:::grisClaro
+    end
+
+    subgraph FASE2["📦  FASE 2: PEDIDO (GYH → SIIGO)"]
+        direction TB
+
+        PED_CREAR["📋 Comercial autoriza<br/>PEDIDO en GYH<br/>━━━━━━━━━━━━━━━━━━━<br/>• Basado en cotización aprobada<br/>• Genera Orden de Compra<br/>• Fecha inicio de alquiler<br/>• Items solicitados"]:::azul
+
+        PED_VERIFICAR["🔍 Almacén verifica<br/>disponibilidad<br/>━━━━━━━━━━━━━━━━━━━<br/>• Consulta inventario bodegas<br/>• Alertas si stock bajo<br/>• NO bloquea (consultivo)"]:::nuevo
+
+        PED_ESTADO{"Estado del<br/>pedido"}:::naranja
+
+        PED_COMPLETO["✅ COMPLETO<br/>100% despachado<br/>━━━━━━━━━━━━━━━━━━━<br/>fecha_alquiler_inicio = NOW()"]:::exito
+
+        PED_PARCIAL["⚠️ PARCIAL<br/>< 100% despachado<br/>━━━━━━━━━━━━━━━━━━━<br/>Genera ALERTA<br/>NO inicia contador de alquiler"]:::nuevo
+
+        PED_SIIGO_ENVIO["📤 ENVÍO A SIIGO<br/>━━━━━━━━━━━━━━━━━━━<br/>API/Manual:<br/>• Pedido completo/parcial<br/>• Items despachados<br/>• Estado actualizado"]:::siigo
+    end
+
+    subgraph FASE3["🚚  FASE 3: REMISIÓN (GYH → SIIGO)"]
+        direction TB
+
+        REM_SALIDA["📤 REMISIÓN DE SALIDA<br/>━━━━━━━━━━━━━━━━━━━<br/>Almacén genera remisión:<br/>• Conductor asignado<br/>• Vehículo y placa<br/>• Items con cantidad real<br/>• Destino (obra/frente)<br/>• Peso y volumen calculado"]:::azul
+
+        REM_ENTREGA["📍 Entrega en obra<br/>━━━━━━━━━━━━━━━━━━━<br/>Conductor confirma:<br/>• Persona que recibe<br/>• Hora de entrega<br/>• Estado del equipo<br/>• Foto de evidencia"]:::grisClaro
+
+        REM_SIIGO_SALIDA["📤 ENVÍO A SIIGO<br/>━━━━━━━━━━━━━━━━━━━<br/>Remisión de salida:<br/>• Número remisión GYH<br/>• Items entregados<br/>• Cliente y obra<br/>• Fecha y hora"]:::siigo
+
+        REM_DEVOLUCION["📥 REMISIÓN DE DEVOLUCIÓN<br/>━━━━━━━━━━━━━━━━━━━<br/>Almacén recibe equipo:<br/>• Despachador clasifica estado:<br/>  OK | Daño leve | Mantenimiento<br/>  Baja | Faltante | Ajeno<br/>• Cantidad real devuelta<br/>• Fotos de evidencia"]:::azul
+
+        REM_SIIGO_DEVOL["📤 ENVÍO A SIIGO<br/>━━━━━━━━━━━━━━━━━━━<br/>Remisión de devolución:<br/>• Cantidad devuelta<br/>• Estado del equipo<br/>• Novedades registradas<br/>• Actualiza kardex"]:::siigo
+    end
+
+    subgraph FASE4["💰  FASE 4: FACTURACIÓN (GYH → SIIGO → DIAN)"]
+        direction TB
+
+        FAC_GENERAR["📄 Facturación genera<br/>FACTURA en GYH<br/>━━━━━━━━━━━━━━━━━━━<br/>Modalidades:<br/>• Por Orden de Compra<br/>• Por Remisión<br/>• Por Kardex (recomendado)"]:::azul
+
+        FAC_KARDEX["📊 Construcción de Kardex<br/>━━━━━━━━━━━━━━━━━━━<br/>Sistema calcula:<br/>• Remisiones salida vs devolución<br/>• Períodos de alquiler<br/>• Devoluciones parciales<br/>• Conversión de unidades<br/>• Días × cantidad × precio"]:::nuevo
+
+        FAC_VALIDAR["🔍 Validación pre-envío<br/>━━━━━━━━━━━━━━━━━━━<br/>Revisar:<br/>• Centro de costo correcto (13/14)<br/>• NO mezclar tipos<br/>• Retenciones diferenciadas<br/>• Datos de cliente correctos"]:::grisClaro
+
+        FAC_SIIGO_ENVIO["📤 ENVÍO A SIIGO<br/>━━━━━━━━━━━━━━━━━━━<br/>Factura electrónica:<br/>• Número consecutivo GYH<br/>• Items discriminados por período<br/>• Subtotal + IVA + Retenciones<br/>• Centro de costo<br/>• PDF adjunto"]:::siigo
+
+        FAC_SIIGO_VALIDA{"¿Siigo valida<br/>estructura?"}:::naranja
+
+        FAC_SIIGO_ERROR["❌ ERROR Siigo<br/>━━━━━━━━━━━━━━━━━━━<br/>Errores comunes:<br/>• Centros costo mezclados<br/>• NIT incorrecto<br/>• Retenciones mal aplicadas<br/><br/>Estado: 'error'<br/>Requiere corrección"]:::peligro
+
+        FAC_SIIGO_OK["✅ Siigo acepta<br/>━━━━━━━━━━━━━━━━━━━<br/>Estado: 'enviada'<br/>siigo_estado: 'transmitida'"]:::exito
+
+        FAC_DIAN_TRANSMISION["🏛️ Siigo transmite a DIAN<br/>━━━━━━━━━━━━━━━━━━━<br/>Automático:<br/>• XML firmado digitalmente<br/>• Validación DIAN<br/>• Generación de CUFE"]:::dian
+    end
+
+    subgraph FASE5["🤖  FASE 5: VALIDACIÓN DIAN (AUTOMÁTICA + SCRAPING)"]
+        direction TB
+
+        VAL_AUTO_1H["⏰ VALIDACIÓN AUTOMÁTICA +1H<br/>━━━━━━━━━━━━━━━━━━━<br/>Rutina programada:<br/>1 hora después de enviar a Siigo<br/>ejecuta scraping DIAN"]:::automatico
+
+        VAL_SCRAPING["🔍 SCRAPING PORTAL DIAN<br/>━━━━━━━━━━━━━━━━━━━<br/>Script Python/Node:<br/>• Accede a catalogo-vpfe.dian.gov.co<br/>• Busca por número de factura<br/>• Extrae estado real<br/>• Captura CUFE si aceptada<br/>• Registra timestamp"]:::dian
+
+        VAL_ESTADO{"Estado DIAN<br/>obtenido"}:::naranja
+
+        VAL_ACEPTADA["✅ ACEPTADA DIAN<br/>━━━━━━━━━━━━━━━━━━━<br/>Actualizar en GYH:<br/>• estado_radian: 'aceptada_dian'<br/>• CUFE: [extraído del portal]<br/>• fecha_validacion_dian: NOW()<br/>• Enviar email a cliente<br/>  (PDF + XML + CUFE)"]:::exito
+
+        VAL_RECHAZADA["❌ RECHAZADA DIAN<br/>━━━━━━━━━━━━━━━━━━━<br/>Actualizar en GYH:<br/>• estado_radian: 'rechazada'<br/>• fecha_validacion_dian: NOW()<br/>• Alerta a Facturación<br/>• Requiere ANULAR factura<br/>  y generar nueva"]:::peligro
+
+        VAL_PENDIENTE["⏳ PENDIENTE DIAN<br/>━━━━━━━━━━━━━━━━━━━<br/>Actualizar en GYH:<br/>• estado_radian: 'pendiente'<br/>• Reintentar en revisión nocturna<br/>• Alerta si > 24 horas pendiente"]:::nuevo
+
+        VAL_NOCTURNA["🌙 REVISIÓN NOCTURNA<br/>━━━━━━━━━━━━━━━━━━━<br/>Rutina diaria 2:00 AM:<br/>• Busca facturas 'pendiente'<br/>• Ejecuta scraping DIAN<br/>• Actualiza estados<br/>• Genera reportes"]:::automatico
+
+        VAL_MANUAL["👤 VALIDACIÓN MANUAL<br/>━━━━━━━━━━━━━━━━━━━<br/>Facturación puede:<br/>• Validar manualmente en portal<br/>• Forzar re-scraping<br/>• Ver historial de validaciones"]:::grisClaro
+    end
+
+    subgraph FASE6["💵  FASE 6: REGISTRO DE PAGOS (SIIGO → GYH)"]
+        direction TB
+
+        PAGO_CLIENTE["💳 Cliente realiza pago<br/>━━━━━━━━━━━━━━━━━━━<br/>Canales:<br/>• Transferencia bancaria<br/>• Consignación<br/>• Cheque<br/>• Plataforma de pagos"]:::grisClaro
+
+        PAGO_SIIGO_REG["📊 Registro en Siigo<br/>━━━━━━━━━━━━━━━━━━━<br/>Contabilidad registra:<br/>• Pago recibido<br/>• Factura asociada<br/>• Fecha de pago<br/>• Monto parcial/total"]:::siigo
+
+        PAGO_CONSULTA["🔄 SINCRONIZACIÓN GYH ← SIIGO<br/>━━━━━━━━━━━━━━━━━━━<br/>Rutina periódica:<br/>• Consulta API Siigo<br/>• Busca pagos nuevos por factura<br/>• Extrae: monto, fecha, método"]:::automatico
+
+        PAGO_GYH_UPDATE["✅ Actualizar en GYH<br/>━━━━━━━━━━━━━━━━━━━<br/>Si pago completo:<br/>• estado: 'pagada'<br/>• saldo_pendiente: 0<br/>• fecha_pago: [fecha Siigo]<br/>• Eliminar de cartera<br/><br/>Si pago parcial:<br/>• saldo_pendiente -= monto<br/>• Mantener en cartera"]:::exito
+
+        PAGO_NOTIF["📧 Notificaciones<br/>━━━━━━━━━━━━━━━━━━━<br/>• Contabilidad: pago registrado<br/>• Comercial: cliente al día<br/>• Sistema: actualizar KPIs"]:::nuevo
+    end
+
+    subgraph MONITOREO["📊  MONITOREO Y REPORTES"]
+        direction TB
+
+        MON_DASHBOARD["📈 Dashboard de Integración<br/>━━━━━━━━━━━━━━━━━━━<br/>KPIs en tiempo real:<br/>• Facturas enviadas vs validadas<br/>• % aceptación DIAN (meta > 98%)<br/>• Tiempo promedio validación<br/>• Pagos pendientes de sincronizar<br/>• Errores de integración"]:::azul
+
+        MON_ALERTAS["🚨 Sistema de Alertas<br/>━━━━━━━━━━━━━━━━━━━<br/>Notifica automáticamente:<br/>• Facturas rechazadas DIAN<br/>• Errores de envío Siigo<br/>• Scraping fallido > 3 intentos<br/>• Pagos no sincronizados > 24h<br/>• CUFE faltantes"]:::peligro
+
+        MON_LOGS["📝 Logs de Auditoría<br/>━━━━━━━━━━━━━━━━━━━<br/>Registro completo:<br/>• Timestamp de cada operación<br/>• Usuario responsable<br/>• Request/Response Siigo<br/>• Resultados de scraping<br/>• Errores y reintentos"]:::grisClaro
+    end
+
+    %% ── FLUJO PRINCIPAL ──
+    INICIO --> COT_CREAR
+
+    %% FASE 1: COTIZACIÓN
+    COT_CREAR --> COT_APROBAR
+    COT_APROBAR --> COT_SIIGO
+
+    COT_SIIGO -->|"Enviar"| COT_SIIGO_ENVIO
+    COT_SIIGO -->|"No enviar"| COT_NO_ENVIO
+
+    COT_SIIGO_ENVIO --> COT_SIIGO_OK
+    COT_SIIGO_OK --> PED_CREAR
+    COT_NO_ENVIO --> PED_CREAR
+
+    %% FASE 2: PEDIDO
+    PED_CREAR --> PED_VERIFICAR
+    PED_VERIFICAR --> PED_ESTADO
+
+    PED_ESTADO -->|"100%"| PED_COMPLETO
+    PED_ESTADO -->|"< 100%"| PED_PARCIAL
+
+    PED_COMPLETO --> PED_SIIGO_ENVIO
+    PED_PARCIAL --> PED_SIIGO_ENVIO
+
+    PED_SIIGO_ENVIO --> REM_SALIDA
+
+    %% FASE 3: REMISIÓN
+    REM_SALIDA --> REM_ENTREGA
+    REM_ENTREGA --> REM_SIIGO_SALIDA
+    REM_SIIGO_SALIDA --> REM_DEVOLUCION
+    REM_DEVOLUCION --> REM_SIIGO_DEVOL
+
+    REM_SIIGO_DEVOL --> FAC_GENERAR
+
+    %% FASE 4: FACTURACIÓN
+    FAC_GENERAR --> FAC_KARDEX
+    FAC_KARDEX --> FAC_VALIDAR
+    FAC_VALIDAR --> FAC_SIIGO_ENVIO
+
+    FAC_SIIGO_ENVIO --> FAC_SIIGO_VALIDA
+
+    FAC_SIIGO_VALIDA -->|"Error"| FAC_SIIGO_ERROR
+    FAC_SIIGO_VALIDA -->|"OK"| FAC_SIIGO_OK
+
+    FAC_SIIGO_ERROR --> FAC_VALIDAR
+    FAC_SIIGO_OK --> FAC_DIAN_TRANSMISION
+
+    FAC_DIAN_TRANSMISION --> VAL_AUTO_1H
+
+    %% FASE 5: VALIDACIÓN DIAN
+    VAL_AUTO_1H --> VAL_SCRAPING
+    VAL_SCRAPING --> VAL_ESTADO
+
+    VAL_ESTADO -->|"Aceptada"| VAL_ACEPTADA
+    VAL_ESTADO -->|"Rechazada"| VAL_RECHAZADA
+    VAL_ESTADO -->|"Pendiente"| VAL_PENDIENTE
+
+    VAL_PENDIENTE --> VAL_NOCTURNA
+    VAL_NOCTURNA --> VAL_SCRAPING
+
+    VAL_ACEPTADA --> PAGO_CLIENTE
+
+    %% Validación manual siempre disponible
+    VAL_MANUAL -.->|"Ejecuta"| VAL_SCRAPING
+
+    %% FASE 6: PAGOS
+    PAGO_CLIENTE --> PAGO_SIIGO_REG
+    PAGO_SIIGO_REG --> PAGO_CONSULTA
+    PAGO_CONSULTA --> PAGO_GYH_UPDATE
+    PAGO_GYH_UPDATE --> PAGO_NOTIF
+
+    %% MONITOREO
+    PAGO_NOTIF --> MON_DASHBOARD
+    VAL_ACEPTADA --> MON_DASHBOARD
+    VAL_RECHAZADA --> MON_ALERTAS
+    FAC_SIIGO_ERROR --> MON_ALERTAS
+
+    MON_DASHBOARD --> MON_LOGS
+    MON_ALERTAS --> MON_LOGS
+
+    %% Si factura rechazada, reinicia ciclo
+    VAL_RECHAZADA -.->|"Anular y<br/>generar nueva"| FAC_GENERAR
+
+    %% ── NOTAS TÉCNICAS ──
+    NOTE_SCRAPING["💡 SCRAPING DIAN - ESPECIFICACIONES TÉCNICAS<br/>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━<br/>Script: scraper_dian.py / scraper_dian.js<br/><br/>FLUJO:<br/>1. Autenticación en portal DIAN (cookies/session)<br/>2. Buscar factura por: NIT + Número + Fecha<br/>3. Parsear HTML/JSON de respuesta<br/>4. Extraer campos:<br/>   - Estado: Aceptada | Rechazada | Pendiente<br/>   - CUFE: código alfanumérico único<br/>   - Fecha validación DIAN<br/>   - Motivo rechazo (si aplica)<br/>5. Registrar en BD: tabla validaciones_dian_log<br/>6. Actualizar tabla facturas<br/><br/>FRECUENCIAS:<br/>• +1 hora post-envío (automático)<br/>• Diario 2:00 AM (pendientes)<br/>• Manual on-demand<br/><br/>REINTENTOS:<br/>• Max 3 intentos si falla<br/>• Espera exponencial: 5min, 15min, 30min<br/>• Alerta si 3 fallos consecutivos<br/><br/>TECNOLOGÍAS:<br/>• Python: BeautifulSoup + Selenium + requests<br/>• Node: Puppeteer + Cheerio<br/>• Almacenar capturas de pantalla como evidencia"]:::nuevo
+
+    NOTE_API_SIIGO["💡 API SIIGO - ENDPOINTS CLAVE<br/>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━<br/>Base URL: https://api.siigo.com/v1<br/><br/>AUTENTICACIÓN:<br/>POST /auth → Bearer Token (renovar cada 24h)<br/><br/>ENDPOINTS:<br/>• POST /quotations → Enviar cotización<br/>• POST /invoices → Enviar factura<br/>• GET /invoices/{id}/payments → Consultar pagos<br/>• POST /credit-notes → Notas crédito (anulaciones)<br/>• GET /customers/{nit} → Validar cliente<br/><br/>WEBHOOKS (ideal):<br/>• invoice.validated → DIAN aceptó/rechazó<br/>• payment.received → Cliente pagó<br/>• invoice.status_changed → Cambio de estado<br/><br/>HEADERS REQUERIDOS:<br/>Authorization: Bearer {token}<br/>Content-Type: application/json<br/>Partner-Id: {partner_id_gyh}"]:::siigo
+
+    NOTE_VALIDACIONES["⚠️ VALIDACIONES CRÍTICAS PRE-ENVÍO<br/>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━<br/>ANTES de enviar a Siigo, validar:<br/><br/>1. CLIENTE:<br/>   • NIT existe en Siigo<br/>   • Régimen IVA coincide<br/>   • Datos fiscales actualizados<br/><br/>2. CENTRO DE COSTO:<br/>   • NO mezclar 13 y 14 en misma factura<br/>   • Transporte siempre factura separada<br/>   • Validar tipo de item vs centro costo<br/><br/>3. RETENCIONES:<br/>   • Alquiler: Rte. Fuente 3.5% + Rte. ICA 0.8%<br/>   • Transporte: Rte. Fuente 1%<br/>   • Venta: Rte. Fuente 2.5%<br/>   • NO aplicar si cliente régimen simplificado<br/><br/>4. ITEMS:<br/>   • Códigos de producto existen en Siigo<br/>   • Unidades de medida correctas<br/>   • Precios > 0<br/>   • IVA correcto (19% si aplica)<br/><br/>5. NUMERACIÓN:<br/>   • Consecutivo único no repetido<br/>   • Rango autorizado DIAN vigente"]:::peligro
+
+    VAL_SCRAPING -.-> NOTE_SCRAPING
+    FAC_SIIGO_ENVIO -.-> NOTE_API_SIIGO
+    FAC_VALIDAR -.-> NOTE_VALIDACIONES

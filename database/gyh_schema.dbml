@@ -26,17 +26,18 @@ Project gyh_sistema {
 // ============================================================
 
 Enum rol_usuario {
-  superadmin    [note: 'Configuración global del sistema — parámetros de trayecto, reglas de negocio, tarifas']
-  admin         [note: 'Administrador del sistema']
-  comercial     [note: 'Equipo de ventas y cotizaciones; incluye ingenieros de campo; autoriza despachos']
-  dibujante     [note: 'Modelamiento técnico en AutoCAD']
-  contabilidad  [note: 'Validación financiera y supervisión de cartera']
-  facturacion   [note: 'Genera facturas y proformas, envía a Siigo/DIAN, gestiona centros de costo y retenciones']
-  juridica      [note: 'Validación documental y contratos']
-  almacen       [note: 'Jefe de almacén, inventarios y agenda de transporte']
-  conductor     [note: 'Transporte de equipos']
-  despachador   [note: 'Conteo físico de equipos en bodega (entrada y salida); clasifica estado en devoluciones']
-  recepcion     [note: 'Cronograma diario de recogidas y cortes — Viviana']
+  superadmin       [note: 'Configuración global del sistema — parámetros de trayecto, reglas de negocio, tarifas']
+  admin            [note: 'Administrador del sistema']
+  comercial        [note: 'Equipo de ventas y cotizaciones; incluye ingenieros de campo; autoriza despachos']
+  dibujante        [note: 'Modelamiento técnico en AutoCAD']
+  contabilidad     [note: 'Validación financiera y supervisión de cartera']
+  facturacion      [note: 'Genera facturas y proformas, envía a Siigo/DIAN, gestiona centros de costo y retenciones']
+  juridica         [note: 'Validación documental y contratos']
+  almacen          [note: 'Jefe de almacén, inventarios y agenda de transporte']
+  conductor        [note: 'Transporte de equipos']
+  despachador      [note: 'Conteo físico de equipos en bodega (entrada y salida); clasifica estado en devoluciones']
+  recepcion        [note: 'Cronograma diario de recogidas y cortes — Viviana']
+  soporte_atencion [note: 'Soporte atención al cliente — registra nuevos clientes con documentación; consulta inventarios para informar disponibilidad; NO aprueba clientes ni ve información financiera']
 }
 
 Enum tipo_id {
@@ -127,6 +128,13 @@ Enum unidad_medida {
   metro_cuadrado
   juego
   kit
+}
+
+Enum bodega_id {
+  bodega_1  [note: 'Bodega 1 — Engativá — Principal de almacenamiento']
+  bodega_2  [note: 'Bodega 2 — Luz — Almacenamiento secundario']
+  bodega_40 [note: 'Bodega 40 — Mantenimiento — Equipo en reparación']
+  bodega_50 [note: 'Bodega 50 — Clientes — Equipo en poder de clientes (alquilado)']
 }
 
 Enum estado_cotizacion {
@@ -589,6 +597,13 @@ Table catalogo_productos {
   categoria            varchar(100)
   tipo_producto        tipo_producto [not null]
   unidad_medida        unidad_medida [default: 'unidad']
+
+  // Conversión de unidades para facturación (nuevo - julio 2026)
+  unidad_kardex        varchar(10)   [note: 'Unidad en la que se registra en kardex (ej: und, unidad)']
+  unidad_facturacion   varchar(10)   [note: 'Unidad en la que se factura (ej: m2, und) — puede diferir de unidad_kardex']
+  largo_m              decimal(8,3)  [note: 'Largo del producto en metros — para conversión automática a m²']
+  ancho_m              decimal(8,3)  [note: 'Ancho del producto en metros — para conversión automática a m²']
+  alto_m               decimal(8,3)  [note: 'Alto del producto en metros']
 
   // Precios por modalidad (catálogo general anual — actualizado por Recepción)
   precio_venta         decimal(15,2)
@@ -1478,4 +1493,825 @@ Table rpt_inventario_rotacion {
   }
 
   Note: 'Reporte de rotación de inventario por producto y línea de negocio — base para decisiones de compra y reposición'
+}
+
+// ============================================================
+// GESTIÓN DE INVENTARIOS POR BODEGA (NUEVO - Julio 2026)
+// ============================================================
+
+// Tabla de distribución de inventario por bodega
+Table bodegas_inventario {
+  id                    uuid         [pk, default: `gen_random_uuid()`]
+  producto_id           uuid         [not null, ref: > catalogo_productos.id]
+  bodega_id             bodega_id    [not null]
+
+  // Distribución de stock
+  stock_disponible      integer      [default: 0, note: 'Unidades disponibles para alquiler en esta bodega']
+  stock_en_alquiler     integer      [default: 0, note: 'Unidades actualmente alquiladas (solo aplica a bodega_50)']
+  stock_mantenimiento   integer      [default: 0, note: 'Unidades en mantenimiento (principalmente bodega_40)']
+
+  // Auditoría
+  ultima_actualizacion  timestamp    [default: `now()`]
+  actualizado_por       uuid         [ref: > usuarios.id]
+
+  indexes {
+    (producto_id, bodega_id) [unique, note: 'Un producto puede tener inventario en múltiples bodegas']
+    bodega_id
+    producto_id
+  }
+
+  Note: '''
+    Sistema de inventarios consultivo (no restrictivo) por bodegas.
+
+    4 BODEGAS:
+    - Bodega 1 (Engativá): Principal — stock_disponible + stock_mantenimiento
+    - Bodega 2 (Luz): Secundaria — stock_disponible + stock_mantenimiento
+    - Bodega 40 (Mantenimiento): Solo stock_mantenimiento — equipo en reparación
+    - Bodega 50 (Clientes): Solo stock_en_alquiler — equipo en poder de clientes
+
+    VISIBILIDAD POR ROL:
+    - Almacén/Despachador: Ve las 4 bodegas
+    - Producción: Ve Bodega 1, 2 y 40 (NO ve Bodega 50)
+    - Soporte Atención: Ve Bodega 1 y 2 (NO ve Bodega 40 ni 50)
+    - Comercial: Consulta para cotizaciones
+
+    FILOSOFÍA CONSULTIVA:
+    - Sistema MUESTRA disponibilidad
+    - Sistema ADVIERTE si stock bajo (< 50 unidades)
+    - Sistema NO BLOQUEA operaciones
+    - Permite crear cotizaciones y pedidos con stock insuficiente
+    - Decisión final es del operador/comercial
+
+    INDICADORES DE STOCK:
+    - Sin stock: 0 unidades (🔴)
+    - Stock bajo: < 50 unidades (🟡)
+    - Stock medio: 50-200 unidades (🟢)
+    - Stock alto: > 200 unidades (🔵)
+  '''
+}
+
+// ============================================================
+// DIMENSIONES DE TIEMPO (Para análisis temporal en BI)
+// ============================================================
+
+Table dim_fecha {
+  fecha                date         [pk]
+  anio                 integer      [not null]
+  mes                  integer      [not null]
+  mes_nombre           varchar(20)  [note: 'Enero, Febrero, ...']
+  trimestre            integer      [not null]
+  trimestre_nombre     varchar(10)  [note: 'Q1, Q2, Q3, Q4']
+  semana               integer      [not null]
+  dia_del_mes          integer      [not null]
+  dia_de_la_semana     integer      [not null, note: '1=Lunes, 7=Domingo']
+  dia_nombre           varchar(20)  [note: 'Lunes, Martes, ...']
+  es_fin_de_semana     boolean      [default: false]
+  es_festivo           boolean      [default: false]
+  nombre_festivo       varchar(100)
+
+  Note: '''
+    Dimensión de tiempo para análisis temporal.
+    Permite filtrar y agrupar por año, mes, trimestre, semana, día.
+    Se genera una fila por cada fecha desde 2020-01-01 hasta 2030-12-31.
+  '''
+}
+
+Table dim_hora {
+  hora                 integer      [pk, note: '0-23']
+  hora_12h             varchar(10)  [note: '12 AM - 11 PM']
+  periodo_dia          varchar(20)  [note: 'Madrugada|Mañana|Tarde|Noche']
+  turno_trabajo        varchar(20)  [note: 'Diurno|Nocturno']
+
+  Note: '''
+    Dimensión de hora para análisis de patrones horarios.
+    Útil para analizar:
+    - Horas pico de despachos
+    - Tiempos de llegada de conductores
+    - Patrones de facturación
+  '''
+}
+
+// ============================================================
+// TABLAS DE HECHOS (FACT TABLES) — Para análisis y BI
+// ============================================================
+
+Table fact_cotizaciones {
+  id                  bigserial    [pk]
+  fecha_cotizacion    date         [not null]
+  anio                integer      [not null]
+  mes                 integer      [not null]
+  trimestre           integer      [not null]
+  semana              integer      [not null]
+
+  cotizacion_id       uuid         [not null, ref: > cotizaciones.id]
+  cliente_id          uuid         [not null, ref: > clientes.id]
+  obra_id             uuid         [ref: > obras.id]
+  dibujante_id        uuid         [ref: > usuarios.id]
+  comercial_id        uuid         [ref: > usuarios.id]
+  ciudad_sucursal     ciudad_sucursal
+
+  estado              estado_cotizacion [not null]
+  incluye_venta       boolean      [default: false]
+  incluye_alquiler    boolean      [default: false]
+  incluye_transporte  boolean      [default: false]
+
+  subtotal            decimal(18,2) [default: 0]
+  descuento           decimal(18,2) [default: 0]
+  iva                 decimal(18,2) [default: 0]
+  total               decimal(18,2) [default: 0]
+
+  horas_modelamiento  decimal(4,2)
+  dias_hasta_respuesta integer     [note: 'Días desde creación hasta aprobación/rechazo']
+  tasa_conversion     decimal(5,2) [note: '% de conversión a orden de compra']
+
+  created_at          timestamp    [default: `now()`]
+  updated_at          timestamp    [default: `now()`]
+
+  indexes {
+    (cliente_id, fecha_cotizacion)
+    (comercial_id, fecha_cotizacion)
+    (dibujante_id, fecha_cotizacion)
+    (anio, mes)
+    estado
+  }
+
+  Note: '''
+    Tabla de hechos para análisis de cotizaciones.
+
+    KPIs derivados:
+    - Volumen de cotizaciones por período
+    - Tasa de conversión cotización→orden
+    - Tiempo promedio de respuesta
+    - Valor promedio de cotización
+    - Distribución por tipo de negocio
+    - Productividad por dibujante (cotizaciones/semana)
+  '''
+}
+
+Table fact_pedidos {
+  id                     bigserial    [pk]
+  fecha_pedido           date         [not null]
+  anio                   integer      [not null]
+  mes                    integer      [not null]
+  trimestre              integer      [not null]
+
+  pedido_id              uuid         [not null, ref: > pedidos.id]
+  orden_compra_id        uuid         [not null, ref: > ordenes_compra.id]
+  cliente_id             uuid         [not null, ref: > clientes.id]
+  obra_id                uuid         [not null, ref: > obras.id]
+  frente_id              uuid         [ref: > frentes_obra.id]
+  ciudad_sucursal        ciudad_sucursal
+
+  estado                 estado_pedido [not null]
+  es_parcial             boolean      [default: false]
+  dias_hasta_completo    integer      [note: 'Días desde pedido hasta estado = completo']
+  dias_en_obra           integer      [note: 'Días desde pedido completo hasta devolución total']
+
+  total_items            integer      [default: 0]
+  items_despachados      integer      [default: 0]
+  items_devueltos        integer      [default: 0]
+  items_pendientes       integer      [default: 0]
+
+  valor_estimado_alquiler decimal(18,2) [note: 'Valor estimado del alquiler (días × tarifa)']
+  valor_real_facturado    decimal(18,2) [note: 'Valor real facturado al cliente']
+
+  tiene_novedades        boolean      [default: false]
+  tiene_faltantes        boolean      [default: false]
+  tiene_danos            boolean      [default: false]
+
+  created_at             timestamp    [default: `now()`]
+  updated_at             timestamp    [default: `now()`]
+
+  indexes {
+    (cliente_id, fecha_pedido)
+    (obra_id, fecha_pedido)
+    (anio, mes)
+    estado
+  }
+
+  Note: '''
+    Tabla de hechos para análisis de pedidos.
+
+    KPIs derivados:
+    - Pedidos completos vs parciales
+    - Tiempo promedio hasta despacho completo
+    - Días promedio de alquiler por pedido
+    - Valor promedio por pedido
+    - Tasa de novedades (daños, faltantes)
+    - Rotación de equipos
+  '''
+}
+
+Table fact_remisiones {
+  id                     bigserial    [pk]
+  fecha_remision         date         [not null]
+  anio                   integer      [not null]
+  mes                    integer      [not null]
+  trimestre              integer      [not null]
+
+  remision_id            uuid         [not null, ref: > remisiones.id]
+  tipo_remision          tipo_remision [not null]
+  pedido_id              uuid         [ref: > pedidos.id]
+  cliente_id             uuid         [not null, ref: > clientes.id]
+  obra_id                uuid         [not null, ref: > obras.id]
+  conductor_id           uuid         [ref: > conductores.id]
+  vehiculo_id            uuid         [ref: > vehiculos.id]
+
+  total_items            integer      [default: 0]
+  peso_total_kg          decimal(12,3) [default: 0]
+  volumen_total_m3       decimal(10,3) [default: 0]
+
+  cobra_transporte       boolean      [default: false]
+  valor_transporte       decimal(15,2)
+  zona_transporte        varchar(50)  [note: 'bogota|fuera_bogota|ibague|armenia']
+
+  tiene_novedades        boolean      [default: false]
+  tiene_equipos_ajenos   boolean      [default: false]
+
+  dias_desde_salida      integer      [note: 'Solo para tipo = entrada_devolucion']
+
+  created_at             timestamp    [default: `now()`]
+  updated_at             timestamp    [default: `now()`]
+
+  indexes {
+    (cliente_id, fecha_remision)
+    (conductor_id, fecha_remision)
+    (anio, mes)
+    tipo_remision
+  }
+
+  Note: '''
+    Tabla de hechos para análisis de remisiones.
+
+    KPIs derivados:
+    - Volumen de despachos/devoluciones
+    - Peso y volumen transportado
+    - Valor de transporte facturado
+    - Días promedio de ciclo (salida→devolución)
+    - Tasa de novedades en devoluciones
+    - Productividad por conductor
+  '''
+}
+
+Table fact_facturacion {
+  id                     bigserial    [pk]
+  fecha_factura          date         [not null]
+  anio                   integer      [not null]
+  mes                    integer      [not null]
+  trimestre              integer      [not null]
+
+  factura_id             uuid         [not null, ref: > facturas.id]
+  orden_compra_id        uuid         [not null, ref: > ordenes_compra.id]
+  cliente_id             uuid         [not null, ref: > clientes.id]
+  ciudad_sucursal        ciudad_sucursal
+
+  modalidad_factura      modalidad_factura
+  centro_costo           varchar(5)   [note: '13=alquiler, 14=venta/reposición']
+  estado                 estado_factura
+  estado_radian          estado_radian
+
+  subtotal               decimal(18,2) [not null]
+  descuento              decimal(18,2) [default: 0]
+  iva                    decimal(18,2) [default: 0]
+  rte_fuente             decimal(18,2) [default: 0]
+  rte_ica                decimal(18,2) [default: 0]
+  total                  decimal(18,2) [not null]
+  saldo_pendiente        decimal(18,2) [not null]
+
+  dias_hasta_vencimiento integer
+  dias_mora              integer      [default: 0]
+
+  tiene_dominio_corporativo boolean   [note: 'Del campo tipo_dominio_correo del cliente']
+  requiere_seguimiento_telefonico boolean
+
+  created_at             timestamp    [default: `now()`]
+  updated_at             timestamp    [default: `now()`]
+
+  indexes {
+    (cliente_id, fecha_factura)
+    (anio, mes)
+    estado
+    estado_radian
+    centro_costo
+  }
+
+  Note: '''
+    Tabla de hechos para análisis de facturación.
+
+    KPIs derivados:
+    - Facturación por período
+    - Facturación por centro de costo
+    - Tasa de aprobación DIAN
+    - Valor promedio de factura
+    - Días promedio hasta pago
+    - Cartera vencida por tramos
+    - Retenciones totales
+  '''
+}
+
+Table fact_inventario_movimientos {
+  id                     bigserial    [pk]
+  fecha_movimiento       date         [not null]
+  anio                   integer      [not null]
+  mes                    integer      [not null]
+  trimestre              integer      [not null]
+
+  producto_id            uuid         [not null, ref: > catalogo_productos.id]
+  bodega_id              bodega_id    [not null]
+  tipo_producto          tipo_producto
+  unidad_negocio         varchar(50)
+
+  tipo_movimiento        varchar(30)  [not null, note: 'salida|entrada_devolucion|ajuste|baja|mantenimiento']
+
+  cantidad_salida        integer      [default: 0]
+  cantidad_entrada       integer      [default: 0]
+  stock_inicial_dia      integer      [default: 0]
+  stock_final_dia        integer      [default: 0]
+
+  remision_id            uuid         [ref: > remisiones.id]
+  cliente_id             uuid         [ref: > clientes.id]
+
+  valor_unitario         decimal(15,2)
+  valor_total_movimiento decimal(18,2)
+
+  created_at             timestamp    [default: `now()`]
+
+  indexes {
+    (producto_id, fecha_movimiento)
+    (bodega_id, fecha_movimiento)
+    (anio, mes)
+    tipo_movimiento
+  }
+
+  Note: '''
+    Tabla de hechos para análisis de inventario.
+
+    KPIs derivados:
+    - Rotación de inventario por producto
+    - Stock promedio por bodega
+    - Días de inventario disponible
+    - Valor de inventario
+    - Tasa de merma/baja
+    - Análisis de movimientos por tipo
+  '''
+}
+
+Table fact_productividad_usuarios {
+  id                     bigserial    [pk]
+  fecha                  date         [not null]
+  anio                   integer      [not null]
+  mes                    integer      [not null]
+  semana                 integer      [not null]
+
+  usuario_id             uuid         [not null, ref: > usuarios.id]
+  rol                    rol_usuario  [not null]
+
+  // Métricas por rol (según aplique)
+  cotizaciones_creadas   integer      [default: 0, note: 'Dibujante/Comercial']
+  horas_modelamiento     decimal(6,2) [default: 0, note: 'Dibujante']
+  clientes_registrados   integer      [default: 0, note: 'Comercial/Soporte Atención']
+  clientes_aprobados     integer      [default: 0, note: 'Contabilidad/Jurídica/Comercial']
+  remisiones_procesadas  integer      [default: 0, note: 'Almacén/Despachador']
+  viajes_realizados      integer      [default: 0, note: 'Conductor']
+  facturas_generadas     integer      [default: 0, note: 'Facturación']
+  pagos_registrados      integer      [default: 0, note: 'Cartera']
+
+  acciones_total         integer      [default: 0, note: 'Total de acciones en auditoria']
+
+  created_at             timestamp    [default: `now()`]
+
+  indexes {
+    (usuario_id, fecha)
+    (rol, fecha)
+    (anio, mes)
+  }
+
+  Note: '''
+    Tabla de hechos para análisis de productividad por usuario/rol.
+
+    KPIs derivados:
+    - Productividad individual por rol
+    - Comparativa entre usuarios del mismo rol
+    - Tendencias de productividad
+    - Identificación de cuellos de botella
+    - Planificación de recursos
+  '''
+}
+
+Table fact_tiempos_ciclo {
+  id                     bigserial    [pk]
+  fecha_inicio           date         [not null]
+  fecha_fin              date
+  anio                   integer      [not null]
+  mes                    integer      [not null]
+
+  tipo_ciclo             varchar(50)  [not null, note: 'prospecto_a_cliente|cotizacion_a_orden|pedido_a_completo|alquiler_completo|factura_a_pago']
+
+  cliente_id             uuid         [ref: > clientes.id]
+  cotizacion_id          uuid         [ref: > cotizaciones.id]
+  pedido_id              uuid         [ref: > pedidos.id]
+  factura_id             uuid         [ref: > facturas.id]
+
+  dias_ciclo             integer      [note: 'Duración total del ciclo en días']
+  estado_final           varchar(50)  [note: 'Estado en el que terminó el ciclo']
+
+  created_at             timestamp    [default: `now()`]
+
+  indexes {
+    tipo_ciclo
+    (cliente_id, tipo_ciclo)
+    (anio, mes)
+  }
+
+  Note: '''
+    Tabla de hechos para análisis de tiempos de ciclo.
+
+    Ciclos medidos:
+    1. Prospecto → Cliente Aprobado
+    2. Cotización → Orden de Compra
+    3. Pedido → Pedido Completo
+    4. Alquiler (Salida → Devolución Total)
+    5. Factura → Pago Completo
+
+    KPIs derivados:
+    - Tiempo promedio por tipo de ciclo
+    - Identificación de demoras
+    - Optimización de procesos
+    - Predicción de tiempos
+  '''
+}
+
+Table fact_calidad_servicio {
+  id                     bigserial    [pk]
+  fecha                  date         [not null]
+  anio                   integer      [not null]
+  mes                    integer      [not null]
+
+  tipo_evento            varchar(50)  [not null, note: 'pedido_incompleto|novedad_devolucion|factura_rechazada|cliente_insatisfecho']
+  severidad              varchar(20)  [note: 'baja|media|alta|critica']
+
+  cliente_id             uuid         [ref: > clientes.id]
+  obra_id                uuid         [ref: > obras.id]
+  pedido_id              uuid         [ref: > pedidos.id]
+  remision_id            uuid         [ref: > remisiones.id]
+  factura_id             uuid         [ref: > facturas.id]
+
+  descripcion            text
+  causa_raiz             text
+  accion_correctiva      text
+
+  resuelto               boolean      [default: false]
+  dias_hasta_resolucion  integer
+
+  created_at             timestamp    [default: `now()`]
+  updated_at             timestamp    [default: `now()`]
+
+  indexes {
+    tipo_evento
+    (cliente_id, fecha)
+    severidad
+    resuelto
+  }
+
+  Note: '''
+    Tabla de hechos para análisis de calidad de servicio.
+
+    KPIs derivados:
+    - Tasa de incidencias por tipo
+    - Tiempo promedio de resolución
+    - Clientes con más incidencias
+    - Tendencias de calidad
+    - Efectividad de acciones correctivas
+  '''
+}
+
+// ============================================================
+// AGREGADOS ADICIONALES (Tablas pre-calculadas para dashboards)
+// ============================================================
+
+Table agg_cotizaciones_mes {
+  id                     uuid         [pk, default: `gen_random_uuid()`]
+  anio                   integer      [not null]
+  mes                    integer      [not null]
+  ciudad_sucursal        ciudad_sucursal
+  dibujante_id           uuid         [ref: > usuarios.id]
+  comercial_id           uuid         [ref: > usuarios.id]
+
+  total_cotizaciones     integer      [default: 0]
+  cotizaciones_borrador  integer      [default: 0]
+  cotizaciones_enviadas  integer      [default: 0]
+  cotizaciones_aprobadas integer      [default: 0]
+  cotizaciones_rechazadas integer     [default: 0]
+  cotizaciones_vencidas  integer      [default: 0]
+
+  tasa_aprobacion        decimal(5,2) [note: '% de cotizaciones aprobadas']
+  tiempo_prom_respuesta  decimal(6,2) [note: 'Días promedio hasta respuesta']
+
+  valor_total_cotizado   decimal(18,2) [default: 0]
+  valor_total_aprobado   decimal(18,2) [default: 0]
+
+  horas_modelamiento_total decimal(8,2) [default: 0]
+
+  generado_at            timestamp    [default: `now()`]
+
+  indexes {
+    (anio, mes)
+    ciudad_sucursal
+    dibujante_id
+    comercial_id
+  }
+
+  Note: 'Agregado mensual de cotizaciones por sucursal, dibujante y comercial'
+}
+
+Table agg_ventas_mes {
+  id                     uuid         [pk, default: `gen_random_uuid()`]
+  anio                   integer      [not null]
+  mes                    integer      [not null]
+  ciudad_sucursal        ciudad_sucursal
+  centro_costo           varchar(5)   [note: '13=alquiler, 14=venta/reposición']
+
+  total_facturas         integer      [default: 0]
+  subtotal               decimal(18,2) [default: 0]
+  iva                    decimal(18,2) [default: 0]
+  retenciones            decimal(18,2) [default: 0]
+  total_facturado        decimal(18,2) [default: 0]
+  total_cobrado          decimal(18,2) [default: 0]
+  saldo_pendiente        decimal(18,2) [default: 0]
+
+  clientes_activos       integer      [default: 0, note: 'Clientes que facturaron en el mes']
+  ticket_promedio        decimal(18,2) [default: 0]
+
+  generado_at            timestamp    [default: `now()`]
+
+  indexes {
+    (anio, mes)
+    ciudad_sucursal
+    centro_costo
+  }
+
+  Note: 'Agregado mensual de ventas y alquileres por sucursal y centro de costo'
+}
+
+Table agg_inventario_mes {
+  id                     uuid         [pk, default: `gen_random_uuid()`]
+  anio                   integer      [not null]
+  mes                    integer      [not null]
+  bodega_id              bodega_id    [not null]
+  tipo_producto          tipo_producto
+  unidad_negocio         varchar(50)
+
+  stock_inicial_mes      integer      [default: 0]
+  stock_final_mes        integer      [default: 0]
+  stock_promedio_mes     integer      [default: 0]
+
+  total_salidas          integer      [default: 0]
+  total_entradas         integer      [default: 0]
+  total_bajas            integer      [default: 0]
+  total_mantenimiento    integer      [default: 0]
+
+  tasa_rotacion          decimal(6,2) [note: 'Veces que rotó en el mes']
+  dias_inventario        decimal(6,2) [note: 'Días de inventario disponible']
+
+  valor_inventario       decimal(18,2) [default: 0]
+
+  generado_at            timestamp    [default: `now()`]
+
+  indexes {
+    (anio, mes)
+    bodega_id
+    tipo_producto
+  }
+
+  Note: 'Agregado mensual de inventarios por bodega y tipo de producto'
+}
+
+Table agg_productividad_equipo {
+  id                     uuid         [pk, default: `gen_random_uuid()`]
+  anio                   integer      [not null]
+  mes                    integer      [not null]
+
+  area                   varchar(50)  [note: 'comercial|dibujante|almacen|facturacion|cartera']
+
+  total_usuarios_activos integer      [default: 0]
+  acciones_promedio      decimal(8,2) [default: 0]
+  productividad_promedio decimal(8,2) [default: 0, note: 'Métrica específica por área']
+
+  // Métricas específicas
+  cotizaciones_por_dibujante decimal(6,2)
+  clientes_por_comercial     decimal(6,2)
+  remisiones_por_despachador decimal(6,2)
+  facturas_por_usuario       decimal(6,2)
+
+  generado_at            timestamp    [default: `now()`]
+
+  indexes {
+    (anio, mes)
+    area
+  }
+
+  Note: 'Agregado mensual de productividad por área/equipo'
+}
+
+Table agg_calidad_servicio_mes {
+  id                     uuid         [pk, default: `gen_random_uuid()`]
+  anio                   integer      [not null]
+  mes                    integer      [not null]
+
+  total_pedidos          integer      [default: 0]
+  pedidos_completos      integer      [default: 0]
+  pedidos_parciales      integer      [default: 0]
+  pedidos_con_novedades  integer      [default: 0]
+
+  total_remisiones       integer      [default: 0]
+  remisiones_con_danos   integer      [default: 0]
+  remisiones_con_faltantes integer   [default: 0]
+
+  total_facturas_dian    integer      [default: 0]
+  facturas_aprobadas_dian integer    [default: 0]
+  facturas_rechazadas_dian integer   [default: 0]
+
+  tasa_pedidos_completos decimal(5,2) [note: '%']
+  tasa_novedades         decimal(5,2) [note: '%']
+  tasa_aprobacion_dian   decimal(5,2) [note: '%']
+
+  tiempo_prom_despacho   decimal(6,2) [note: 'Días promedio hasta pedido completo']
+  tiempo_prom_devolucion decimal(6,2) [note: 'Días promedio de alquiler']
+
+  generado_at            timestamp    [default: `now()`]
+
+  indexes {
+    (anio, mes)
+  }
+
+  Note: 'Agregado mensual de indicadores de calidad de servicio'
+}
+
+Table agg_analisis_clientes {
+  id                     uuid         [pk, default: `gen_random_uuid()`]
+  fecha_corte            date         [not null]
+  cliente_id             uuid         [not null, ref: > clientes.id]
+
+  // RFM (Recency, Frequency, Monetary)
+  dias_ultima_factura    integer      [note: 'R: Recency - días desde última factura']
+  total_facturas_12m     integer      [note: 'F: Frequency - facturas últimos 12 meses']
+  valor_total_12m        decimal(18,2) [note: 'M: Monetary - valor facturado últimos 12 meses']
+
+  score_r                integer      [note: '1-5 (5 = más reciente)']
+  score_f                integer      [note: '1-5 (5 = más frecuente)']
+  score_m                integer      [note: '1-5 (5 = mayor valor)']
+  score_rfm              integer      [note: 'Suma de R+F+M (3-15)']
+
+  segmento               varchar(30)  [note: 'Campeones|Leales|Potenciales|En Riesgo|Perdidos']
+
+  // Métricas adicionales
+  total_obras_activas    integer      [default: 0]
+  ticket_promedio        decimal(18,2)
+  dias_promedio_pago     decimal(6,2)
+  tiene_mora             boolean      [default: false]
+
+  generado_at            timestamp    [default: `now()`]
+
+  indexes {
+    (cliente_id, fecha_corte)
+    segmento
+    score_rfm
+  }
+
+  Note: '''
+    Análisis RFM de clientes para segmentación.
+
+    Segmentos:
+    - Campeones (RFM 12-15): Clientes top
+    - Leales (RFM 9-11): Clientes frecuentes
+    - Potenciales (RFM 6-8): Oportunidad de crecimiento
+    - En Riesgo (RFM 4-5): Requieren atención
+    - Perdidos (RFM 3): Reactivación urgente
+  '''
+}
+
+Table agg_forecast_facturacion {
+  id                     uuid         [pk, default: `gen_random_uuid()`]
+  anio                   integer      [not null]
+  mes                    integer      [not null]
+  tipo_forecast          varchar(20)  [note: 'optimista|realista|pesimista']
+
+  pedidos_pendientes     integer      [default: 0]
+  valor_pedidos_pendientes decimal(18,2) [default: 0]
+
+  alquileres_activos     integer      [default: 0]
+  valor_alquileres_mes   decimal(18,2) [default: 0]
+
+  contratos_vigentes     integer      [default: 0]
+  valor_contratos_mes    decimal(18,2) [default: 0]
+
+  forecast_mes           decimal(18,2) [note: 'Proyección de facturación del mes']
+  margen_error           decimal(5,2) [note: '% de margen de error']
+
+  generado_at            timestamp    [default: `now()`]
+
+  indexes {
+    (anio, mes)
+    tipo_forecast
+  }
+
+  Note: 'Proyección de facturación mensual basada en pedidos, alquileres y contratos activos'
+}
+
+Table agg_transporte_mes {
+  id                     uuid         [pk, default: `gen_random_uuid()`]
+  anio                   integer      [not null]
+  mes                    integer      [not null]
+  conductor_id           uuid         [ref: > conductores.id]
+  vehiculo_id            uuid         [ref: > vehiculos.id]
+  zona                   varchar(50)
+
+  total_viajes           integer      [default: 0]
+  km_total               decimal(12,2) [default: 0]
+  peso_total_ton         decimal(12,3) [default: 0]
+  volumen_total_m3       decimal(12,3) [default: 0]
+
+  valor_transporte_facturado decimal(18,2) [default: 0]
+  valor_liquidacion_conductor decimal(18,2) [default: 0]
+  margen_transporte      decimal(18,2) [note: 'facturado - liquidación']
+
+  viajes_calificados     integer      [default: 0, note: 'Viajes que cumplieron criterios']
+  tasa_calificacion      decimal(5,2) [note: '%']
+
+  generado_at            timestamp    [default: `now()`]
+
+  indexes {
+    (anio, mes)
+    conductor_id
+    vehiculo_id
+  }
+
+  Note: 'Agregado mensual de indicadores de transporte por conductor y vehículo'
+}
+
+Table agg_dashboard_ejecutivo {
+  id                     uuid         [pk, default: `gen_random_uuid()`]
+  fecha_corte            date         [not null]
+  periodo                varchar(20)  [note: 'dia|semana|mes|trimestre|ano']
+
+  // Comercial
+  clientes_nuevos        integer      [default: 0]
+  clientes_activos       integer      [default: 0]
+  cotizaciones_nuevas    integer      [default: 0]
+  tasa_conversion        decimal(5,2)
+
+  // Operacional
+  pedidos_nuevos         integer      [default: 0]
+  pedidos_completos      integer      [default: 0]
+  pedidos_incompletos    integer      [default: 0]
+  remisiones_salida      integer      [default: 0]
+  remisiones_entrada     integer      [default: 0]
+
+  // Inventario
+  stock_disponible_valor decimal(18,2)
+  stock_en_alquiler_valor decimal(18,2)
+  tasa_rotacion_global   decimal(6,2)
+
+  // Financiero
+  facturacion_periodo    decimal(18,2)
+  cobros_periodo         decimal(18,2)
+  cartera_total          decimal(18,2)
+  cartera_vencida        decimal(18,2)
+
+  // Calidad
+  tasa_pedidos_completos decimal(5,2)
+  tasa_novedades         decimal(5,2)
+  tasa_aprobacion_dian   decimal(5,2)
+
+  generado_at            timestamp    [default: `now()`]
+
+  indexes {
+    (fecha_corte, periodo)
+  }
+
+  Note: '''
+    Dashboard ejecutivo con KPIs clave del negocio.
+    Se genera diariamente, semanalmente, mensualmente, trimestralmente y anualmente.
+  '''
+}
+
+// ============================================================
+// CONTROL DE PROCESOS ETL
+// ============================================================
+
+Table etl_log {
+  id                bigserial    [pk]
+  proceso           varchar(100) [not null, note: 'Nombre del proceso ETL']
+  fecha_ejecucion   timestamp    [default: `now()`]
+  estado            varchar(20)  [note: 'INICIADO|COMPLETADO|ERROR']
+  duracion_seg      integer      [note: 'Duración en segundos']
+  registros_procesados integer   [note: 'Cantidad de registros procesados']
+  error_mensaje     text         [note: 'Mensaje de error si aplica']
+
+  indexes {
+    proceso
+    fecha_ejecucion
+  }
+
+  Note: 'Log de ejecuciones de procesos ETL — monitoreo y auditoría'
 }

@@ -120,3 +120,28 @@ flowchart TD
     RESPQ -->|"Observaciones"| REVISION
     RESPQ -->|"Rechaza"| RECHAZA
     REVISION --> REVCOM
+
+    %% ── FLUJO ALTERNATIVO: COTIZACIÓN AUTOGESTIONADA (WEB PÚBLICA)
+    subgraph COTIZACION_WEB["🌐  FLUJO ALTERNATIVO: COTIZACIÓN AUTOGESTIONADA (Web Pública)"]
+        direction TB
+        WEB_INICIO(["🖱️ Cliente accede a\nPortal Web Público"]):::naranja
+        WEB_PRODUCTOS["🛒 Paso 1: Selección de Productos\nCatálogo con disponibilidad en tiempo real"]:::azul
+        WEB_CANTIDAD["📊 Paso 2: Cantidades y Duración\nIngresa cantidad y días de alquiler"]:::azul
+        WEB_DISPONIBILIDAD["✅ Paso 3: Verificación de Disponibilidad\nConsulta inventarios (no bloqueante)"]:::nuevo
+        WEB_RESUMEN["📋 Paso 4: Resumen de Cotización\nSubtotal + IVA + descargo de responsabilidad"]:::azul
+        WEB_CONTACTO["📧 Paso 5: Formulario de Contacto\nNombre, empresa, email, teléfono, mensaje"]:::azul
+        WEB_DESCARGA["⬇️ Descarga PDF Indicativa\n(valores estimados, no vinculantes)"]:::grisClaro
+        WEB_NOTIF["🔔 Notificación a Soporte Atención\nSolicitud de cotización recibida"]:::nuevo
+        WEB_SEGUIMIENTO["👤 Soporte Atención hace seguimiento\nContacta al cliente para formalizar"]:::exito
+    end
+
+    INICIO -.->|"Alternativa:\nAcceso Web"| WEB_INICIO
+    WEB_INICIO --> WEB_PRODUCTOS
+    WEB_PRODUCTOS --> WEB_CANTIDAD
+    WEB_CANTIDAD --> WEB_DISPONIBILIDAD
+    WEB_DISPONIBILIDAD --> WEB_RESUMEN
+    WEB_RESUMEN --> WEB_CONTACTO
+    WEB_CONTACTO --> WEB_DESCARGA
+    WEB_DESCARGA --> WEB_NOTIF
+    WEB_NOTIF --> WEB_SEGUIMIENTO
+    WEB_SEGUIMIENTO -.->|"Si procede,\ninicia proceso formal"| PLANOS

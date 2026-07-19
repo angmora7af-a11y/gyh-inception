@@ -1,6 +1,6 @@
 # Matriz de Roles y Permisos — G&H Sistema
 
-**12 roles · Control de acceso basado en roles (RBAC)**
+**13 roles · Control de acceso basado en roles (RBAC)**
 
 > ✓ = Acceso completo · ◎ = Solo lectura / parcial · — = Sin acceso
 
@@ -8,109 +8,126 @@
 
 ## Módulo Clientes y Prospectos
 
-| Acción | CEO | SuperAdmin | Admin | Comercial | Dibujante | Contabilidad | Facturación | Jurídica | Almacén | Conductor | Despachador | Recepción |
-|--------|:---:|:----------:|:-----:|:---------:|:---------:|:------------:|:-----------:|:--------:|:-------:|:---------:|:-----------:|:---------:|
-| Ver lista de clientes/prospectos | ✓ | ✓ | ✓ | ✓ | ◎ | ✓ | ◎ | ✓ | ◎ | — | ◎ | — |
-| Crear / editar cliente | — | ✓ | ✓ | ✓ | — | — | — | — | — | — | — | — |
-| Subir documentos del cliente | — | ✓ | ✓ | ✓ | — | — | — | — | — | — | — | — |
-| Dar concepto favorable/no favorable | — | ✓ | ✓ | ✓ | — | ✓ | — | ✓ | — | — | — | — |
-| Ver todos los conceptos de aprobación | ✓ | ✓ | ✓ | ✓ | — | ✓ | — | ✓ | — | — | — | — |
-| Aprobar cliente (si los 3 dan favorable) | — | ✓ | ✓ | — | — | — | — | — | — | — | — | — |
-| **Ver motivos de rechazo detallados** | ✓ | ✓ | ✓ | — | — | — | — | — | — | — | — | — |
-| **Forzar aprobación (última palabra CEO)** | ✓ | — | — | — | — | — | — | — | — | — | — | — |
-| **Editar datos para facturación (caso fiducia)** | — | ✓ | ✓ | — | — | — | ✓ | — | — | — | — | — |
+| Acción | CEO | SuperAdmin | Admin | Comercial | Dibujante | Contabilidad | Facturación | Jurídica | Almacén | Conductor | Despachador | Recepción | **Soporte Atención** |
+|--------|:---:|:----------:|:-----:|:---------:|:---------:|:------------:|:-----------:|:--------:|:-------:|:---------:|:-----------:|:---------:|:--------------------:|
+| Ver lista de clientes/prospectos | ✓ | ✓ | ✓ | ✓ | ◎ | ✓ | ◎ | ✓ | ◎ | — | ◎ | — | **✓** |
+| Crear / editar cliente | — | ✓ | ✓ | ✓ | — | — | — | — | — | — | — | — | **✓** |
+| Subir documentos del cliente | — | ✓ | ✓ | ✓ | — | — | — | — | — | — | — | — | **✓** |
+| Dar concepto favorable/no favorable | — | ✓ | ✓ | ✓ | — | ✓ | — | ✓ | — | — | — | — | **—** |
+| Ver todos los conceptos de aprobación | ✓ | ✓ | ✓ | ✓ | — | ✓ | — | ✓ | — | — | — | — | **—** |
+| Aprobar cliente (si los 3 dan favorable) | — | ✓ | ✓ | — | — | — | — | — | — | — | — | — | **—** |
+| **Ver motivos de rechazo detallados** | ✓ | ✓ | ✓ | — | — | — | — | — | — | — | — | — | **—** |
+| **Forzar aprobación (última palabra CEO)** | ✓ | — | — | — | — | — | — | — | — | — | — | — | **—** |
+| **Editar datos para facturación (caso fiducia)** | — | ✓ | ✓ | — | — | — | ✓ | — | — | — | — | — | **—** |
 
 ---
 
 ## Módulo Cotizaciones
 
-| Acción | CEO | SuperAdmin | Admin | Comercial | Dibujante | Contabilidad | Facturación | Jurídica | Almacén | Conductor | Despachador | Recepción |
-|--------|:---:|:----------:|:-----:|:---------:|:---------:|:------------:|:-----------:|:--------:|:-------:|:---------:|:-----------:|:---------:|
-| Ver cotizaciones asignadas | — | ✓ | ✓ | ✓ | ✓ | — | — | — | — | — | — | — |
-| Cargar planos y archivos | — | ✓ | ✓ | — | ✓ | — | — | — | — | — | — | — |
-| Crear cotización técnica (materiales) | — | ✓ | ✓ | — | ✓ | — | — | — | — | — | — | — |
-| Agregar valores comerciales | — | ✓ | ✓ | ✓ | — | — | — | — | — | — | — | — |
-| Generar PDF y enviar al cliente | — | ✓ | ✓ | ✓ | — | — | — | — | — | — | — | — |
-| Ver todas las cotizaciones | ◎ | ✓ | ✓ | ✓ | — | — | — | — | — | — | — | — |
-| **Gestionar precios especiales por cliente** | — | ✓ | ✓ | ✓ | — | — | — | ◎ | — | — | — | — |
+| Acción | CEO | SuperAdmin | Admin | Comercial | Dibujante | Contabilidad | Facturación | Jurídica | Almacén | Conductor | Despachador | Recepción | **Soporte Atención** |
+|--------|:---:|:----------:|:-----:|:---------:|:---------:|:------------:|:-----------:|:--------:|:-------:|:---------:|:-----------:|:---------:|:--------------------:|
+| Ver cotizaciones asignadas | — | ✓ | ✓ | ✓ | ✓ | — | — | — | — | — | — | — | **◎** |
+| Cargar planos y archivos | — | ✓ | ✓ | — | ✓ | — | — | — | — | — | — | — | **—** |
+| Crear cotización técnica (materiales) | — | ✓ | ✓ | — | ✓ | — | — | — | — | — | — | — | **—** |
+| Agregar valores comerciales | — | ✓ | ✓ | ✓ | — | — | — | — | — | — | — | — | **—** |
+| Generar PDF y enviar al cliente | — | ✓ | ✓ | ✓ | — | — | — | — | — | — | — | — | **—** |
+| Ver todas las cotizaciones | ◎ | ✓ | ✓ | ✓ | — | — | — | — | — | — | — | — | **—** |
+| **Gestionar precios especiales por cliente** | — | ✓ | ✓ | ✓ | — | — | — | ◎ | — | — | — | — | **—** |
+| **Acceder a cotización autogestionada (web pública)** | ✓ | ✓ | ✓ | ✓ | — | — | — | — | — | — | — | — | **✓** |
 
 ---
 
 ## Módulo Contratos
 
-| Acción | CEO | SuperAdmin | Admin | Comercial | Dibujante | Contabilidad | Facturación | Jurídica | Almacén | Conductor | Despachador | Recepción |
-|--------|:---:|:----------:|:-----:|:---------:|:---------:|:------------:|:-----------:|:--------:|:-------:|:---------:|:-----------:|:---------:|
-| Crear orden de compra | — | ✓ | ✓ | ✓ | — | — | — | — | — | — | — | — |
-| Enviar contrato a firma electrónica (Ooku) | — | ✓ | ✓ | ✓ | — | — | — | — | — | — | — | — |
-| Confirmar firma del contrato | — | ✓ | ✓ | — | — | — | — | ✓ | — | — | — | — |
+| Acción | CEO | SuperAdmin | Admin | Comercial | Dibujante | Contabilidad | Facturación | Jurídica | Almacén | Conductor | Despachador | Recepción | **Soporte Atención** |
+|--------|:---:|:----------:|:-----:|:---------:|:---------:|:------------:|:-----------:|:--------:|:-------:|:---------:|:-----------:|:---------:|:--------------------:|
+| Crear orden de compra | — | ✓ | ✓ | ✓ | — | — | — | — | — | — | — | — | **—** |
+| Enviar contrato a firma electrónica (Ooku) | — | ✓ | ✓ | ✓ | — | — | — | — | — | — | — | — | **—** |
+| Confirmar firma del contrato | — | ✓ | ✓ | — | — | — | — | ✓ | — | — | — | — | **—** |
+| **Ver contratos de clientes registrados** | — | — | — | — | — | — | — | — | — | — | — | — | **◎** |
 
 ---
 
 ## Módulo Almacén / Gestión de Conductores
 
-| Acción | CEO | SuperAdmin | Admin | Comercial | Dibujante | Contabilidad | Facturación | Jurídica | Almacén | Conductor | Despachador | Recepción |
-|--------|:---:|:----------:|:-----:|:---------:|:---------:|:------------:|:-----------:|:--------:|:-------:|:---------:|:-----------:|:---------:|
-| Ver stock / Kardex (Bodega + Clientes + Producción) | ◎ | ✓ | ✓ | — | — | — | ◎ | — | ✓ | — | ◎ | ◎ |
-| Generar remisión de salida | — | ✓ | ✓ | — | — | — | — | — | ✓ | — | — | — |
-| Programar agenda de transporte | — | ✓ | ✓ | — | — | — | — | — | ✓ | — | — | — |
-| Asignar conductor y vehículo | — | ✓ | ✓ | — | — | — | — | — | ✓ | — | — | — |
-| Confirmar entrega / recepción en obra | — | ✓ | ✓ | — | — | — | — | — | ✓ | ✓ | — | — |
-| Ver agenda de despacho asignada | — | — | — | — | — | — | — | — | — | ✓ | — | — |
-| Alertas de recogidas pendientes | ◎ | ✓ | ✓ | — | — | — | — | — | ✓ | — | — | ✓ |
-| **Autorizar despacho de pedido** | — | ✓ | ✓ | ✓ | — | — | — | — | — | — | — | — |
-| **Clasificar estado de equipo devuelto (OK/Daño/Mant/Baja/Faltante/Ajeno)** | — | ✓ | ✓ | — | — | — | — | — | ✓ | — | ✓ | — |
-| **Enviar cronograma diario de recogidas** | — | ✓ | ✓ | — | — | — | — | — | — | — | — | ✓ |
-| **Registrar y gestionar equipo ajeno** | — | ✓ | ✓ | — | — | — | — | — | ✓ | — | ✓ | — |
-| **Registrar indisponibilidad de conductor** | — | ✓ | ✓ | — | — | — | — | — | ✓ | — | — | — |
-| **Verificar y cargar camiones (despachador)** | — | ✓ | ✓ | — | — | — | — | — | — | — | ✓ | — |
-| **Ver y registrar movimientos de Kardex Consumibles** | — | ✓ | ✓ | — | — | — | — | — | ✓ | — | ✓ | — |
-| **Alerta de stock mínimo de consumibles** | — | ✓ | ✓ | — | — | — | — | — | ✓ | — | — | — |
-| **Evaluar criterios de liquidación conductor por viaje** | — | ✓ | ✓ | — | — | — | — | — | ✓ | — | — | — |
+| Acción | CEO | SuperAdmin | Admin | Comercial | Dibujante | Contabilidad | Facturación | Jurídica | Almacén | Conductor | Despachador | Recepción | **Soporte Atención** |
+|--------|:---:|:----------:|:-----:|:---------:|:---------:|:------------:|:-----------:|:--------:|:-------:|:---------:|:-----------:|:---------:|:--------------------:|
+| Ver stock / Kardex (Bodega + Clientes + Producción) | ◎ | ✓ | ✓ | — | — | — | ◎ | — | ✓ | — | ◎ | ◎ | **—** |
+| Generar remisión de salida | — | ✓ | ✓ | — | — | — | — | — | ✓ | — | — | — | **—** |
+| Programar agenda de transporte | — | ✓ | ✓ | — | — | — | — | — | ✓ | — | — | — | **—** |
+| Asignar conductor y vehículo | — | ✓ | ✓ | — | — | — | — | — | ✓ | — | — | — | **—** |
+| Confirmar entrega / recepción en obra | — | ✓ | ✓ | — | — | — | — | — | ✓ | ✓ | — | — | **—** |
+| Ver agenda de despacho asignada | — | — | — | — | — | — | — | — | — | ✓ | — | — | **—** |
+| Alertas de recogidas pendientes | ◎ | ✓ | ✓ | — | — | — | — | — | ✓ | — | — | ✓ | **—** |
+| **Ver pedidos relacionados a clientes registrados** | — | — | — | — | — | — | — | — | — | — | — | — | **◎** |
+| **Autorizar despacho de pedido** | — | ✓ | ✓ | ✓ | — | — | — | — | — | — | — | — | **—** |
+| **Clasificar estado de equipo devuelto (OK/Daño/Mant/Baja/Faltante/Ajeno)** | — | ✓ | ✓ | — | — | — | — | — | ✓ | — | ✓ | — | **—** |
+| **Enviar cronograma diario de recogidas** | — | ✓ | ✓ | — | — | — | — | — | — | — | — | ✓ | **—** |
+| **Registrar y gestionar equipo ajeno** | — | ✓ | ✓ | — | — | — | — | — | ✓ | — | ✓ | — | **—** |
+| **Registrar indisponibilidad de conductor** | — | ✓ | ✓ | — | — | — | — | — | ✓ | — | — | — | **—** |
+| **Verificar y cargar camiones (despachador)** | — | ✓ | ✓ | — | — | — | — | — | — | — | ✓ | — | **—** |
+| **Ver y registrar movimientos de Kardex Consumibles** | — | ✓ | ✓ | — | — | — | — | — | ✓ | — | ✓ | — | **—** |
+| **Alerta de stock mínimo de consumibles** | — | ✓ | ✓ | — | — | — | — | — | ✓ | — | — | — | **—** |
+| **Evaluar criterios de liquidación conductor por viaje** | — | ✓ | ✓ | — | — | — | — | — | ✓ | — | — | — | **—** |
 
 ---
 
 ## Módulo Facturación
 
-| Acción | CEO | SuperAdmin | Admin | Comercial | Dibujante | Contabilidad | Facturación | Jurídica | Almacén | Conductor | Despachador | Recepción |
-|--------|:---:|:----------:|:-----:|:---------:|:---------:|:------------:|:-----------:|:--------:|:-------:|:---------:|:-----------:|:---------:|
-| Generar proforma | — | ✓ | ✓ | — | — | — | ✓ | — | — | — | — | — |
-| Generar factura | — | ✓ | ✓ | — | — | — | ✓ | — | — | — | — | — |
-| Gestionar modalidad de factura por cliente | — | ✓ | ✓ | — | — | — | ✓ | — | — | — | — | — |
-| Registrar pagos | — | ✓ | ✓ | — | — | ✓ | ✓ | — | — | — | — | — |
-| Ver facturas propias del área | — | ✓ | ✓ | — | — | ✓ | ✓ | ✓ | — | — | — | — |
-| **Enviar factura a Siigo / Validar envío DIAN** | — | ✓ | ✓ | — | — | — | ✓ | — | — | — | — | — |
-| **Gestionar centros de costo (13 Alquiler / 14 Venta)** | — | ✓ | ✓ | — | — | — | ✓ | — | — | — | — | — |
-| **Editar datos de cliente para facturación (fiducia)** | — | ✓ | ✓ | — | — | — | ✓ | — | — | — | — | — |
-| **Configurar condiciones de pago por cliente** | — | ✓ | ✓ | — | — | ✓ | ✓ | — | — | — | — | — |
+| Acción | CEO | SuperAdmin | Admin | Comercial | Dibujante | Contabilidad | Facturación | Jurídica | Almacén | Conductor | Despachador | Recepción | **Soporte Atención** |
+|--------|:---:|:----------:|:-----:|:---------:|:---------:|:------------:|:-----------:|:--------:|:-------:|:---------:|:-----------:|:---------:|:--------------------:|
+| Generar proforma | — | ✓ | ✓ | — | — | — | ✓ | — | — | — | — | — | **—** |
+| Generar factura | — | ✓ | ✓ | — | — | — | ✓ | — | — | — | — | — | **—** |
+| **Acceder a Pre-Facturación con Kardex detallado** | — | ✓ | ✓ | — | — | — | ✓ | — | — | — | — | — | **—** |
+| **Ver Proforma con detalle discriminado** | — | ✓ | ✓ | — | — | — | ✓ | — | — | — | — | — | **—** |
+| Gestionar modalidad de factura por cliente | — | ✓ | ✓ | — | — | — | ✓ | — | — | — | — | — | **—** |
+| Registrar pagos | — | ✓ | ✓ | — | — | ✓ | ✓ | — | — | — | — | — | **—** |
+| Ver facturas propias del área | — | ✓ | ✓ | — | — | ✓ | ✓ | ✓ | — | — | — | — | **—** |
+| **Enviar factura a Siigo / Validar envío DIAN** | — | ✓ | ✓ | — | — | — | ✓ | — | — | — | — | — | **—** |
+| **Validar DIAN/Radian (automática y manual)** | — | ✓ | ✓ | — | — | — | ✓ | — | — | — | — | — | **—** |
+| **Gestionar centros de costo (13 Alquiler / 14 Venta)** | — | ✓ | ✓ | — | — | — | ✓ | — | — | — | — | — | **—** |
+| **Editar datos de cliente para facturación (fiducia)** | — | ✓ | ✓ | — | — | — | ✓ | — | — | — | — | — | **—** |
+| **Configurar condiciones de pago por cliente** | — | ✓ | ✓ | — | — | ✓ | ✓ | — | — | — | — | — | **—** |
 
 ---
 
 ## Módulo Cartera
 
-| Acción | CEO | SuperAdmin | Admin | Comercial | Dibujante | Contabilidad | Facturación | Jurídica | Almacén | Conductor | Despachador | Recepción |
-|--------|:---:|:----------:|:-----:|:---------:|:---------:|:------------:|:-----------:|:--------:|:-------:|:---------:|:-----------:|:---------:|
-| Ver cartera y facturas vencidas | ◎ | ✓ | ✓ | — | — | ✓ | ✓ | ✓ | — | — | — | — |
-| Registrar gestión de cobro (notas) | — | ✓ | ✓ | — | — | ✓ | ✓ | ✓ | — | — | — | — |
-| Cambiar estado de cartera | — | ✓ | ✓ | — | — | ✓ | ✓ | ✓ | — | — | — | — |
-| Demanda / Cobro jurídico | — | ✓ | ✓ | — | — | — | — | ✓ | — | — | — | — |
+| Acción | CEO | SuperAdmin | Admin | Comercial | Dibujante | Contabilidad | Facturación | Jurídica | Almacén | Conductor | Despachador | Recepción | **Soporte Atención** |
+|--------|:---:|:----------:|:-----:|:---------:|:---------:|:------------:|:-----------:|:--------:|:-------:|:---------:|:-----------:|:---------:|:--------------------:|
+| Ver cartera y facturas vencidas | ◎ | ✓ | ✓ | — | — | ✓ | ✓ | ✓ | — | — | — | — | **—** |
+| Registrar gestión de cobro (notas) | — | ✓ | ✓ | — | — | ✓ | ✓ | ✓ | — | — | — | — | **—** |
+| Cambiar estado de cartera | — | ✓ | ✓ | — | — | ✓ | ✓ | ✓ | — | — | — | — | **—** |
+| Demanda / Cobro jurídico | — | ✓ | ✓ | — | — | — | — | ✓ | — | — | — | — | **—** |
+
+---
+
+## Módulo Inventarios
+
+| Acción | CEO | SuperAdmin | Admin | Comercial | Dibujante | Contabilidad | Facturación | Jurídica | Almacén | Conductor | Despachador | Recepción | **Soporte Atención** |
+|--------|:---:|:----------:|:-----:|:---------:|:---------:|:------------:|:-----------:|:--------:|:-------:|:---------:|:-----------:|:---------:|:--------------------:|
+| **Consultar inventarios por bodega (no restrictivo)** | ◎ | ✓ | ✓ | ✓ | — | — | — | — | ✓ | — | ✓ | — | **✓** |
+| **Ver disponibilidad en tiempo real (4 bodegas)** | ◎ | ✓ | ✓ | ✓ | — | — | — | — | ✓ | — | ✓ | — | **✓** |
+| **Recibir alertas de stock bajo (no bloqueantes)** | — | ✓ | ✓ | ✓ | — | — | — | — | ✓ | — | — | — | **—** |
+| **Filtrar por bodega según rol** | — | ✓ | ✓ | ✓ | — | — | — | — | ✓ | — | ✓ | — | **✓** |
 
 ---
 
 ## Auditoría y Configuración
 
-| Acción | CEO | SuperAdmin | Admin | Comercial | Dibujante | Contabilidad | Facturación | Jurídica | Almacén | Conductor | Despachador | Recepción |
-|--------|:---:|:----------:|:-----:|:---------:|:---------:|:------------:|:-----------:|:--------:|:-------:|:---------:|:-----------:|:---------:|
-| Ver log completo de auditoría | ✓ | ✓ | ✓ | — | — | ✓ | ◎ | — | — | — | — | — |
-| Gestionar usuarios y roles | — | ✓ | ✓ | — | — | — | — | — | — | — | — | — |
-| Configurar catálogo de productos | — | ✓ | ✓ | — | — | — | — | — | — | — | — | — |
-| Configurar unidades de negocio | — | ✓ | ✓ | — | — | — | — | — | — | — | — | — |
-| **Configurar parámetros globales del sistema** | — | ✓ | — | — | — | — | — | — | — | — | — | — |
-| **Configurar reglas conductores (km · combustible · peso/volumen)** | — | ✓ | — | — | — | — | — | — | — | — | — | — |
-| **Configurar valor de km y reglas de trayecto** | — | ✓ | — | — | — | — | — | — | — | — | — | — |
-| **Configurar tarifas de transporte por zona (Bogotá/Fuera)** | — | ✓ | — | — | — | — | — | — | — | — | — | — |
-| **Configurar criterios de liquidación conductor (MP/RTE/SER/CL/PP)** | — | ✓ | — | — | — | — | — | — | — | — | — | — |
-| **Configurar pesos por equipo del catálogo (FT/FM/AMD/ALFOR)** | — | ✓ | ✓ | — | — | — | — | — | ✓ | — | — | — |
-| **Gestionar catálogo de consumibles** | — | ✓ | ✓ | — | — | — | — | — | ✓ | — | — | — |
+| Acción | CEO | SuperAdmin | Admin | Comercial | Dibujante | Contabilidad | Facturación | Jurídica | Almacén | Conductor | Despachador | Recepción | **Soporte Atención** |
+|--------|:---:|:----------:|:-----:|:---------:|:---------:|:------------:|:-----------:|:--------:|:-------:|:---------:|:-----------:|:---------:|:--------------------:|
+| Ver log completo de auditoría | ✓ | ✓ | ✓ | — | — | ✓ | ◎ | — | — | — | — | — | **—** |
+| Gestionar usuarios y roles | — | ✓ | ✓ | — | — | — | — | — | — | — | — | — | **—** |
+| Configurar catálogo de productos | — | ✓ | ✓ | — | — | — | — | — | — | — | — | — | **—** |
+| Configurar unidades de negocio | — | ✓ | ✓ | — | — | — | — | — | — | — | — | — | **—** |
+| **Configurar parámetros globales del sistema** | — | ✓ | — | — | — | — | — | — | — | — | — | — | **—** |
+| **Configurar reglas conductores (km · combustible · peso/volumen)** | — | ✓ | — | — | — | — | — | — | — | — | — | — | **—** |
+| **Configurar valor de km y reglas de trayecto** | — | ✓ | — | — | — | — | — | — | — | — | — | — | **—** |
+| **Configurar tarifas de transporte por zona (Bogotá/Fuera)** | — | ✓ | — | — | — | — | — | — | — | — | — | — | **—** |
+| **Configurar criterios de liquidación conductor (MP/RTE/SER/CL/PP)** | — | ✓ | — | — | — | — | — | — | — | — | — | — | **—** |
+| **Configurar pesos por equipo del catálogo (FT/FM/AMD/ALFOR)** | — | ✓ | ✓ | — | — | — | — | — | ✓ | — | — | — | **—** |
+| **Gestionar catálogo de consumibles** | — | ✓ | ✓ | — | — | — | — | — | ✓ | — | — | — | **—** |
 
 ---
 
@@ -215,3 +232,4 @@ El conductor accede al pago por toneladas **solo si cumple los 5 criterios**. El
 | **Despachador** | Verifica y carga físicamente los camiones antes del despacho; clasifica estado de devoluciones (6 estados) |
 | **Conductor** | Ejecuta transporte de equipos a obras; su liquidación se calcula por km, carga y combustible |
 | **Recepción** | Genera cronograma diario de recogidas y cortes; recibe reporte de Almacén |
+| **Soporte Atención** | Registra nuevos clientes con documentación completa; consulta inventarios para informar disponibilidad; ve estado de pedidos y cotizaciones de clientes registrados (solo lectura); NO aprueba clientes ni ve información financiera |

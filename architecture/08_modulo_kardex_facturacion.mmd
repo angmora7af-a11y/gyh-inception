@@ -1,0 +1,162 @@
+%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'primaryColor': '#1A365D',
+    'primaryTextColor': '#FFFFFF',
+    'primaryBorderColor': '#1A365D',
+    'lineColor': '#4A5568',
+    'secondaryColor': '#EDF2F7',
+    'clusterBkg': '#2D3748',
+    'clusterBorder': '#1A202C',
+    'titleColor': '#FFFFFF',
+    'edgeLabelBackground': '#F7FAFC',
+    'fontFamily': 'Montserrat, sans-serif'
+  }
+}}%%
+
+flowchart TD
+    classDef azul       fill:#1A365D,color:#FFFFFF,stroke:#0F2440,stroke-width:2px
+    classDef naranja    fill:#FF9F1C,color:#1A365D,stroke:#E8910A,stroke-width:2px,font-weight:bold
+    classDef gris       fill:#4A5568,color:#FFFFFF,stroke:#2D3748,stroke-width:1px
+    classDef grisClaro  fill:#EDF2F7,color:#1A365D,stroke:#CBD5E0,stroke-width:1px
+    classDef exito      fill:#38A169,color:#FFFFFF,stroke:#2F855A,stroke-width:2px
+    classDef peligro    fill:#E53E3E,color:#FFFFFF,stroke:#C53030,stroke-width:2px
+    classDef nuevo      fill:#BEE3F8,color:#1A365D,stroke:#3182CE,stroke-width:2px
+    classDef alerta     fill:#FED7D7,color:#1A365D,stroke:#FC8181,stroke-width:2px
+
+    linkStyle default color:#1A365D
+
+    INICIO(["📊 Facturación por Kardex Detallado"]):::naranja
+
+    subgraph SELECCION["🎯  PASO 1: SELECCIÓN DE MODALIDAD"]
+        direction TB
+        MODALIDAD{"¿Modalidad de<br/>facturación?"}:::naranja
+        MOD_OC["📋 Por Orden de Compra<br/>(factura consolidada mensual)"]:::azul
+        MOD_REM["📄 Por Remisión<br/>(factura individual)"]:::azul
+        MOD_KARDEX["🎯 Por Kardex Actual<br/>(solo lo que tiene el cliente — RECOMENDADO)"]:::nuevo
+    end
+
+    subgraph CONSTRUCCION_KARDEX["🔨  PASO 2: CONSTRUCCIÓN DEL KARDEX"]
+        direction TB
+        OBTENER_REM["📦 Obtener todas las remisiones<br/>de la Orden de Compra seleccionada"]:::azul
+        FILTRAR_REM["🔍 Filtrar remisiones<br/>• Salidas (envíos a obra)<br/>• Devoluciones (retornos)"]:::grisClaro
+        AGRUPAR_PROD["📦 Agrupar movimientos<br/>por producto"]:::grisClaro
+        ORDENAR_FECHA["📅 Ordenar por fecha<br/>(cronológico)"]:::grisClaro
+    end
+
+    subgraph CALCULO_PERIODOS["⏱️  PASO 3: CÁLCULO DE PERÍODOS"]
+        direction TB
+        PER_INICIO["🚀 Identificar fecha de salida<br/>(primera remisión de envío)"]:::azul
+
+        PER_DECISION{"¿Hay devolución<br/>parcial/total?"}:::naranja
+
+        PER_DEVOLUCION_SI["✅ Calcular período cerrado<br/>Días = fecha_devolución - fecha_salida<br/>Cantidad = cantidad_enviada"]:::nuevo
+
+        PER_DEVOLUCION_NO["⏳ Período abierto (hasta hoy)<br/>Días = HOY - fecha_salida<br/>Cantidad = cantidad_activa"]:::alerta
+
+        PER_PARCIAL["🔄 Devolución Parcial<br/>Dividir en sub-períodos:<br/>1. Período con cantidad total<br/>2. Período con cantidad reducida"]:::nuevo
+
+        PER_TOTAL["✅ Devolución Total<br/>Cerrar período completo"]:::exito
+    end
+
+    subgraph CONVERSION_UNIDADES["🔢  PASO 4: CONVERSIÓN DE UNIDADES"]
+        direction TB
+        CONV_CHECK{"¿Producto se<br/>factura por m²?"}:::naranja
+
+        CONV_SI["📐 Aplicar conversión<br/>M² = Cantidad × (Largo × Ancho)<br/>Ejemplo: 100 und × (0.6m × 0.9m) = 54 m²"]:::nuevo
+
+        CONV_NO["📦 Mantener unidades originales<br/>Facturar por UND"]:::grisClaro
+
+        CONV_MOSTRAR["👁️ Mostrar ambas unidades<br/>• Kardex: 100 UND<br/>• Facturación: 54 M²"]:::azul
+    end
+
+    subgraph CALCULO_VALORES["💰  PASO 5: CÁLCULO DE VALORES"]
+        direction TB
+        CALC_SUBTOTAL["📊 Calcular subtotal por producto<br/>Subtotal = Σ(Cantidad × Días × Precio_Día)"]:::azul
+
+        CALC_EJEMPLO["📌 Ejemplo de cálculo con devolución parcial:<br/>━━━━━━━━━━━━━━━━━━━━━━━<br/>Salida: 100 formaletas (01-ENE)<br/>Devolución parcial: 20 formaletas (20-ENE)<br/>Precio: $1,000/día<br/><br/>Período 1: 100 und × 20 días × $1,000 = $2,000,000<br/>Período 2: 80 und × 11 días × $1,000 = $880,000<br/>━━━━━━━━━━━━━━━━━━━━━━━<br/>SUBTOTAL PRODUCTO: $2,880,000"]:::nuevo
+
+        CALC_IVA["📈 Calcular IVA<br/>IVA = Subtotal × 19%"]:::grisClaro
+
+        CALC_RETENCIONES["🏦 Calcular Retenciones<br/>• Rte. Fuente: según tipo (alquiler 3.5%)<br/>• Rte. ICA: 0.8% si aplica<br/>• Diferente para transporte y venta"]:::nuevo
+
+        CALC_TOTAL["💵 Calcular TOTAL<br/>Total = Subtotal + IVA - Rte.Fuente - Rte.ICA"]:::exito
+    end
+
+    subgraph PRESENTACION["📋  PASO 6: PRESENTACIÓN DISCRIMINADA"]
+        direction TB
+        PRES_ACCORDION["🎨 Vista Accordion por Producto<br/>• Nombre del producto<br/>• Cantidad total (con conversión si aplica)<br/>• Días promedio<br/>• Subtotal"]:::azul
+
+        PRES_EXPANDIDO["📖 Vista expandida<br/>Muestra TODOS los períodos:<br/>• Fecha inicio → Fecha fin<br/>• Cantidad en ese período<br/>• Días del período<br/>• Precio × días<br/>• Subtotal del período"]:::nuevo
+
+        PRES_RESUMEN["📊 Resumen de Facturación<br/>━━━━━━━━━━━━━━━━━━━━<br/>Subtotal: $XX,XXX,XXX<br/>IVA (19%): $XX,XXX<br/>Rte. Fuente: -$XX,XXX<br/>Rte. ICA: -$XX,XXX<br/>━━━━━━━━━━━━━━━━━━━━<br/>TOTAL A FACTURAR: $XX,XXX,XXX"]:::exito
+    end
+
+    subgraph GENERACION["✅  PASO 7: GENERACIÓN DE FACTURA"]
+        direction TB
+        GEN_VALIDAR["🔍 Validar antes de generar<br/>• Centro de costo correcto (13/14)<br/>• No mezclar tipos<br/>• Retenciones correctas"]:::alerta
+
+        GEN_CREAR["📄 Crear factura en sistema<br/>• Asignar número consecutivo<br/>• Estado inicial: 'enviada'<br/>• CUFE: null (hasta validación DIAN)"]:::azul
+
+        GEN_SIIGO["📤 Enviar a Siigo<br/>(ver diagrama 07_integracion_siigo.mmd)"]:::nuevo
+
+        GEN_VALIDAR_DIAN["🏛️ Validar en DIAN<br/>(ver diagrama 10_validacion_dian_radian.mmd)"]:::nuevo
+
+        GEN_NOTIFICAR["📧 Notificar al cliente<br/>Email + Seguimiento telefónico"]:::exito
+    end
+
+    %% ── FLUJO PRINCIPAL ──
+    INICIO --> MODALIDAD
+
+    MODALIDAD -->|"Por OC"| MOD_OC
+    MODALIDAD -->|"Por Remisión"| MOD_REM
+    MODALIDAD -->|"Por Kardex (✓)"| MOD_KARDEX
+
+    MOD_OC & MOD_REM & MOD_KARDEX --> OBTENER_REM
+
+    OBTENER_REM --> FILTRAR_REM
+    FILTRAR_REM --> AGRUPAR_PROD
+    AGRUPAR_PROD --> ORDENAR_FECHA
+    ORDENAR_FECHA --> PER_INICIO
+
+    PER_INICIO --> PER_DECISION
+
+    PER_DECISION -->|"SÍ (hay devolución)"| PER_DEVOLUCION_SI
+    PER_DECISION -->|"NO (sin devolución)"| PER_DEVOLUCION_NO
+
+    PER_DEVOLUCION_SI --> PER_PARCIAL
+    PER_DEVOLUCION_SI --> PER_TOTAL
+
+    PER_PARCIAL --> CONV_CHECK
+    PER_TOTAL --> CONV_CHECK
+    PER_DEVOLUCION_NO --> CONV_CHECK
+
+    CONV_CHECK -->|"SÍ (m²)"| CONV_SI
+    CONV_CHECK -->|"NO (und)"| CONV_NO
+
+    CONV_SI --> CONV_MOSTRAR
+    CONV_NO --> CONV_MOSTRAR
+
+    CONV_MOSTRAR --> CALC_SUBTOTAL
+    CALC_SUBTOTAL --> CALC_EJEMPLO
+    CALC_EJEMPLO --> CALC_IVA
+    CALC_IVA --> CALC_RETENCIONES
+    CALC_RETENCIONES --> CALC_TOTAL
+
+    CALC_TOTAL --> PRES_ACCORDION
+    PRES_ACCORDION --> PRES_EXPANDIDO
+    PRES_EXPANDIDO --> PRES_RESUMEN
+
+    PRES_RESUMEN --> GEN_VALIDAR
+    GEN_VALIDAR --> GEN_CREAR
+    GEN_CREAR --> GEN_SIIGO
+    GEN_SIIGO --> GEN_VALIDAR_DIAN
+    GEN_VALIDAR_DIAN --> GEN_NOTIFICAR
+
+    %% ── NOTAS ADICIONALES ──
+    NOTE1["💡 VENTAJAS DEL KARDEX DETALLADO<br/>━━━━━━━━━━━━━━━━━━━━━━━━━━━━<br/>✓ Elimina el 'punteo' manual<br/>✓ Considera devoluciones parciales automáticamente<br/>✓ Genera factura discriminada por períodos<br/>✓ Evita errores de cálculo<br/>✓ Auditable y transparente para el cliente<br/>✓ Conversión automática de unidades"]:::nuevo
+
+    NOTE2["⚠️ CASOS ESPECIALES<br/>━━━━━━━━━━━━━━━━━━━━━━━━━━━━<br/>• Si hay equipo sin devolver: facturar hasta HOY<br/>• Si hay múltiples devoluciones parciales: crear sub-períodos<br/>• Si producto se factura por m²: mostrar conversión explícita<br/>• Siempre validar que centro de costo sea consistente"]:::alerta
+
+    PRES_RESUMEN -.-> NOTE1
+    GEN_VALIDAR -.-> NOTE2

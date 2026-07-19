@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentación Técnica - G&H Sistema de Gestión</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1A365D;
+            --primary-light: #2D3748;
+            --secondary: #FF9F1C;
+            --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --text-dark: #2D3748;
+            --text-light: #718096;
+            --border: #E2E8F0;
+            --bg-card: #FFFFFF;
+            --bg-section: #F7FAFC;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--text-dark);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+        }
+
+        /* HEADER */
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            padding: 40px 50px;
+            border-bottom: 5px solid var(--secondary);
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        header .tagline {
+            font-size: 1.3em;
+            opacity: 0.95;
+            font-weight: 300;
+            margin-bottom: 20px;
+        }
+
+        header .stats {
+            display: flex;
+            gap: 30px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+
+        header .stat {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 20px;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+        }
+
+        header .stat i {
+            font-size: 1.5em;
+            color: var(--secondary);
+        }
+
+        header .stat-value {
+            font-size: 1.8em;
+            font-weight: 700;
+        }
+
+        header .stat-label {
+            font-size: 0.85em;
+            opacity: 0.8;
+        }
+
+        /* NAVIGATION */
+        nav {
+            background: var(--bg-section);
+            padding: 20px 50px;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            background: rgba(247, 250, 252, 0.95);
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: var(--text-dark);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        nav a:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        nav a i {
+            font-size: 0.9em;
+        }
+
+        /* MAIN CONTENT */
+        main {
+            padding: 50px;
+        }
+
+        section {
+            margin-bottom: 50px;
+        }
+
+        section h2 {
+            font-size: 2em;
+            color: var(--primary);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid var(--secondary);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        section h2 i {
+            color: var(--secondary);
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(26, 54, 93, 0.15);
+        }
+
+        .card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .card-icon {
+            font-size: 2em;
+            color: var(--primary);
+            min-width: 40px;
+        }
+
+        .card-title {
+            font-size: 1.2em;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+
+        .card-description {
+            color: var(--text-light);
+            font-size: 0.95em;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .card-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 0.85em;
+            color: var(--text-light);
+            flex-wrap: wrap;
+        }
+
+        .card-meta span {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .card-link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-new {
+            background: #FED7D7;
+            color: #C53030;
+        }
+
+        .badge-updated {
+            background: #BEE3F8;
+            color: #2C5282;
+        }
+
+        .badge-core {
+            background: #C6F6D5;
+            color: #22543D;
+        }
+
+        /* HIGHLIGHTS */
+        .highlight-section {
+            background: linear-gradient(135deg, #EDF2F7 0%, #E6FFFA 100%);
+            border-left: 5px solid var(--secondary);
+            padding: 30px;
+            border-radius: 8px;
+            margin: 30px 0;
+        }
+
+        .highlight-section h3 {
+            color: var(--primary);
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .highlight-section ul {
+            list-style: none;
+            margin-left: 20px;
+        }
+
+        .highlight-section li {
+            padding: 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .highlight-section li::before {
+            content: "✓";
+            color: #38A169;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        /* FOOTER */
+        footer {
+            background: var(--bg-section);
+            padding: 30px 50px;
+            text-align: center;
+            border-top: 1px solid var(--border);
+            color: var(--text-light);
+        }
+
+        footer p {
+            margin-bottom: 10px;
+        }
+
+        footer a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            header, main, footer, nav {
+                padding-left: 25px;
+                padding-right: 25px;
+            }
+
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+
+            nav ul {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+            nav {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📚 Documentación Técnica</h1>
+            <div class="tagline">G&H Obras y Estructuras Metálicas S.A.S.</div>
+            <div class="stats">
+                <div class="stat">
+                    <i class="fas fa-diagram-project"></i>
+                    <div>
+                        <div class="stat-value">11</div>
+                        <div class="stat-label">Diagramas</div>
+                    </div>
+                </div>
+                <div class="stat">
+                    <i class="fas fa-database"></i>
+                    <div>
+                        <div class="stat-value">1</div>
+                        <div class="stat-label">Schema DBML</div>
+                    </div>
+                </div>
+                <div class="stat">
+                    <i class="fas fa-users"></i>
+                    <div>
+                        <div class="stat-value">13</div>
+                        <div class="stat-label">Roles</div>
+                    </div>
+                </div>
+                <div class="stat">
+                    <i class="fas fa-clock"></i>
+                    <div>
+                        <div class="stat-value">18/07/2026</div>
+                        <div class="stat-label">Actualizado</div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <nav>
+            <ul>
+                <li><a href="#arquitectura"><i class="fas fa-building"></i> Arquitectura</a></li>
+                <li><a href="#facturacion"><i class="fas fa-file-invoice-dollar"></i> Facturación</a></li>
+                <li><a href="#integracion"><i class="fas fa-plug"></i> Integración</a></li>
+                <li><a href="#database"><i class="fas fa-database"></i> Base de Datos</a></li>
+                <li><a href="#sitemaps"><i class="fas fa-sitemap"></i> Sitemaps</a></li>
+                <li><a href="#nuevas"><i class="fas fa-star"></i> Nuevas Funcionalidades</a></li>
+            </ul>
+        </nav>
+
+        <main>
+            <!-- NUEVAS FUNCIONALIDADES JULIO 2026 -->
+            <section id="nuevas">
+                <h2><i class="fas fa-star"></i> Nuevas Funcionalidades - Julio 2026</h2>
+
+                <div class="highlight-section">
+                    <h3><i class="fas fa-rocket"></i> Implementaciones Recientes</h3>
+                    <ul>
+                        <li><strong>Rol Soporte Atención al Cliente:</strong> Registra clientes y consulta inventarios</li>
+                        <li><strong>Facturación por Kardex Detallado:</strong> Considera devoluciones parciales automáticamente</li>
+                        <li><strong>Conversión Automática de Unidades:</strong> UND → M² según dimensiones del producto</li>
+                        <li><strong>Validación DIAN/Radian Automatizada:</strong> Scraping del portal DIAN para extraer CUFE</li>
+                        <li><strong>Cotización Autogestionada Web:</strong> Portal público sin autenticación</li>
+                        <li><strong>Sistema de Inventarios Consultivo:</strong> 4 bodegas con visibilidad por rol</li>
+                        <li><strong>Alertas de Pedidos Incompletos:</strong> Dashboard con KPIs y notificaciones</li>
+                        <li><strong>Integración Completa Siigo:</strong> Flujo desde cotización hasta pago sincronizado</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- ARQUITECTURA -->
+            <section id="arquitectura">
+                <h2><i class="fas fa-building"></i> Arquitectura del Sistema</h2>
+                <div class="card-grid">
+                    <a href="diagrams/01_flujo_principal_gyh.html" class="card-link">
+    <div class="card">
+        <div class="card-header">
+            <div class="card-icon"><i class="fas fa-route"></i></div>
+            <div>
+                <div class="card-title">Flujo Principal GYH </div>
+            </div>
+        </div>
+        <div class="card-description">Diagrama general del sistema desde prospecto hasta facturación completa</div>
+        <div class="card-meta">
+            <span><i class="fas fa-file"></i> Mermaid</span>
+            <span><i class="fas fa-calendar"></i> Jul 2026</span>
+        </div>
+    </div>
+</a>
+<a href="diagrams/02_arquitectura_sistema.html" class="card-link">
+    <div class="card">
+        <div class="card-header">
+            <div class="card-icon"><i class="fas fa-layer-group"></i></div>
+            <div>
+                <div class="card-title">Arquitectura del Sistema </div>
+            </div>
+        </div>
+        <div class="card-description">Componentes, capas y tecnologías del sistema de gestión</div>
+        <div class="card-meta">
+            <span><i class="fas fa-file"></i> Mermaid</span>
+            <span><i class="fas fa-calendar"></i> Jul 2026</span>
+        </div>
+    </div>
+</a>
+<a href="diagrams/03_modulo_cotizacion.html" class="card-link">
+    <div class="card">
+        <div class="card-header">
+            <div class="card-icon"><i class="fas fa-calculator"></i></div>
+            <div>
+                <div class="card-title">Módulo de Cotizaciones <span class="badge badge-updated">Actualizado</span></div>
+            </div>
+        </div>
+        <div class="card-description">Proceso de cotización técnica + comercial + web autogestionada</div>
+        <div class="card-meta">
+            <span><i class="fas fa-file"></i> Mermaid</span>
+            <span><i class="fas fa-calendar"></i> Jul 2026</span>
+        </div>
+    </div>
+</a>
+<a href="diagrams/04_registro_aprobacion_cliente.html" class="card-link">
+    <div class="card">
+        <div class="card-header">
+            <div class="card-icon"><i class="fas fa-user-check"></i></div>
+            <div>
+                <div class="card-title">Registro y Aprobación de Clientes </div>
+            </div>
+        </div>
+        <div class="card-description">Flujo de aprobación tripartita: Comercial, Contabilidad, Jurídica</div>
+        <div class="card-meta">
+            <span><i class="fas fa-file"></i> Mermaid</span>
+            <span><i class="fas fa-calendar"></i> Jul 2026</span>
+        </div>
+    </div>
+</a>
+<a href="diagrams/05_modulo_inventarios_logistica.html" class="card-link">
+    <div class="card">
+        <div class="card-header">
+            <div class="card-icon"><i class="fas fa-boxes-stacked"></i></div>
+            <div>
+                <div class="card-title">Inventarios y Logística </div>
+            </div>
+        </div>
+        <div class="card-description">Gestión de stock, remisiones y agenda de transporte</div>
+        <div class="card-meta">
+            <span><i class="fas fa-file"></i> Mermaid</span>
+            <span><i class="fas fa-calendar"></i> Jul 2026</span>
+        </div>
+    </div>
+</a>
+<a href="diagrams/06_roles_y_permisos.html" class="card-link">
+    <div class="card">
+        <div class="card-header">
+            <div class="card-icon"><i class="fas fa-user-shield"></i></div>
+            <div>
+                <div class="card-title">Roles y Permisos <span class="badge badge-updated">Actualizado</span></div>
+            </div>
+        </div>
+        <div class="card-description">Sistema RBAC con 13 roles y permisos granulares</div>
+        <div class="card-meta">
+            <span><i class="fas fa-file"></i> Mermaid</span>
+            <span><i class="fas fa-calendar"></i> Jul 2026</span>
+        </div>
+    </div>
+</a>
+                </div>
+            </section>
+
+            <!-- FACTURACIÓN E INTEGRACIÓN -->
+            <section id="facturacion">
+                <h2><i class="fas fa-file-invoice-dollar"></i> Facturación e Integración</h2>
+                <div class="card-grid">
+                    <a href="diagrams/07_integracion_siigo.html" class="card-link">
+    <div class="card">
+        <div class="card-header">
+            <div class="card-icon"><i class="fas fa-arrows-spin"></i></div>
+            <div>
+                <div class="card-title">Integración Siigo/DIAN <span class="badge badge-new">Nuevo</span></div>
+            </div>
+        </div>
+        <div class="card-description">Secuencia completa de envío a Siigo y validación en DIAN (6 fases)</div>
+        <div class="card-meta">
+            <span><i class="fas fa-file"></i> Mermaid</span>
+            <span><i class="fas fa-calendar"></i> Jul 2026</span>
+        </div>
+    </div>
+</a>
+<a href="diagrams/08_modulo_kardex_facturacion.html" class="card-link">
+    <div class="card">
+        <div class="card-header">
+            <div class="card-icon"><i class="fas fa-file-invoice"></i></div>
+            <div>
+                <div class="card-title">Módulo Kardex y Facturación <span class="badge badge-new">Nuevo</span></div>
+            </div>
+        </div>
+        <div class="card-description">Facturación detallada por kardex con devoluciones parciales automáticas</div>
+        <div class="card-meta">
+            <span><i class="fas fa-file"></i> Mermaid</span>
+            <span><i class="fas fa-calendar"></i> Jul 2026</span>
+        </div>
+    </div>
+</a>
+<a href="diagrams/09_bodegas_inventarios.html" class="card-link">
+    <div class="card">
+        <div class="card-header">
+            <div class="card-icon"><i class="fas fa-warehouse"></i></div>
+            <div>
+                <div class="card-title">Sistema de Bodegas <span class="badge badge-new">Nuevo</span></div>
+            </div>
+        </div>
+        <div class="card-description">4 bodegas consultivas (no restrictivas) con visibilidad por rol</div>
+        <div class="card-meta">
+            <span><i class="fas fa-file"></i> Mermaid</span>
+            <span><i class="fas fa-calendar"></i> Jul 2026</span>
+        </div>
+    </div>
+</a>
+<a href="diagrams/10_validacion_dian_radian.html" class="card-link">
+    <div class="card">
+        <div class="card-header">
+            <div class="card-icon"><i class="fas fa-shield-halved"></i></div>
+            <div>
+                <div class="card-title">Validación DIAN/Radian <span class="badge badge-new">Nuevo</span></div>
+            </div>
+        </div>
+        <div class="card-description">Proceso de validación electrónica con scraping automático</div>
+        <div class="card-meta">
+            <span><i class="fas fa-file"></i> Mermaid</span>
+            <span><i class="fas fa-calendar"></i> Jul 2026</span>
+        </div>
+    </div>
+</a>
+                </div>
+            </section>
+
+            <!-- INTEGRACIÓN SIIGO -->
+            <section id="integracion">
+                <h2><i class="fas fa-plug"></i> Integración Completa Siigo-DIAN</h2>
+                <div class="card-grid">
+                    <a href="diagrams/11_flujo_completo_integracion_siigo.html" class="card-link">
+    <div class="card">
+        <div class="card-header">
+            <div class="card-icon"><i class="fas fa-diagram-project"></i></div>
+            <div>
+                <div class="card-title">Flujo Completo Integración Siigo <span class="badge badge-new">Nuevo</span></div>
+            </div>
+        </div>
+        <div class="card-description">DIAGRAMA MAESTRO: Cotización → Pedido → Remisión → Factura → DIAN → Pagos. Incluye scraping CUFE y sincronización automática.</div>
+        <div class="card-meta">
+            <span><i class="fas fa-file"></i> Mermaid</span>
+            <span><i class="fas fa-calendar"></i> Jul 2026</span>
+        </div>
+    </div>
+</a>
+                </div>
+            </section>
+
+            <!-- BASE DE DATOS -->
+            <section id="database">
+                <h2><i class="fas fa-database"></i> Base de Datos</h2>
+                <div class="card-grid">
+                    <a href="../database/gyh_schema.dbml" class="card-link">
+    <div class="card">
+        <div class="card-header">
+            <div class="card-icon"><i class="fas fa-database"></i></div>
+            <div>
+                <div class="card-title">Schema DBML PostgreSQL <span class="badge badge-updated">Actualizado</span></div>
+            </div>
+        </div>
+        <div class="card-description">Esquema completo v1.1 (SEM-27 + Julio 2026). Incluye 13 roles, bodegas, conversión de unidades, validación DIAN.</div>
+        <div class="card-meta">
+            <span><i class="fas fa-file"></i> DBML</span>
+            <span><i class="fas fa-calendar"></i> Jul 2026</span>
+        </div>
+    </div>
+</a>
+<a href="../architecture/06_roles_y_permisos_tabla.md" class="card-link">
+    <div class="card">
+        <div class="card-header">
+            <div class="card-icon"><i class="fas fa-table"></i></div>
+            <div>
+                <div class="card-title">Tabla de Roles y Permisos <span class="badge badge-updated">Actualizado</span></div>
+            </div>
+        </div>
+        <div class="card-description">Matriz completa: 13 roles × 10 módulos con permisos detallados</div>
+        <div class="card-meta">
+            <span><i class="fas fa-file"></i> Markdown</span>
+            <span><i class="fas fa-calendar"></i> Jul 2026</span>
+        </div>
+    </div>
+</a>
+                </div>
+            </section>
+
+            <!-- SITEMAPS -->
+            <section id="sitemaps">
+                <h2><i class="fas fa-sitemap"></i> Sitemaps y Navegación</h2>
+                <div class="card-grid">
+                    <a href="diagrams/sitemap_gyh_app.html" class="card-link">
+    <div class="card">
+        <div class="card-header">
+            <div class="card-icon"><i class="fas fa-sitemap"></i></div>
+            <div>
+                <div class="card-title">Sitemap Principal </div>
+            </div>
+        </div>
+        <div class="card-description">Estructura completa de navegación del sistema</div>
+        <div class="card-meta">
+            <span><i class="fas fa-file"></i> Mermaid</span>
+            <span><i class="fas fa-calendar"></i> Jul 2026</span>
+        </div>
+    </div>
+</a>
+<a href="diagrams/sitemap_01_auth_dashboard.html" class="card-link">
+    <div class="card">
+        <div class="card-header">
+            <div class="card-icon"><i class="fas fa-lock"></i></div>
+            <div>
+                <div class="card-title">Auth y Dashboard </div>
+            </div>
+        </div>
+        <div class="card-description">Autenticación y panel principal</div>
+        <div class="card-meta">
+            <span><i class="fas fa-file"></i> Mermaid</span>
+            <span><i class="fas fa-calendar"></i> Jul 2026</span>
+        </div>
+    </div>
+</a>
+<a href="diagrams/sitemap_02_clientes.html" class="card-link">
+    <div class="card">
+        <div class="card-header">
+            <div class="card-icon"><i class="fas fa-users"></i></div>
+            <div>
+                <div class="card-title">Módulo Clientes </div>
+            </div>
+        </div>
+        <div class="card-description">Gestión de clientes y prospectos</div>
+        <div class="card-meta">
+            <span><i class="fas fa-file"></i> Mermaid</span>
+            <span><i class="fas fa-calendar"></i> Jul 2026</span>
+        </div>
+    </div>
+</a>
+<a href="diagrams/sitemap_03_cotizaciones.html" class="card-link">
+    <div class="card">
+        <div class="card-header">
+            <div class="card-icon"><i class="fas fa-file-lines"></i></div>
+            <div>
+                <div class="card-title">Módulo Cotizaciones </div>
+            </div>
+        </div>
+        <div class="card-description">Cotizaciones técnicas y comerciales</div>
+        <div class="card-meta">
+            <span><i class="fas fa-file"></i> Mermaid</span>
+            <span><i class="fas fa-calendar"></i> Jul 2026</span>
+        </div>
+    </div>
+</a>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p><strong>G&H Obras y Estructuras Metálicas S.A.S.</strong></p>
+            <p>NIT: 901.218.896-8 | Bogotá, Colombia</p>
+            <p>Documentación generada: 18 de July de 2026 a las 20:42:53</p>
+            <p>Sistema de Gestión Integral | PostgreSQL + React 18</p>
+        </footer>
+    </div>
+</body>
+</html>
